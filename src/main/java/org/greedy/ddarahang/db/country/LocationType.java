@@ -1,4 +1,4 @@
-package org.greedy.ddarahang.db.locationType;
+package org.greedy.ddarahang.db.country;
 
 
 import lombok.AllArgsConstructor;
