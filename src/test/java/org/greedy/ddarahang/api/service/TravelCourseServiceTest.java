@@ -1,62 +1,69 @@
 package org.greedy.ddarahang.api.service;
 
-import org.greedy.ddarahang.api.TestDataProvider;
 import org.greedy.ddarahang.api.dto.TravelCourseResponse;
+import org.greedy.ddarahang.common.AllFixture;
+import org.greedy.ddarahang.db.country.Country;
+import org.greedy.ddarahang.db.country.CountryRepository;
+import org.greedy.ddarahang.db.region.Region;
+import org.greedy.ddarahang.db.region.RegionRepository;
 import org.greedy.ddarahang.db.travelCourse.TravelCourse;
 import org.greedy.ddarahang.db.travelCourse.TravelCourseRepository;
-import org.junit.jupiter.api.BeforeEach;
+import org.greedy.ddarahang.db.video.Video;
+import org.greedy.ddarahang.db.video.VideoRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@AutoConfigureMockMvc
+@SpringBootTest
 class TravelCourseServiceTest {
 
-    @Mock
+    @Autowired
     private TravelCourseRepository travelCourseRepository;
 
-    @InjectMocks
+    @Autowired
+    private RegionRepository regionRepository;
+
+    @Autowired
+    private VideoRepository videoRepository;
+
+    @Autowired
+    private CountryRepository countryRepository;
+
+    @Autowired
     private TravelCourseService travelCourseService;
-
-    private List<TravelCourseResponse> mockResponses;
-
-    @BeforeEach
-    void setUp(){
-        Mockito.reset(travelCourseRepository);
-        mockResponses = TestDataProvider.getMockTravelCouresResponses();
-    }
 
     @Test
     void regionName이_없는_경우() {
         //Given
         String countryName = "대한민국";
         String regionName = "";
-        TravelCourse travelCourse = new TravelCourse(
 
-        );
-        when(travelCourseRepository.findByCountryName("대한민국")).thenReturn(List.of(travelCourse));
+        System.out.println(travelCourseRepository);
+
+        Country mockCountry = AllFixture.getMockCountry();
+        Country country = countryRepository.save(mockCountry);
+        Region mockRegion = AllFixture.getMockRegion(country);
+        Region region = regionRepository.save(mockRegion);
+        Video mockVideo = AllFixture.getMockVideo(LocalDate.now());
+        Video video = videoRepository.save(mockVideo);
+        TravelCourse mockTravelCourse = AllFixture.getMockTravelCourse(video, country, region);
+        travelCourseRepository.save(mockTravelCourse);
 
         //When
-        List<TravelCourseResponse> result = travelCourseService.getTravelCourses(countryName, regionName);
+        List<TravelCourseResponse> responses = travelCourseService.getTravelCourses(countryName, regionName);
 
         //Then
-        verify(travelCourseRepository, times(1)).findByCountryName("대한민국");
-        verify(travelCourseRepository, never()).findByRegionName(anyString());
-
-        assertEquals(1, result.size());
+        assertEquals(1, responses.size());
     }
 
 //    @Test
