@@ -8,6 +8,8 @@ import org.greedy.ddarahang.common.exception.NotFoundTravelCourseDetailException
 import org.greedy.ddarahang.db.travelCourse.TravelCourse;
 import org.greedy.ddarahang.db.travelCourse.TravelCourseRepository;
 import org.greedy.ddarahang.db.travelCourseDetail.TravelCourseDetailRepository;
+import org.greedy.ddarahang.db.video.Video;
+import org.greedy.ddarahang.db.video.VideoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,19 +22,17 @@ public class TravelCourseService {
 
     private final TravelCourseRepository travelCourseRepository;
     private final TravelCourseDetailRepository travelCourseDetailRepository;
+    private final VideoRepository videoRepository;
 
     public List<TravelCourseListResponse> getTravelCourses(String countryName, String regionName) {
         if (regionName.isBlank()) {
-            List<TravelCourse> travelCourse = travelCourseRepository.findByCountryName(countryName);
-
-            return travelCourse.stream()
-                    .map(TravelCourseListResponse::from).toList();
+            return travelCourseRepository.findByCountryName(countryName)
+                    .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
+                    .toList();
         }
-
-        List<TravelCourse> travelCourse = travelCourseRepository.findByRegionName(regionName);
-
-        return travelCourse.stream()
-                .map(TravelCourseListResponse::from).toList();
+        return travelCourseRepository.findByCountryName(countryName)
+                .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
+                .toList();
     }
 
     public TravelCourseResponse getTravelCourseDetail(Long id) {
@@ -42,6 +42,6 @@ public class TravelCourseService {
         List<TravelCourseDetailResponse> travelCourseDetails = travelCourseDetailRepository.findAllByTravelCourseId(id)
                 .stream().map(TravelCourseDetailResponse::from).toList();
 
-        return TravelCourseResponse.from(travelCourse, travelCourseDetails);
+        return TravelCourseResponse.from(travelCourse.getVideo(), travelCourseDetails);
     }
 }
