@@ -27,7 +27,7 @@ public class Country {
     @Column(name = "country_id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "country_name", nullable = false)
+    @Column(name = "country_name", unique = true, nullable = false)
     private String name;
 
     @Enumerated(EnumType.STRING)
