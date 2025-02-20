@@ -21,13 +21,31 @@ public class TravelCourseController {
     private final TravelCourseService travelCourseService;
 
     @GetMapping
-    public ResponseEntity<List<TravelCourseListResponse>> getTravelCourses(@RequestParam String countryName, @RequestParam String regionName) {
+    public ResponseEntity<List<TravelCourseListResponse>> getTravelCourses(
+            @RequestParam String countryName,
+            @RequestParam String regionName
+    ) {
         return ResponseEntity.ok(travelCourseService.getTravelCourses(countryName, regionName));
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity<TravelCourseResponse> getTravelCourseDetail(@PathVariable Long id) {
-        return travelCourseService.getTravelCourseDetail(id);
+        return ResponseEntity.ok(travelCourseService.getTravelCourseDetail(id));
+    }
+
+    @GetMapping("/uploaddate")
+    public ResponseEntity<List<TravelCourseListResponse>> getSortedByUploadDate(
+            @RequestParam String countryName,
+            @RequestParam String regionName
+    ) {
+        return ResponseEntity.ok(travelCourseService.getSortedByUploadDate(countryName, regionName));
+    }
+
+    @GetMapping("/viewcount")
+    public ResponseEntity<List<TravelCourseListResponse>> getSortedByViewCount(
+            @RequestParam String countryName,
+            @RequestParam String regionName
+    ) {
+        return ResponseEntity.ok(travelCourseService.getSortedByViewCount(countryName, regionName));
     }
 }
