@@ -8,8 +8,7 @@ import org.greedy.ddarahang.common.exception.NotFoundTravelCourseDetailException
 import org.greedy.ddarahang.db.travelCourse.TravelCourse;
 import org.greedy.ddarahang.db.travelCourse.TravelCourseRepository;
 import org.greedy.ddarahang.db.travelCourseDetail.TravelCourseDetailRepository;
-import org.greedy.ddarahang.db.video.Video;
-import org.greedy.ddarahang.db.video.VideoRepository;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,15 +21,14 @@ public class TravelCourseService {
 
     private final TravelCourseRepository travelCourseRepository;
     private final TravelCourseDetailRepository travelCourseDetailRepository;
-    private final VideoRepository videoRepository;
 
     public List<TravelCourseListResponse> getTravelCourses(String countryName, String regionName) {
         if (regionName.isBlank()) {
-            return travelCourseRepository.findByCountryName(countryName)
+            return travelCourseRepository.findAllByCountryName(countryName)
                     .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
                     .toList();
         }
-        return travelCourseRepository.findByCountryName(countryName)
+        return travelCourseRepository.findAllByRegionName(regionName)
                 .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
                 .toList();
     }
@@ -43,5 +41,27 @@ public class TravelCourseService {
                 .stream().map(TravelCourseDetailResponse::from).toList();
 
         return TravelCourseResponse.from(travelCourse.getVideo(), travelCourseDetails);
+    }
+
+    public List<TravelCourseListResponse> getSortedByUploadDate(String countryName, String regionName) {
+        if (regionName.isBlank()) {
+            return travelCourseRepository.findAllByCountryNameOrderByUploadDateDesc(countryName)
+                    .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
+                    .toList();
+        }
+        return travelCourseRepository.findAllByRegionNameOrderByUploadDateDesc(regionName)
+                .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
+                .toList();
+    }
+
+    public List<TravelCourseListResponse> getSortedByViewCount(String countryName, String regionName) {
+        if (regionName.isBlank()) {
+            return travelCourseRepository.findAllByCountryNameOrderByViewCountDesc(countryName)
+                    .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
+                    .toList();
+        }
+        return travelCourseRepository.findAllByRegionNameOrderByViewCountDesc(regionName)
+                .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
+                .toList();
     }
 }
