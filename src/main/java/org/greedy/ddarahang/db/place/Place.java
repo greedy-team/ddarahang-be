@@ -26,13 +26,13 @@ public class Place {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "place_id", unique = true, nullable = false)
+    @Column(unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "place_name", nullable = false)
+    @Column(nullable = false)
     private String name;
 
-    @Column(name = "place_address", nullable = false)
+    @Column(nullable = false)
     private String address;
 
     @ManyToOne(fetch = FetchType.LAZY)

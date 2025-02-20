@@ -27,13 +27,13 @@ public class TravelCourseDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "travel_course_detail_id", unique = true, nullable = false)
+    @Column(unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "day", nullable = false)
+    @Column(nullable = false)
     private Integer day;
 
-    @Column(name = "order_in_day", nullable = false)
+    @Column(nullable = false)
     private Integer orderInDay;
 
     @ManyToOne(fetch = FetchType.LAZY)
