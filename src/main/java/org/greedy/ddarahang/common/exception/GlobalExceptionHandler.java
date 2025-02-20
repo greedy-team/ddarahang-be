@@ -31,7 +31,13 @@ public class GlobalExceptionHandler{
     }
 
     @ExceptionHandler(NotFoundTravelCourseDetailException.class)
-    public ResponseEntity<String> handleExceptions(NotFoundTravelCourseDetailException e) {
+    public ResponseEntity<String> notFoundTravelCourseDetailException(NotFoundTravelCourseDetailException e) {
+        log.error("");
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(InvalidCountryNameException.class)
+    public ResponseEntity<String> invalidCountryNameException(InvalidCountryNameException e) {
         log.error("");
         return ResponseEntity.badRequest().body(e.getMessage());
     }
