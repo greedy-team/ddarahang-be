@@ -1,5 +1,6 @@
 package org.greedy.ddarahang.api.service;
 
+import jakarta.persistence.EntityManager;
 import org.greedy.ddarahang.api.dto.TravelCourseResponse;
 import org.greedy.ddarahang.common.AllFixture;
 import org.greedy.ddarahang.db.country.Country;
@@ -11,6 +12,7 @@ import org.greedy.ddarahang.db.travelCourse.TravelCourseRepository;
 import org.greedy.ddarahang.db.video.Video;
 import org.greedy.ddarahang.db.video.VideoRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -22,7 +24,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
@@ -43,6 +44,14 @@ class TravelCourseServiceTest {
 
     @Autowired
     private TravelCourseService travelCourseService;
+
+    @BeforeEach
+    void setUp() {
+        travelCourseRepository.deleteAll();
+        videoRepository.deleteAll();
+        regionRepository.deleteAll();
+        countryRepository.deleteAll();
+    }
 
     @Test
     void regionName이_없는_경우() {
