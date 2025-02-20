@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.greedy.ddarahang.api.dto.TravelCourseDetailResponse;
 import org.greedy.ddarahang.api.dto.TravelCourseResponse;
 import org.greedy.ddarahang.api.dto.TravelCourseListResponse;
+import org.greedy.ddarahang.common.exception.InvalidCountryNameException;
 import org.greedy.ddarahang.common.exception.NotFoundTravelCourseDetailException;
 import org.greedy.ddarahang.db.travelCourse.TravelCourse;
 import org.greedy.ddarahang.db.travelCourse.TravelCourseRepository;
@@ -23,6 +24,8 @@ public class TravelCourseService {
     private final TravelCourseDetailRepository travelCourseDetailRepository;
 
     public List<TravelCourseListResponse> getTravelCourses(String countryName, String regionName) {
+        validateParams(countryName);
+
         if (regionName.isBlank()) {
             return travelCourseRepository.findAllByCountryName(countryName)
                     .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
@@ -44,6 +47,8 @@ public class TravelCourseService {
     }
 
     public List<TravelCourseListResponse> getSortedByUploadDate(String countryName, String regionName) {
+        validateParams(countryName);
+
         if (regionName.isBlank()) {
             return travelCourseRepository.findAllByCountryNameOrderByUploadDateDesc(countryName)
                     .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
@@ -55,6 +60,8 @@ public class TravelCourseService {
     }
 
     public List<TravelCourseListResponse> getSortedByViewCount(String countryName, String regionName) {
+        validateParams(countryName);
+
         if (regionName.isBlank()) {
             return travelCourseRepository.findAllByCountryNameOrderByViewCountDesc(countryName)
                     .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
@@ -63,5 +70,11 @@ public class TravelCourseService {
         return travelCourseRepository.findAllByRegionNameOrderByViewCountDesc(regionName)
                 .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
                 .toList();
+    }
+
+    private void validateParams(String countryName) {
+        if (countryName.isBlank()) {
+            throw new InvalidCountryNameException("invalid country name");
+        }
     }
 }

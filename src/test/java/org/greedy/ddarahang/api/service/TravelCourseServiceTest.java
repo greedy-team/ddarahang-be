@@ -51,6 +51,7 @@ class TravelCourseServiceTest {
         countryRepository.deleteAll();
     }
 
+
     @Test
     void regionName이_없는_경우() {
         //Given
