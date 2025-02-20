@@ -24,25 +24,25 @@ public class Video {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "video_id", unique = true, nullable = false)
+    @Column(unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "creator", nullable = false)
+    @Column(nullable = false)
     private String creator;
 
-    @Column(name = "title", nullable = false)
+    @Column(nullable = false)
     private String title;
 
-    @Column(name = "video_url", nullable = false)
+    @Column(nullable = false)
     private String videoUrl;
 
-    @Column(name = "thumbnail_url", nullable = false)
+    @Column(nullable = false)
     private String thumbnailUrl;
 
-    @Column(name = "view_count", nullable = false)
+    @Column(nullable = false)
     private Long viewCount;
 
-    @Column(name = "upload_date", nullable = false)
+    @Column(nullable = false)
     private LocalDate uploadDate;
 
 }

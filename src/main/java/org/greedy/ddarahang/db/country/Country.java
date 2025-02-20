@@ -24,14 +24,14 @@ public class Country {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "country_id", unique = true, nullable = false)
+    @Column(unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "country_name", unique = true, nullable = false)
+    @Column(unique = true, nullable = false)
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "location_type", nullable = false)
+    @Column(nullable = false)
     private LocationType locationType;
 
 }
