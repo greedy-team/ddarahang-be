@@ -3,6 +3,7 @@ package org.greedy.ddarahang.api.dto;
 import org.greedy.ddarahang.db.travelCourse.TravelCourse;
 
 import java.time.LocalDate;
+import org.greedy.ddarahang.db.video.Video;
 
 public record TravelCourseListResponse(
         Long travelCourseId,
@@ -12,14 +13,14 @@ public record TravelCourseListResponse(
         Long viewCount,
         LocalDate uploadDate
 ) {
-    public static TravelCourseListResponse from(TravelCourse travelCourse) {
+    public static TravelCourseListResponse from(TravelCourse travelCourse, Video video) {
         return new TravelCourseListResponse(
                 travelCourse.getId(),
-                travelCourse.getVideo().getCreator(),
-                travelCourse.getVideo().getTitle(),
-                travelCourse.getVideo().getThumbnailUrl(),
-                travelCourse.getVideo().getViewCount(),
-                travelCourse.getVideo().getUploadDate()
+                video.getCreator(),
+                video.getTitle(),
+                video.getThumbnailUrl(),
+                video.getViewCount(),
+                video.getUploadDate()
         );
     }
 }
