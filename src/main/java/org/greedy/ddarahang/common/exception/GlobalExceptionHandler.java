@@ -30,6 +30,18 @@ public class GlobalExceptionHandler{
         return builder.toString();
     }
 
+    @ExceptionHandler(NotFoundTravelCourseDetailException.class)
+    public ResponseEntity<String> notFoundTravelCourseDetailException(NotFoundTravelCourseDetailException e) {
+        log.error("");
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(InvalidCountryNameException.class)
+    public ResponseEntity<String> invalidCountryNameException(InvalidCountryNameException e) {
+        log.error("");
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
     @ExceptionHandler(DdarahangException.class)
     public ResponseEntity<String> handleExceptions(DdarahangException e) {
         log.error("");
