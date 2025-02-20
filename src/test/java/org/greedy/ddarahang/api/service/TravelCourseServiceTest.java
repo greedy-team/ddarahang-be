@@ -10,6 +10,7 @@ import org.greedy.ddarahang.db.travelCourse.TravelCourse;
 import org.greedy.ddarahang.db.travelCourse.TravelCourseRepository;
 import org.greedy.ddarahang.db.video.Video;
 import org.greedy.ddarahang.db.video.VideoRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -20,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,7 +50,28 @@ class TravelCourseServiceTest {
         String countryName = "대한민국";
         String regionName = "";
 
-        System.out.println(travelCourseRepository);
+        Country mockCountry = AllFixture.getMockCountry();
+        Country country = countryRepository.save(mockCountry);
+        Region mockRegion = AllFixture.getMockRegion(country);
+        Region region = regionRepository.save(mockRegion);
+        Video mockVideo = AllFixture.getMockVideo(LocalDate.now());
+        Video video = videoRepository.save(mockVideo);
+        TravelCourse mockTravelCourse = AllFixture.getMockTravelCourse(video, country, region);
+        travelCourseRepository.save(mockTravelCourse);
+
+        //When
+        List<TravelCourseResponse> responses = travelCourseService.getTravelCourses(countryName, regionName);
+
+        //Then
+        assertThat(responses.get(0).creator()).isEqualTo(video.getCreator());
+        assertThat(responses.get(0).thumbnailUrl()).isEqualTo(video.getThumbnailUrl());
+    }
+
+    @Test
+    void regionName이_있는_경우() {
+        //Given
+        String countryName = "대한민국";
+        String regionName = "서울";
 
         Country mockCountry = AllFixture.getMockCountry();
         Country country = countryRepository.save(mockCountry);
@@ -63,21 +86,7 @@ class TravelCourseServiceTest {
         List<TravelCourseResponse> responses = travelCourseService.getTravelCourses(countryName, regionName);
 
         //Then
-        assertEquals(1, responses.size());
+        assertThat(responses.get(0).creator()).isEqualTo(video.getCreator());
+        assertThat(responses.get(0).thumbnailUrl()).isEqualTo(video.getThumbnailUrl());
     }
-
-//    @Test
-//    void regionName이_있는_경우() {
-//        //Given
-//        when(travelCourseRepository.findByRegionName("서울")).thenReturn(List.of());
-//
-//        //When
-//        List<TravelCourseResponse> result = travelCourseService.getTravelCourses(request);
-//
-//        //Then
-//        verify(travelCourseRepository, never()).findByCountryName(anyString());
-//        verify(travelCourseRepository, times(1)).findByRegionName("서울");
-//
-//        assertEquals(1, result.size());
-//    }
 }
