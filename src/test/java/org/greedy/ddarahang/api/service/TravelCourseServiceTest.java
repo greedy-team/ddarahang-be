@@ -1,7 +1,6 @@
 package org.greedy.ddarahang.api.service;
 
-import jakarta.persistence.EntityManager;
-import org.greedy.ddarahang.api.dto.TravelCourseResponse;
+import org.greedy.ddarahang.api.dto.TravelCourseListResponse;
 import org.greedy.ddarahang.common.AllFixture;
 import org.greedy.ddarahang.db.country.Country;
 import org.greedy.ddarahang.db.country.CountryRepository;
@@ -11,7 +10,6 @@ import org.greedy.ddarahang.db.travelCourse.TravelCourse;
 import org.greedy.ddarahang.db.travelCourse.TravelCourseRepository;
 import org.greedy.ddarahang.db.video.Video;
 import org.greedy.ddarahang.db.video.VideoRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -69,7 +67,7 @@ class TravelCourseServiceTest {
         travelCourseRepository.save(mockTravelCourse);
 
         //When
-        List<TravelCourseResponse> responses = travelCourseService.getTravelCourses(countryName, regionName);
+        List<TravelCourseListResponse> responses = travelCourseService.getTravelCourses(countryName, regionName);
 
         //Then
         assertThat(responses.get(0).creator()).isEqualTo(video.getCreator());
@@ -92,7 +90,7 @@ class TravelCourseServiceTest {
         travelCourseRepository.save(mockTravelCourse);
 
         //When
-        List<TravelCourseResponse> responses = travelCourseService.getTravelCourses(countryName, regionName);
+        List<TravelCourseListResponse> responses = travelCourseService.getTravelCourses(countryName, regionName);
 
         //Then
         assertThat(responses.get(0).creator()).isEqualTo(video.getCreator());
