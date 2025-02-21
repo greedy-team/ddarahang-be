@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class TestDataProvider {
-    public static List<TravelCourseListResponse> getMockTravelCouresResponses(){
+    public static List<TravelCourseListResponse> getMockTravelCourseResponses() {
         return List.of(
                 new TravelCourseListResponse(
                         1L, "calm down man", "침착맨 삼국지 완전판",
