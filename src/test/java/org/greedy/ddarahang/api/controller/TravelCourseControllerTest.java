@@ -66,10 +66,13 @@ public class TravelCourseControllerTest {
 
         Country mockCountry = AllFixture.getMockCountry();
         Country country = countryRepository.save(mockCountry);
+
         Region mockRegion = AllFixture.getMockRegion(country);
         Region region = regionRepository.save(mockRegion);
+
         Video mockVideo = AllFixture.getMockVideo(LocalDate.now());
         Video video = videoRepository.save(mockVideo);
+
         TravelCourse mockTravelCourse = AllFixture.getMockTravelCourse(video, country, region);
         travelCourseRepository.save(mockTravelCourse);
 
@@ -89,12 +92,16 @@ public class TravelCourseControllerTest {
 
         Country mockCountry = AllFixture.getMockCountry();
         Country country = countryRepository.save(mockCountry);
+
         Region mockRegion = AllFixture.getMockRegion(country);
         Region region = regionRepository.save(mockRegion);
+
         Video mockVideo = AllFixture.getMockVideo(LocalDate.now());
         Video video = videoRepository.save(mockVideo);
+
         TravelCourse mockTravelCourse = AllFixture.getMockTravelCourse(video, country, region);
         TravelCourse saveTravelCourse = travelCourseRepository.save(mockTravelCourse);
+
         Long id = saveTravelCourse.getId();
 
         // When
@@ -102,6 +109,62 @@ public class TravelCourseControllerTest {
                 .pathParam("id", id)
                 .when()
                 .get("/api/v1/travelcourses/{id}")
+                .then()
+                .statusCode(200); // Then
+    }
+
+    @Test
+    void 여행_목록_조회_업로드_날짜_내림차순_성공하면_200_응답을_보낸다() {
+        //Given
+        String countryName = "대한민국";
+        String regionName = "서울";
+
+        Country mockCountry = AllFixture.getMockCountry();
+        Country country = countryRepository.save(mockCountry);
+
+        Region mockRegion = AllFixture.getMockRegion(country);
+        Region region = regionRepository.save(mockRegion);
+
+        Video mockVideo = AllFixture.getMockVideo(LocalDate.now());
+        Video video = videoRepository.save(mockVideo);
+
+        TravelCourse mockTravelCourse = AllFixture.getMockTravelCourse(video, country, region);
+        travelCourseRepository.save(mockTravelCourse);
+
+        // When
+        RestAssured.given()
+                .param("countryName", countryName)
+                .param("regionName", regionName)
+                .when()
+                .get("/api/v1/travelcourses/uploaddate")
+                .then()
+                .statusCode(200); // Then
+    }
+    
+    @Test
+    void 여행_목록_조회_조회수_내림차순_성공하면_200_응답을_보낸다() {
+        //Given
+        String countryName = "대한민국";
+        String regionName = "서울";
+
+        Country mockCountry = AllFixture.getMockCountry();
+        Country country = countryRepository.save(mockCountry);
+
+        Region mockRegion = AllFixture.getMockRegion(country);
+        Region region = regionRepository.save(mockRegion);
+
+        Video mockVideo = AllFixture.getMockVideo(LocalDate.now());
+        Video video = videoRepository.save(mockVideo);
+
+        TravelCourse mockTravelCourse = AllFixture.getMockTravelCourse(video, country, region);
+        travelCourseRepository.save(mockTravelCourse);
+
+        // When
+        RestAssured.given()
+                .param("countryName", countryName)
+                .param("regionName", regionName)
+                .when()
+                .get("/api/v1/travelcourses/viewcount")
                 .then()
                 .statusCode(200); // Then
     }
