@@ -11,8 +11,8 @@ public interface TravelCourseRepository extends JpaRepository<TravelCourse, Long
     List<TravelCourse> findAllByCountryName(String countryName);
     List<TravelCourse> findAllByRegionName(String regionName);
 
-    List<TravelCourse> findAllByCountryNameOrderByVideo_UploadDateDesc(String countryName);
-    List<TravelCourse> findAllByRegionNameOrderByVideo_UploadDateDesc(String regionName);
+    List<TravelCourse> findAllByCountryNameOrderByVideoUploadDateDesc(String countryName);
+    List<TravelCourse> findAllByRegionNameOrderByVideoUploadDateDesc(String regionName);
 
     List<TravelCourse> findAllByCountryNameOrderByVideo_ViewCountDesc(String countryName);
     List<TravelCourse> findAllByRegionNameOrderByVideo_ViewCountDesc(String regionName);
