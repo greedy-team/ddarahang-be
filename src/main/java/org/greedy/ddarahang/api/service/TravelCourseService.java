@@ -50,11 +50,11 @@ public class TravelCourseService {
         validateParams(countryName);
 
         if (regionName.isBlank()) {
-            return travelCourseRepository.findAllByCountryNameOrderByVideo_UploadDateDesc(countryName)
+            return travelCourseRepository.findAllByCountryNameOrderByVideoUploadDateDesc(countryName)
                     .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
                     .toList();
         }
-        return travelCourseRepository.findAllByRegionNameOrderByVideo_UploadDateDesc(regionName)
+        return travelCourseRepository.findAllByRegionNameOrderByVideoUploadDateDesc(regionName)
                 .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
                 .toList();
     }
