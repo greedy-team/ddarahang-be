@@ -4,14 +4,11 @@ import io.restassured.RestAssured;
 import org.greedy.ddarahang.common.AllFixture;
 import org.greedy.ddarahang.db.country.Country;
 import org.greedy.ddarahang.db.country.CountryRepository;
-import org.greedy.ddarahang.db.place.Place;
-import org.greedy.ddarahang.db.place.PlaceRepository;
 import org.greedy.ddarahang.db.region.Region;
 import org.greedy.ddarahang.db.region.RegionRepository;
 import org.greedy.ddarahang.db.travelCourse.TravelCourse;
 import org.greedy.ddarahang.db.travelCourse.TravelCourseRepository;
 import org.greedy.ddarahang.db.travelCourseDetail.TravelCourseDetail;
-import org.greedy.ddarahang.db.travelCourseDetail.TravelCourseDetailRepository;
 import org.greedy.ddarahang.db.video.Video;
 import org.greedy.ddarahang.db.video.VideoRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,13 +35,7 @@ public class TravelCourseControllerTest {
     private TravelCourseRepository travelCourseRepository;
 
     @Autowired
-    private TravelCourseDetailRepository travelCourseDetailRepository;
-
-    @Autowired
     private RegionRepository regionRepository;
-
-    @Autowired
-    private PlaceRepository placeRepository;
 
     @Autowired
     private VideoRepository videoRepository;
@@ -54,7 +45,6 @@ public class TravelCourseControllerTest {
 
     private Country country;
     private Region region;
-    private Place place;
     private Video video;
     private TravelCourse travelCourse;
     private TravelCourseDetail travelCourseDetail;
@@ -66,8 +56,6 @@ public class TravelCourseControllerTest {
         videoRepository.deleteAll();
         regionRepository.deleteAll();
         countryRepository.deleteAll();
-        placeRepository.deleteAll();
-        travelCourseDetailRepository.deleteAll();
 
         prepareTestData();
     }
@@ -75,10 +63,8 @@ public class TravelCourseControllerTest {
     private void prepareTestData() {
         country = countryRepository.save(AllFixture.getMockCountry());
         region = regionRepository.save(AllFixture.getMockRegion(country));
-        place = placeRepository.save(AllFixture.getMockPlace(region));
         video = videoRepository.save(AllFixture.getMockVideo(LocalDate.now()));
         travelCourse = travelCourseRepository.save(AllFixture.getMockTravelCourse(video, country, region));
-        travelCourseDetail = travelCourseDetailRepository.save(AllFixture.getMockTravelCourseDetail(travelCourse,place));
     }
 
     /**
