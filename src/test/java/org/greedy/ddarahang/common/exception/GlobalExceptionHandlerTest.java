@@ -1,6 +1,7 @@
 package org.greedy.ddarahang.common.exception;
 
 import io.restassured.RestAssured;
+import jakarta.transaction.Transactional;
 import org.greedy.ddarahang.api.service.TravelCourseService;
 import org.greedy.ddarahang.common.AllFixture;
 import org.greedy.ddarahang.db.country.Country;
@@ -88,6 +89,7 @@ class GlobalExceptionHandlerTest {
      * 🔹 Exception 발생 테스트
      */
     @Nested
+    @Transactional
     class 예외발생테스트{
 
         @Test
