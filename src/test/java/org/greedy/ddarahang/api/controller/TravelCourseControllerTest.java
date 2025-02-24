@@ -1,7 +1,10 @@
 package org.greedy.ddarahang.api.controller;
 
 import io.restassured.RestAssured;
-import org.greedy.ddarahang.common.AllFixture;
+import org.greedy.ddarahang.common.fixture.CountryFixture;
+import org.greedy.ddarahang.common.fixture.RegionFixture;
+import org.greedy.ddarahang.common.fixture.TravelCourseFixture;
+import org.greedy.ddarahang.common.fixture.VideoFixture;
 import org.greedy.ddarahang.db.country.Country;
 import org.greedy.ddarahang.db.country.CountryRepository;
 import org.greedy.ddarahang.db.region.Region;
@@ -32,7 +35,7 @@ public class TravelCourseControllerTest {
     private int port;
 
     @Autowired
-    private TravelCourseRepository travelCourseRepository;
+    private CountryRepository countryRepository;
 
     @Autowired
     private RegionRepository regionRepository;
@@ -41,7 +44,7 @@ public class TravelCourseControllerTest {
     private VideoRepository videoRepository;
 
     @Autowired
-    private CountryRepository countryRepository;
+    private TravelCourseRepository travelCourseRepository;
 
     private Country country;
     private Region region;
@@ -61,10 +64,10 @@ public class TravelCourseControllerTest {
     }
 
     private void prepareTestData() {
-        country = countryRepository.save(AllFixture.getMockCountry());
-        region = regionRepository.save(AllFixture.getMockRegion(country));
-        video = videoRepository.save(AllFixture.getMockVideo(LocalDate.now()));
-        travelCourse = travelCourseRepository.save(AllFixture.getMockTravelCourse(video, country, region));
+        country = countryRepository.save(CountryFixture.getMockCountry());
+        region = regionRepository.save(RegionFixture.getMockRegion(country));
+        video = videoRepository.save(VideoFixture.getMockVideo(LocalDate.now()));
+        travelCourse = travelCourseRepository.save(TravelCourseFixture.getMockTravelCourse(video, country, region));
     }
 
     /**

@@ -3,7 +3,10 @@ package org.greedy.ddarahang.api.service;
 import jakarta.transaction.Transactional;
 import org.greedy.ddarahang.api.dto.TravelCourseListResponse;
 import org.greedy.ddarahang.api.dto.TravelCourseResponse;
-import org.greedy.ddarahang.common.AllFixture;
+import org.greedy.ddarahang.common.fixture.CountryFixture;
+import org.greedy.ddarahang.common.fixture.RegionFixture;
+import org.greedy.ddarahang.common.fixture.TravelCourseFixture;
+import org.greedy.ddarahang.common.fixture.VideoFixture;
 import org.greedy.ddarahang.db.country.Country;
 import org.greedy.ddarahang.db.country.CountryRepository;
 import org.greedy.ddarahang.db.region.Region;
@@ -62,10 +65,10 @@ class TravelCourseServiceTest {
     }
 
     private void prepareTestData() {
-        country = countryRepository.save(AllFixture.getMockCountry());
-        region = regionRepository.save(AllFixture.getMockRegion(country));
-        video = videoRepository.save(AllFixture.getMockVideo(LocalDate.now()));
-        travelCourse = travelCourseRepository.save(AllFixture.getMockTravelCourse(video, country, region));
+        country = countryRepository.save(CountryFixture.getMockCountry());
+        region = regionRepository.save(RegionFixture.getMockRegion(country));
+        video = videoRepository.save(VideoFixture.getMockVideo(LocalDate.now()));
+        travelCourse = travelCourseRepository.save(TravelCourseFixture.getMockTravelCourse(video, country, region));
     }
 
     /**

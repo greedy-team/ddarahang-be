@@ -1,9 +1,13 @@
 package org.greedy.ddarahang.common.exception;
 
 import io.restassured.RestAssured;
-import jakarta.transaction.Transactional;
 import org.greedy.ddarahang.api.service.TravelCourseService;
-import org.greedy.ddarahang.common.AllFixture;
+import org.greedy.ddarahang.common.fixture.CountryFixture;
+import org.greedy.ddarahang.common.fixture.PlaceFixture;
+import org.greedy.ddarahang.common.fixture.RegionFixture;
+import org.greedy.ddarahang.common.fixture.TravelCourseDetailFixture;
+import org.greedy.ddarahang.common.fixture.TravelCourseFixture;
+import org.greedy.ddarahang.common.fixture.VideoFixture;
 import org.greedy.ddarahang.db.country.Country;
 import org.greedy.ddarahang.db.country.CountryRepository;
 import org.greedy.ddarahang.db.place.Place;
@@ -39,10 +43,7 @@ class GlobalExceptionHandlerTest {
     private int port;
 
     @Autowired
-    private TravelCourseRepository travelCourseRepository;
-
-    @Autowired
-    private TravelCourseDetailRepository travelCourseDetailRepository;
+    private CountryRepository countryRepository;
 
     @Autowired
     private RegionRepository regionRepository;
@@ -54,7 +55,10 @@ class GlobalExceptionHandlerTest {
     private VideoRepository videoRepository;
 
     @Autowired
-    private CountryRepository countryRepository;
+    private TravelCourseRepository travelCourseRepository;
+
+    @Autowired
+    private TravelCourseDetailRepository travelCourseDetailRepository;
 
     private Country country;
     private Region region;
@@ -66,30 +70,29 @@ class GlobalExceptionHandlerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        travelCourseDetailRepository.deleteAll();
         travelCourseRepository.deleteAll();
         videoRepository.deleteAll();
+        placeRepository.deleteAll();
         regionRepository.deleteAll();
         countryRepository.deleteAll();
-        placeRepository.deleteAll();
-        travelCourseDetailRepository.deleteAll();
 
         prepareTestData();
     }
 
     private void prepareTestData() {
-        country = countryRepository.save(AllFixture.getMockCountry());
-        region = regionRepository.save(AllFixture.getMockRegion(country));
-        place = placeRepository.save(AllFixture.getMockPlace(region));
-        video = videoRepository.save(AllFixture.getMockVideo(LocalDate.now()));
-        travelCourse = travelCourseRepository.save(AllFixture.getMockTravelCourse(video, country, region));
-        travelCourseDetail = travelCourseDetailRepository.save(AllFixture.getMockTravelCourseDetail(travelCourse,place));
+        country = countryRepository.save(CountryFixture.getMockCountry());
+        region = regionRepository.save(RegionFixture.getMockRegion(country));
+        place = placeRepository.save(PlaceFixture.getMockPlace(region));
+        video = videoRepository.save(VideoFixture.getMockVideo(LocalDate.now()));
+        travelCourse = travelCourseRepository.save(TravelCourseFixture.getMockTravelCourse(video, country, region));
+        travelCourseDetail = travelCourseDetailRepository.save(TravelCourseDetailFixture.getMockTravelCourseDetail(travelCourse,place));
     }
 
     /**
      * 🔹 Exception 발생 테스트
      */
     @Nested
-    @Transactional
     class 예외발생테스트{
 
         @Test
