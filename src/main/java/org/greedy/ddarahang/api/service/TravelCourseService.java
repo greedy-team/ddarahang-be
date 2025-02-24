@@ -50,11 +50,11 @@ public class TravelCourseService {
         validateParams(countryName);
 
         if (regionName.isBlank()) {
-            return travelCourseRepository.findAllByCountryNameOrderByUploadDateDesc(countryName)
+            return travelCourseRepository.findAllByCountryNameOrderByVideoUploadDateDesc(countryName)
                     .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
                     .toList();
         }
-        return travelCourseRepository.findAllByRegionNameOrderByUploadDateDesc(regionName)
+        return travelCourseRepository.findAllByRegionNameOrderByVideoUploadDateDesc(regionName)
                 .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
                 .toList();
     }
@@ -63,11 +63,11 @@ public class TravelCourseService {
         validateParams(countryName);
 
         if (regionName.isBlank()) {
-            return travelCourseRepository.findAllByCountryNameOrderByViewCountDesc(countryName)
+            return travelCourseRepository.findAllByCountryNameOrderByVideo_ViewCountDesc(countryName)
                     .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
                     .toList();
         }
-        return travelCourseRepository.findAllByRegionNameOrderByViewCountDesc(regionName)
+        return travelCourseRepository.findAllByRegionNameOrderByVideo_ViewCountDesc(regionName)
                 .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
                 .toList();
     }

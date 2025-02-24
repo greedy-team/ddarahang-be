@@ -30,7 +30,7 @@ public class TravelCourseDetail {
     @Column(unique = true, nullable = false)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "`day`", nullable = false)
     private Integer day;
 
     @Column(nullable = false)
