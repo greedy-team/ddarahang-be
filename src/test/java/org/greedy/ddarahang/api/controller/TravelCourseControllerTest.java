@@ -64,17 +64,17 @@ public class TravelCourseControllerTest {
         String countryName = "대한민국";
         String regionName = "서울";
 
-        Country mockCountry = AllFixture.getMockCountry();
-        Country country = countryRepository.save(mockCountry);
+        Country country_200_ok = AllFixture.getMockCountry();
+        Country country = countryRepository.save(country_200_ok);
 
-        Region mockRegion = AllFixture.getMockRegion(country);
-        Region region = regionRepository.save(mockRegion);
+        Region region_200_ok = AllFixture.getMockRegion(country);
+        Region region = regionRepository.save(region_200_ok);
 
-        Video mockVideo = AllFixture.getMockVideo(LocalDate.now());
-        Video video = videoRepository.save(mockVideo);
+        Video video_200_ok = AllFixture.getMockVideo(LocalDate.now());
+        Video video = videoRepository.save(video_200_ok);
 
-        TravelCourse mockTravelCourse = AllFixture.getMockTravelCourse(video, country, region);
-        travelCourseRepository.save(mockTravelCourse);
+        TravelCourse travelCourse_200_ok = AllFixture.getMockTravelCourse(video, country, region);
+        travelCourseRepository.save(travelCourse_200_ok);
 
         // When
         RestAssured.given()
@@ -90,17 +90,17 @@ public class TravelCourseControllerTest {
     void 여행_상세_조회_성공하면_200_응답을_보낸다() {
         //Given
 
-        Country mockCountry = AllFixture.getMockCountry();
-        Country country = countryRepository.save(mockCountry);
+        Country country_200_ok = AllFixture.getMockCountry();
+        Country country = countryRepository.save(country_200_ok);
 
-        Region mockRegion = AllFixture.getMockRegion(country);
-        Region region = regionRepository.save(mockRegion);
+        Region region_200_ok = AllFixture.getMockRegion(country);
+        Region region = regionRepository.save(region_200_ok);
 
-        Video mockVideo = AllFixture.getMockVideo(LocalDate.now());
-        Video video = videoRepository.save(mockVideo);
+        Video video_200_ok = AllFixture.getMockVideo(LocalDate.now());
+        Video video = videoRepository.save(video_200_ok);
 
-        TravelCourse mockTravelCourse = AllFixture.getMockTravelCourse(video, country, region);
-        TravelCourse saveTravelCourse = travelCourseRepository.save(mockTravelCourse);
+        TravelCourse travelCourse_200_ok = AllFixture.getMockTravelCourse(video, country, region);
+        TravelCourse saveTravelCourse = travelCourseRepository.save(travelCourse_200_ok);
 
         Long id = saveTravelCourse.getId();
 
@@ -119,17 +119,17 @@ public class TravelCourseControllerTest {
         String countryName = "대한민국";
         String regionName = "서울";
 
-        Country mockCountry = AllFixture.getMockCountry();
-        Country country = countryRepository.save(mockCountry);
+        Country country_200_ok = AllFixture.getMockCountry();
+        Country country = countryRepository.save(country_200_ok);
 
-        Region mockRegion = AllFixture.getMockRegion(country);
-        Region region = regionRepository.save(mockRegion);
+        Region region_200_ok = AllFixture.getMockRegion(country);
+        Region region = regionRepository.save(region_200_ok);
 
-        Video mockVideo = AllFixture.getMockVideo(LocalDate.now());
-        Video video = videoRepository.save(mockVideo);
+        Video video_200_ok = AllFixture.getMockVideo(LocalDate.now());
+        Video video = videoRepository.save(video_200_ok);
 
-        TravelCourse mockTravelCourse = AllFixture.getMockTravelCourse(video, country, region);
-        travelCourseRepository.save(mockTravelCourse);
+        TravelCourse travelCourse_200_ok = AllFixture.getMockTravelCourse(video, country, region);
+        TravelCourse saveTravelCourse = travelCourseRepository.save(travelCourse_200_ok);
 
         // When
         RestAssured.given()
@@ -147,17 +147,17 @@ public class TravelCourseControllerTest {
         String countryName = "대한민국";
         String regionName = "서울";
 
-        Country mockCountry = AllFixture.getMockCountry();
-        Country country = countryRepository.save(mockCountry);
+        Country country_200_ok = AllFixture.getMockCountry();
+        Country country = countryRepository.save(country_200_ok);
 
-        Region mockRegion = AllFixture.getMockRegion(country);
-        Region region = regionRepository.save(mockRegion);
+        Region region_200_ok = AllFixture.getMockRegion(country);
+        Region region = regionRepository.save(region_200_ok);
 
-        Video mockVideo = AllFixture.getMockVideo(LocalDate.now());
-        Video video = videoRepository.save(mockVideo);
+        Video video_200_ok = AllFixture.getMockVideo(LocalDate.now());
+        Video video = videoRepository.save(video_200_ok);
 
-        TravelCourse mockTravelCourse = AllFixture.getMockTravelCourse(video, country, region);
-        travelCourseRepository.save(mockTravelCourse);
+        TravelCourse travelCourse_200_ok = AllFixture.getMockTravelCourse(video, country, region);
+        TravelCourse saveTravelCourse = travelCourseRepository.save(travelCourse_200_ok);
 
         // When
         RestAssured.given()
