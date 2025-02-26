@@ -70,9 +70,7 @@ public class TravelCourseControllerTest {
         travelCourse = travelCourseRepository.save(TravelCourseFixture.getMockTravelCourse(video, country, region));
     }
 
-    /**
-     * 🔹 GET: /travelcourses
-     */
+
     @Nested
     class 여행_목록_조회_API {
 
@@ -122,9 +120,6 @@ public class TravelCourseControllerTest {
     }
 
 
-    /**
-     * 🔹 GET: /travelcourses/{id}
-     */
     @Nested
     class 여행_상세_조회_API {
 

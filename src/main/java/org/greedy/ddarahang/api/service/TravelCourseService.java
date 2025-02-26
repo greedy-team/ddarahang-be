@@ -40,7 +40,7 @@ public class TravelCourseService {
         validateId(id);
 
         TravelCourse travelCourse = travelCourseRepository.findById(id)
-                .orElseThrow(() -> new NotFoundTravelCourseDetailException("Travel course not found"));
+                .orElseThrow(() -> new NotFoundTravelCourseDetailException("travel course not found"));
 
         List<TravelCourseDetailResponse> travelCourseDetails = travelCourseDetailRepository.findAllByTravelCourseId(id)
                 .stream().map(TravelCourseDetailResponse::from).toList();
