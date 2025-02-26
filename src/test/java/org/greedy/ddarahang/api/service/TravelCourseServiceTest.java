@@ -37,7 +37,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
@@ -93,54 +93,49 @@ class TravelCourseServiceTest {
         travelCourseDetail = travelCourseDetailRepository.save(TravelCourseDetailFixture.getMockTravelCourseDetail(travelCourse,place));
     }
 
-    /**
-     * 🔹 여행_목록_조회
-     */
+
     @Nested
     @Transactional
     class 여행_목록_조회_메서드 {
 
         @Test
         void countryName과_regionName이_모두_있으면_데이터가_정상적으로_반환된다() {
-            //Given & When
+            // Given & When
             List<TravelCourseListResponse> responses = travelCourseService.getTravelCourses(country.getName(), region.getName());
 
-            //Then
+            // Then
             assertThat(responses.get(0).creator()).isEqualTo(video.getCreator());
             assertThat(responses.get(0).thumbnailUrl()).isEqualTo(video.getThumbnailUrl());
         }
 
         @Test
         void countryName은_있고_regionName이_없어도_데이터가_정상적으로_반환된다() {
-            //Given & When
-            List<TravelCourseListResponse> responses = travelCourseService.getTravelCourses(country.getName(), region.getName());
+            // Given & When
+            List<TravelCourseListResponse> responses = travelCourseService.getTravelCourses(country.getName(), "");
 
-            //Then
+            // Then
             assertThat(responses.get(0).creator()).isEqualTo(video.getCreator());
             assertThat(responses.get(0).thumbnailUrl()).isEqualTo(video.getThumbnailUrl());
         }
 
         @Test
         void countryName이_null이면_InvalidCountryNameException이_터진다() {
-            // Given & When
-            TravelCourseService service = new TravelCourseService(travelCourseRepository, travelCourseDetailRepository);
-
-            assertThrows(InvalidCountryNameException.class, () -> service.getTravelCourses(null, region.getName()));
+            // When & Then
+            assertThatThrownBy(() -> travelCourseService.getTravelCourses(null, region.getName()))
+                    .isInstanceOf(InvalidCountryNameException.class)
+                    .hasMessage("invalid country name");
         }
 
         @Test
         void countryName이_비어있으면_InvalidCountryNameException이_터진다() {
-            // Given & When
-            TravelCourseService service = new TravelCourseService(travelCourseRepository, travelCourseDetailRepository);
-
-            assertThrows(InvalidCountryNameException.class, () -> service.getTravelCourses("", region.getName()));
+            // When & Then
+            assertThatThrownBy(() -> travelCourseService.getTravelCourses("", region.getName()))
+                    .isInstanceOf(InvalidCountryNameException.class)
+                    .hasMessage("invalid country name");
         }
     }
 
 
-    /**
-     * 🔹 여행 상세 조회 (`getTravelCourseDetail`)
-     */
     @Nested
     @Transactional
     class 여행_상세_조회_메서드 {
@@ -156,16 +151,18 @@ class TravelCourseServiceTest {
 
         @Test
         void 여행_상세_조회_아이디가_null이면_MissingIdException_발생() {
-            TravelCourseService service = new TravelCourseService(travelCourseRepository, travelCourseDetailRepository);
-
-            assertThrows(MissingIdException.class, () -> service.getTravelCourseDetail(null));
+            // When & Then
+            assertThatThrownBy(() -> travelCourseService.getTravelCourseDetail(null))
+                    .isInstanceOf(MissingIdException.class)
+                    .hasMessage("invalid id");
         }
 
         @Test
         void 해당_id를_가진_데이터가_없으면_NotFoundTravelCourseDetailException_발생() {
-            TravelCourseService service = new TravelCourseService(travelCourseRepository, travelCourseDetailRepository);
-
-            assertThrows(NotFoundTravelCourseDetailException.class, () -> service.getTravelCourseDetail(-1L));
+            // When & Then
+            assertThatThrownBy(() -> travelCourseService.getTravelCourseDetail(-1L))
+                    .isInstanceOf(NotFoundTravelCourseDetailException.class)
+                    .hasMessage("travel course not found");
         }
     }
 }
