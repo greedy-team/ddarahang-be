@@ -65,8 +65,8 @@ public class TravelCourseControllerTest {
 
     private void prepareTestData() {
         country = countryRepository.save(CountryFixture.getMockCountry());
-        region = regionRepository.save(RegionFixture.getMockRegion(country));
-        video = videoRepository.save(VideoFixture.getMockVideo(LocalDate.now()));
+        region = regionRepository.save(RegionFixture.getMockRegion_1(country));
+        video = videoRepository.save(VideoFixture.getMockVideo_1(LocalDate.now()));
         travelCourse = travelCourseRepository.save(TravelCourseFixture.getMockTravelCourse(video, country, region));
     }
 
@@ -97,6 +97,28 @@ public class TravelCourseControllerTest {
                     .then()
                     .statusCode(200);
         }
+
+        @Test
+        void 여행_목록_조회_나라명이_null이면_400_응답을_보낸다() {
+            RestAssured.given()
+                    .param("countryName", (Object) null)
+                    .param("regionName", region.getName())
+                    .when()
+                    .get("/api/v1/travelcourses")
+                    .then()
+                    .statusCode(400);
+        }
+
+        @Test
+        void 여행_목록_조회_나라명이_비어있으면_400_응답을_보낸다() {
+            RestAssured.given()
+                    .param("countryName", "")
+                    .param("regionName", region.getName())
+                    .when()
+                    .get("/api/v1/travelcourses")
+                    .then()
+                    .statusCode(400);
+        }
     }
 
 
@@ -112,66 +134,6 @@ public class TravelCourseControllerTest {
                     .pathParam("id", travelCourse.getId())
                     .when()
                     .get("/api/v1/travelcourses/{id}")
-                    .then()
-                    .statusCode(200);
-        }
-    }
-
-
-    /**
-     * 🔹 GET: /travelcourses/uploaddate
-     */
-    @Nested
-    class 여행_목록_조회_업로드_날짜_내림차순_API {
-
-        @Test
-        void 여행_목록_조회_업로드_날짜_내림차순_성공하면_200_응답을_보낸다() {
-            RestAssured.given()
-                    .param("countryName", country.getName())
-                    .param("regionName", region.getName())
-                    .when()
-                    .get("/api/v1/travelcourses/uploaddate")
-                    .then()
-                    .statusCode(200);
-        }
-
-        @Test
-        void 여행_목록_조회_업로드_날짜_내림차순_지역명이_없어도_200_응답을_보낸다() {
-            RestAssured.given()
-                    .param("countryName", country.getName())
-                    .param("regionName", "")
-                    .when()
-                    .get("/api/v1/travelcourses/uploaddate")
-                    .then()
-                    .statusCode(200);
-        }
-    }
-
-
-    /**
-     * 🔹 GET: /travelcourses/viewcount
-     */
-    @Nested
-    class 여행_목록_조회_조회수_내림차순_API {
-
-        @Test
-        void 여행_목록_조회_조회수_내림차순_성공하면_200_응답을_보낸다() {
-            RestAssured.given()
-                    .param("countryName", country.getName())
-                    .param("regionName", region.getName())
-                    .when()
-                    .get("/api/v1/travelcourses/viewcount")
-                    .then()
-                    .statusCode(200);
-        }
-
-        @Test
-        void 여행_목록_조회_조회수_내림차순_지역명이_없어도_200_응답을_보낸다() {
-            RestAssured.given()
-                    .param("countryName", country.getName())
-                    .param("regionName", "")
-                    .when()
-                    .get("/api/v1/travelcourses/viewcount")
                     .then()
                     .statusCode(200);
         }
