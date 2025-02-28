@@ -59,7 +59,7 @@ public class TravelCourseService {
                     .toList();
         }
 
-        throw new IllegalArgumentException("Invalid filter value: " + filter);
+        throw new IllegalArgumentException("Invalid filter value : " + filter);
     }
 
     public TravelCourseResponse getTravelCourseDetail(Long id) {
