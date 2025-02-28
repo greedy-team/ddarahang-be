@@ -48,7 +48,7 @@ public class TravelCourseService {
                     .toList();
         }
 
-        //if (filter.equalsIgnoreCase("default"))
+        //filter.equalsIgnoreCase("default"))
         if (regionName.isBlank()) {
             return travelCourseRepository.findAllByCountryName(countryName)
                     .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
