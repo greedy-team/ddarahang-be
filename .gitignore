@@ -37,7 +37,4 @@ out/
 .vscode/
 
 ### Spring Boot 환경 설정 파일 제외 ###
-application.yml
-application-local.yml
 application-prod.yml
-application-prod-rds.yml
