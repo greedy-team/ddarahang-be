@@ -32,6 +32,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -42,6 +43,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @SpringBootTest
+@ActiveProfiles("local")
+@SuppressWarnings("NonAsciiCharacters")
 class TravelCourseServiceTest {
 
     @Autowired
@@ -96,7 +99,7 @@ class TravelCourseServiceTest {
 
     @Nested
     @Transactional
-    class 여행_목록_조회_메서드 {
+    class c {
 
         @Test
         void countryName과_regionName이_모두_있으면_데이터가_정상적으로_반환된다() {
@@ -138,7 +141,7 @@ class TravelCourseServiceTest {
 
     @Nested
     @Transactional
-    class 여행_상세_조회_메서드 {
+    class d {
 
         @Test
         void 존재하는_id를_조회하면_정상적으로_반환된다() {
