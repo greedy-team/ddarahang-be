@@ -26,13 +26,13 @@ public class TravelCourseService {
     public List<TravelCourseListResponse> getTravelCourses(String filter, String countryName, String regionName) {
         validateCountryName(countryName);
 
-        if (filter.equalsIgnoreCase("uploadDate")) {
+        if (filter.equalsIgnoreCase("default")) {
             if (regionName.isBlank()) {
-                return travelCourseRepository.findAllByCountryNameOrderByVideoUploadDateDesc(countryName)
+                return travelCourseRepository.findAllByCountryName(countryName)
                         .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
                         .toList();
             }
-            return travelCourseRepository.findAllByRegionNameOrderByVideoUploadDateDesc(regionName)
+            return travelCourseRepository.findAllByRegionName(regionName)
                     .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
                     .toList();
         }
@@ -48,18 +48,17 @@ public class TravelCourseService {
                     .toList();
         }
 
-        //filter.equalsIgnoreCase("default"))
+        //if (filter.equalsIgnoreCase("uploadDate"))
         if (regionName.isBlank()) {
-            return travelCourseRepository.findAllByCountryName(countryName)
+            return travelCourseRepository.findAllByCountryNameOrderByVideoUploadDateDesc(countryName)
                     .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
                     .toList();
         }
-        return travelCourseRepository.findAllByRegionName(regionName)
+        return travelCourseRepository.findAllByRegionNameOrderByVideoUploadDateDesc(regionName)
                 .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
                 .toList();
+
     }
-
-
 
     public TravelCourseResponse getTravelCourseDetail(Long id) {
         validateId(id);
