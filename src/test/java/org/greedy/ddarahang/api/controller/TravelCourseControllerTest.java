@@ -1,18 +1,21 @@
 package org.greedy.ddarahang.api.controller;
 
 import io.restassured.RestAssured;
-import org.greedy.ddarahang.api.service.TravelCourseService;
-import org.greedy.ddarahang.common.AllFixture;
+import org.greedy.ddarahang.common.fixture.CountryFixture;
+import org.greedy.ddarahang.common.fixture.RegionFixture;
+import org.greedy.ddarahang.common.fixture.TravelCourseFixture;
+import org.greedy.ddarahang.common.fixture.VideoFixture;
 import org.greedy.ddarahang.db.country.Country;
 import org.greedy.ddarahang.db.country.CountryRepository;
 import org.greedy.ddarahang.db.region.Region;
 import org.greedy.ddarahang.db.region.RegionRepository;
 import org.greedy.ddarahang.db.travelCourse.TravelCourse;
 import org.greedy.ddarahang.db.travelCourse.TravelCourseRepository;
-import org.greedy.ddarahang.db.travelCourseDetail.TravelCourseDetailRepository;
+import org.greedy.ddarahang.db.travelCourseDetail.TravelCourseDetail;
 import org.greedy.ddarahang.db.video.Video;
 import org.greedy.ddarahang.db.video.VideoRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -32,10 +35,7 @@ public class TravelCourseControllerTest {
     private int port;
 
     @Autowired
-    private TravelCourseRepository travelCourseRepository;
-
-    @Autowired
-    private TravelCourseDetailRepository travelCourseDetailRepository;
+    private CountryRepository countryRepository;
 
     @Autowired
     private RegionRepository regionRepository;
@@ -44,10 +44,13 @@ public class TravelCourseControllerTest {
     private VideoRepository videoRepository;
 
     @Autowired
-    private CountryRepository countryRepository;
+    private TravelCourseRepository travelCourseRepository;
 
-    @Autowired
-    private TravelCourseService travelCourseService;
+    private Country country;
+    private Region region;
+    private Video video;
+    private TravelCourse travelCourse;
+    private TravelCourseDetail travelCourseDetail;
 
     @BeforeEach
     void setUp() {
@@ -56,116 +59,78 @@ public class TravelCourseControllerTest {
         videoRepository.deleteAll();
         regionRepository.deleteAll();
         countryRepository.deleteAll();
+
+        prepareTestData();
     }
 
-    @Test
-    void 여행_목록_조회_성공하면_200_응답을_보낸다() {
-        //Given
-        String countryName = "대한민국";
-        String regionName = "서울";
-
-        Country country_200_ok = AllFixture.getMockCountry();
-        Country country = countryRepository.save(country_200_ok);
-
-        Region region_200_ok = AllFixture.getMockRegion(country);
-        Region region = regionRepository.save(region_200_ok);
-
-        Video video_200_ok = AllFixture.getMockVideo(LocalDate.now());
-        Video video = videoRepository.save(video_200_ok);
-
-        TravelCourse travelCourse_200_ok = AllFixture.getMockTravelCourse(video, country, region);
-        travelCourseRepository.save(travelCourse_200_ok);
-
-        // When
-        RestAssured.given()
-                .param("countryName", countryName)
-                .param("regionName", regionName)
-                .when()
-                .get("/api/v1/travelcourses")
-                .then()
-                .statusCode(200); // Then
+    private void prepareTestData() {
+        country = countryRepository.save(CountryFixture.getMockCountry());
+        region = regionRepository.save(RegionFixture.getMockRegion_1(country));
+        video = videoRepository.save(VideoFixture.getMockVideo_1(LocalDate.now()));
+        travelCourse = travelCourseRepository.save(TravelCourseFixture.getMockTravelCourse(video, country, region));
     }
 
-    @Test
-    void 여행_상세_조회_성공하면_200_응답을_보낸다() {
-        //Given
 
-        Country country_200_ok = AllFixture.getMockCountry();
-        Country country = countryRepository.save(country_200_ok);
+    @Nested
+    class 여행_목록_조회_API {
 
-        Region region_200_ok = AllFixture.getMockRegion(country);
-        Region region = regionRepository.save(region_200_ok);
+        @Test
+        void 여행_목록_조회_성공하면_200_응답을_보낸다() {
+            RestAssured.given()
+                    .param("countryName", country.getName())
+                    .param("regionName", region.getName())
+                    .when()
+                    .get("/api/v1/travelcourses")
+                    .then()
+                    .statusCode(200);
+        }
 
-        Video video_200_ok = AllFixture.getMockVideo(LocalDate.now());
-        Video video = videoRepository.save(video_200_ok);
+        @Test
+        void 여행_목록_조회_지역명이_없어도_200_응답을_보낸다() {
+            RestAssured.given()
+                    .param("countryName", country.getName())
+                    .param("regionName", "")
+                    .when()
+                    .get("/api/v1/travelcourses")
+                    .then()
+                    .statusCode(200);
+        }
 
-        TravelCourse travelCourse_200_ok = AllFixture.getMockTravelCourse(video, country, region);
-        TravelCourse saveTravelCourse = travelCourseRepository.save(travelCourse_200_ok);
+        @Test
+        void 여행_목록_조회_나라명이_null이면_400_응답을_보낸다() {
+            RestAssured.given()
+                    .param("countryName", (Object) null)
+                    .param("regionName", region.getName())
+                    .when()
+                    .get("/api/v1/travelcourses")
+                    .then()
+                    .statusCode(400);
+        }
 
-        Long id = saveTravelCourse.getId();
-
-        // When
-        RestAssured.given()
-                .pathParam("id", id)
-                .when()
-                .get("/api/v1/travelcourses/{id}")
-                .then()
-                .statusCode(200); // Then
+        @Test
+        void 여행_목록_조회_나라명이_비어있으면_400_응답을_보낸다() {
+            RestAssured.given()
+                    .param("countryName", "")
+                    .param("regionName", region.getName())
+                    .when()
+                    .get("/api/v1/travelcourses")
+                    .then()
+                    .statusCode(400);
+        }
     }
 
-    @Test
-    void 여행_목록_조회_업로드_날짜_내림차순_성공하면_200_응답을_보낸다() {
-        //Given
-        String countryName = "대한민국";
-        String regionName = "서울";
 
-        Country country_200_ok = AllFixture.getMockCountry();
-        Country country = countryRepository.save(country_200_ok);
+    @Nested
+    class 여행_상세_조회_API {
 
-        Region region_200_ok = AllFixture.getMockRegion(country);
-        Region region = regionRepository.save(region_200_ok);
-
-        Video video_200_ok = AllFixture.getMockVideo(LocalDate.now());
-        Video video = videoRepository.save(video_200_ok);
-
-        TravelCourse travelCourse_200_ok = AllFixture.getMockTravelCourse(video, country, region);
-        TravelCourse saveTravelCourse = travelCourseRepository.save(travelCourse_200_ok);
-
-        // When
-        RestAssured.given()
-                .param("countryName", countryName)
-                .param("regionName", regionName)
-                .when()
-                .get("/api/v1/travelcourses/uploaddate")
-                .then()
-                .statusCode(200); // Then
-    }
-    
-    @Test
-    void 여행_목록_조회_조회수_내림차순_성공하면_200_응답을_보낸다() {
-        //Given
-        String countryName = "대한민국";
-        String regionName = "서울";
-
-        Country country_200_ok = AllFixture.getMockCountry();
-        Country country = countryRepository.save(country_200_ok);
-
-        Region region_200_ok = AllFixture.getMockRegion(country);
-        Region region = regionRepository.save(region_200_ok);
-
-        Video video_200_ok = AllFixture.getMockVideo(LocalDate.now());
-        Video video = videoRepository.save(video_200_ok);
-
-        TravelCourse travelCourse_200_ok = AllFixture.getMockTravelCourse(video, country, region);
-        TravelCourse saveTravelCourse = travelCourseRepository.save(travelCourse_200_ok);
-
-        // When
-        RestAssured.given()
-                .param("countryName", countryName)
-                .param("regionName", regionName)
-                .when()
-                .get("/api/v1/travelcourses/viewcount")
-                .then()
-                .statusCode(200); // Then
+        @Test
+        void 여행_상세_조회_성공하면_200_응답을_보낸다() {
+            RestAssured.given()
+                    .pathParam("id", travelCourse.getId())
+                    .when()
+                    .get("/api/v1/travelcourses/{id}")
+                    .then()
+                    .statusCode(200);
+        }
     }
 }
