@@ -1,11 +1,11 @@
 package org.greedy.ddarahang.api.service;
 
-import jakarta.transaction.Transactional;
 import org.greedy.ddarahang.api.dto.TravelCourseListResponse;
 import org.greedy.ddarahang.api.dto.TravelCourseResponse;
 import org.greedy.ddarahang.common.exception.InvalidCountryNameException;
 import org.greedy.ddarahang.common.exception.MissingIdException;
 import org.greedy.ddarahang.common.exception.NotFoundTravelCourseDetailException;
+import org.greedy.ddarahang.common.BaseTest;
 import org.greedy.ddarahang.common.fixture.CountryFixture;
 import org.greedy.ddarahang.common.fixture.PlaceFixture;
 import org.greedy.ddarahang.common.fixture.RegionFixture;
@@ -31,8 +31,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -41,9 +39,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(MockitoExtension.class)
-@AutoConfigureMockMvc
-@SpringBootTest
-class TravelCourseServiceTest {
+class TravelCourseServiceTest extends BaseTest {
 
     @Autowired
     private TravelCourseService travelCourseService;
@@ -96,7 +92,7 @@ class TravelCourseServiceTest {
 
 
     @Nested
-    class 여행_목록_조회_메서드 {
+    class GetTravelCourseListMethod {
 
         @Nested
         @DisplayName("기본_조회_서비스_테스트")
@@ -220,10 +216,8 @@ class TravelCourseServiceTest {
         }
     }
 
-
     @Nested
-    @Transactional
-    class 여행_상세_조회_메서드 {
+    class GetTravelCourseDetailMethod {
 
         @Test
         void 존재하는_id를_조회하면_정상적으로_반환된다() {

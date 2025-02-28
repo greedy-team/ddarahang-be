@@ -1,10 +1,9 @@
 package org.greedy.ddarahang;
 
+import org.greedy.ddarahang.common.BaseTest;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class DdarahangApplicationTests {
+class DdarahangApplicationTests extends BaseTest {
 
     @Test
     void contextLoads() {
