@@ -1,6 +1,7 @@
 package org.greedy.ddarahang.api.controller;
 
 import io.restassured.RestAssured;
+import org.greedy.ddarahang.common.BaseTest;
 import org.greedy.ddarahang.common.fixture.CountryFixture;
 import org.greedy.ddarahang.common.fixture.RegionFixture;
 import org.greedy.ddarahang.common.fixture.TravelCourseFixture;
@@ -21,16 +22,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
 import java.time.LocalDate;
 
 @ExtendWith(MockitoExtension.class)
-@AutoConfigureMockMvc
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class TravelCourseControllerTest {
+public class TravelCourseControllerTest extends BaseTest {
 
     @LocalServerPort
     private int port;
@@ -71,9 +68,8 @@ public class TravelCourseControllerTest {
         travelCourse = travelCourseRepository.save(TravelCourseFixture.getMockTravelCourse(video, country, region));
     }
 
-
     @Nested
-    class 여행_목록_조회_API {
+    class GetTravelCourseListAPI {
 
         @Nested
         @DisplayName("기본_조회_동작_테스트")
@@ -233,9 +229,8 @@ public class TravelCourseControllerTest {
 
     }
 
-
     @Nested
-    class 여행_상세_조회_API {
+    class GetTravelCourseDetailAPI {
 
         @Test
         void 여행_상세_조회_성공하면_200_응답을_보낸다() {
