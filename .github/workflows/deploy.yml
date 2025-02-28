@@ -3,21 +3,26 @@ name: CI/CD workflow
 on:
   push:
     branches:
-      - main 
-  workflow_dispatch:  
+      - main
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
-    runs-on: [ self-hosted ]  
+    runs-on: [ self-hosted ]
 
     defaults:
       run:
         shell: bash
 
+    env:
+      PROJECT_DIR: /home/ubuntu/actions-runner/_work/ddarahang-be/ddarahang-be
+      DEPLOY_DIR: /home/ubuntu/ddarahang
+      JAR_NAME: ddarahang-0.0.1-SNAPSHOT.jar
+
     steps:
       - name: Check current working directory
         run: pwd
-        
+
       - name: List files
         run: ls -la
 
@@ -34,10 +39,10 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
 
       - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+        run: chmod +x $PROJECT_DIR/gradlew
 
       - name: Build and test
-        run: ./gradlew build || exit 1
+        run: cd $PROJECT_DIR && ./gradlew build || exit 1
 
       - name: Test
         run: pwd
@@ -49,21 +54,21 @@ jobs:
             sudo lsof -i :80 | awk 'NR!=1 {print $2}' | sudo xargs kill -9
           fi
 
-          if pgrep -f "java -jar /home/ubuntu/ddarahang/ddarahang.jar"; then
+          if pgrep -f "java -jar $DEPLOY_DIR/$JAR_NAME"; then
             echo "Stopping existing application..."
-            pkill -f "java -jar /home/ubuntu/ddarahang/ddarahang.jar"
+            pkill -f "java -jar $DEPLOY_DIR/$JAR_NAME"
           else
             echo "No running application found."
           fi
 
       - name: Ensure deployment folder exists
-        run: sudo mkdir -p /home/ubuntu/ddarahang
+        run: sudo mkdir -p $DEPLOY_DIR
 
       - name: Copy jar to deployment folder
-        run: sudo cp build/libs/ddarahang.jar /home/ubuntu/ddarahang
+        run: sudo cp $PROJECT_DIR/build/libs/$JAR_NAME $DEPLOY_DIR
 
       - name: Grant execute permission for JAR
-        run: sudo chmod +x /home/ubuntu/ddarahang/ddarahang.jar
+        run: sudo chmod +x $DEPLOY_DIR/$JAR_NAME
 
       - name: Run application
-        run: sudo nohup java -jar /home/ubuntu/ddarahang/ddarahang.jar > /home/ubuntu/ddarahang/ddarahang.log 2>&1 &
+        run: sudo nohup java -jar $DEPLOY_DIR/$JAR_NAME > $DEPLOY_DIR/ddarahang.log 2>&1 &
