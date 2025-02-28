@@ -48,16 +48,18 @@ public class TravelCourseService {
                     .toList();
         }
 
-        //if (filter.equalsIgnoreCase("uploadDate"))
-        if (regionName.isBlank()) {
-            return travelCourseRepository.findAllByCountryNameOrderByVideoUploadDateDesc(countryName)
+        if (filter.equalsIgnoreCase("uploadDate")) {
+            if (regionName.isBlank()) {
+                return travelCourseRepository.findAllByCountryNameOrderByVideoUploadDateDesc(countryName)
+                        .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
+                        .toList();
+            }
+            return travelCourseRepository.findAllByRegionNameOrderByVideoUploadDateDesc(regionName)
                     .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
                     .toList();
         }
-        return travelCourseRepository.findAllByRegionNameOrderByVideoUploadDateDesc(regionName)
-                .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
-                .toList();
 
+        throw new IllegalArgumentException("Invalid filter value: " + filter);
     }
 
     public TravelCourseResponse getTravelCourseDetail(Long id) {
