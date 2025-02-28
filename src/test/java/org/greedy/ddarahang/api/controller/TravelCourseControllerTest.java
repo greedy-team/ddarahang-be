@@ -23,12 +23,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("local")
+@SuppressWarnings("NonAsciiCharacters")
 public class TravelCourseControllerTest {
 
     @LocalServerPort
@@ -72,10 +75,10 @@ public class TravelCourseControllerTest {
 
 
     @Nested
-    class 여행_목록_조회_API {
+    class a {
 
         @Test
-        void 여행_목록_조회_성공하면_200_응답을_보낸다() {
+        void abca() {
             RestAssured.given()
                     .param("countryName", country.getName())
                     .param("regionName", region.getName())
@@ -121,7 +124,7 @@ public class TravelCourseControllerTest {
 
 
     @Nested
-    class 여행_상세_조회_API {
+    class d {
 
         @Test
         void 여행_상세_조회_성공하면_200_응답을_보낸다() {
