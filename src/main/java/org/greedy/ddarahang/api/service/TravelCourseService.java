@@ -23,17 +23,43 @@ public class TravelCourseService {
     private final TravelCourseRepository travelCourseRepository;
     private final TravelCourseDetailRepository travelCourseDetailRepository;
 
-    public List<TravelCourseListResponse> getTravelCourses(String countryName, String regionName) {
+    public List<TravelCourseListResponse> getTravelCourses(String filter, String countryName, String regionName) {
         validateCountryName(countryName);
 
-        if (regionName.isBlank()) {
-            return travelCourseRepository.findAllByCountryName(countryName)
+        if (filter.equalsIgnoreCase("default")) {
+            if (regionName.isBlank()) {
+                return travelCourseRepository.findAllByCountryName(countryName)
+                        .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
+                        .toList();
+            }
+            return travelCourseRepository.findAllByRegionName(regionName)
                     .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
                     .toList();
         }
-        return travelCourseRepository.findAllByRegionName(regionName)
-                .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
-                .toList();
+
+        if (filter.equalsIgnoreCase("viewCount")) {
+            if (regionName.isBlank()) {
+                return travelCourseRepository.findAllByCountryNameOrderByVideoViewCountDesc(countryName)
+                        .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
+                        .toList();
+            }
+            return travelCourseRepository.findAllByRegionNameOrderByVideoViewCountDesc(regionName)
+                    .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
+                    .toList();
+        }
+
+        if (filter.equalsIgnoreCase("uploadDate")) {
+            if (regionName.isBlank()) {
+                return travelCourseRepository.findAllByCountryNameOrderByVideoUploadDateDesc(countryName)
+                        .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
+                        .toList();
+            }
+            return travelCourseRepository.findAllByRegionNameOrderByVideoUploadDateDesc(regionName)
+                    .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
+                    .toList();
+        }
+
+        throw new IllegalArgumentException("Invalid filter value : " + filter);
     }
 
     public TravelCourseResponse getTravelCourseDetail(Long id) {
@@ -46,32 +72,6 @@ public class TravelCourseService {
                 .stream().map(TravelCourseDetailResponse::from).toList();
 
         return TravelCourseResponse.from(travelCourse.getVideo(), travelCourseDetails);
-    }
-
-    public List<TravelCourseListResponse> getSortedByUploadDate(String countryName, String regionName) {
-        validateCountryName(countryName);
-
-        if (regionName.isBlank()) {
-            return travelCourseRepository.findAllByCountryNameOrderByVideoUploadDateDesc(countryName)
-                    .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
-                    .toList();
-        }
-        return travelCourseRepository.findAllByRegionNameOrderByVideoUploadDateDesc(regionName)
-                .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
-                .toList();
-    }
-
-    public List<TravelCourseListResponse> getSortedByViewCount(String countryName, String regionName) {
-        validateCountryName(countryName);
-
-        if (regionName.isBlank()) {
-            return travelCourseRepository.findAllByCountryNameOrderByVideoViewCountDesc(countryName)
-                    .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
-                    .toList();
-        }
-        return travelCourseRepository.findAllByRegionNameOrderByVideoViewCountDesc(regionName)
-                .stream().map(travelCourse -> TravelCourseListResponse.from(travelCourse, travelCourse.getVideo()))
-                .toList();
     }
 
     private void validateCountryName(String countryName) {
