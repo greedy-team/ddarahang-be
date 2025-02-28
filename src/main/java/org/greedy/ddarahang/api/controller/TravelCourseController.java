@@ -20,7 +20,6 @@ public class TravelCourseController {
 
     private final TravelCourseService travelCourseService;
 
-    //이거임
     @GetMapping
     public ResponseEntity<List<TravelCourseListResponse>> getTravelCourses(
             @RequestParam String filter,
