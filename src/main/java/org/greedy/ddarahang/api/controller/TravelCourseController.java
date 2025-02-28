@@ -20,32 +20,18 @@ public class TravelCourseController {
 
     private final TravelCourseService travelCourseService;
 
+    //이거임
     @GetMapping
     public ResponseEntity<List<TravelCourseListResponse>> getTravelCourses(
+            @RequestParam String filter,
             @RequestParam String countryName,
             @RequestParam String regionName
     ) {
-        return ResponseEntity.ok(travelCourseService.getTravelCourses(countryName, regionName));
+        return ResponseEntity.ok(travelCourseService.getTravelCourses(filter, countryName, regionName));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<TravelCourseResponse> getTravelCourseDetail(@PathVariable Long id) {
         return ResponseEntity.ok(travelCourseService.getTravelCourseDetail(id));
-    }
-
-    @GetMapping("/uploaddate")
-    public ResponseEntity<List<TravelCourseListResponse>> getSortedByUploadDate(
-            @RequestParam String countryName,
-            @RequestParam String regionName
-    ) {
-        return ResponseEntity.ok(travelCourseService.getSortedByUploadDate(countryName, regionName));
-    }
-
-    @GetMapping("/viewcount")
-    public ResponseEntity<List<TravelCourseListResponse>> getSortedByViewCount(
-            @RequestParam String countryName,
-            @RequestParam String regionName
-    ) {
-        return ResponseEntity.ok(travelCourseService.getSortedByViewCount(countryName, regionName));
     }
 }
