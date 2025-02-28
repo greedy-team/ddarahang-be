@@ -16,6 +16,7 @@ import org.greedy.ddarahang.db.travelCourseDetail.TravelCourseDetail;
 import org.greedy.ddarahang.db.video.Video;
 import org.greedy.ddarahang.db.video.VideoRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -70,49 +71,162 @@ public class TravelCourseControllerTest extends BaseTest {
     @Nested
     class GetTravelCourseListAPI {
 
-        @Test
-        void 여행_목록_조회_성공하면_200_응답을_보낸다() {
-            RestAssured.given()
-                    .param("countryName", country.getName())
-                    .param("regionName", region.getName())
-                    .when()
-                    .get("/api/v1/travelcourses")
-                    .then()
-                    .statusCode(200);
+        @Nested
+        @DisplayName("기본_조회_동작_테스트")
+        class DefaultFilterTest{
+            @Test
+            void 여행목록_기본_조회_성공하면_200_응답을_보낸다() {
+                RestAssured.given()
+                        .param("filter","default")
+                        .param("countryName", country.getName())
+                        .param("regionName", region.getName())
+                        .when()
+                        .get("/api/v1/travelcourses")
+                        .then()
+                        .statusCode(200);
+            }
+
+            @Test
+            void 여행목록_기본_조회_지역명이_없어도_200_응답을_보낸다() {
+                RestAssured.given()
+                        .param("filter","default")
+                        .param("countryName", country.getName())
+                        .param("regionName", "")
+                        .when()
+                        .get("/api/v1/travelcourses")
+                        .then()
+                        .statusCode(200);
+            }
+
+            @Test
+            void 여행목록_기본_조회_나라명이_null이면_400_응답을_보낸다() {
+                RestAssured.given()
+                        .param("filter","default")
+                        .param("countryName", (Object) null)
+                        .param("regionName", region.getName())
+                        .when()
+                        .get("/api/v1/travelcourses")
+                        .then()
+                        .statusCode(400);
+            }
+
+            @Test
+            void 여행목록_기본_조회_나라명이_비어있으면_400_응답을_보낸다() {
+                RestAssured.given()
+                        .param("filter","default")
+                        .param("countryName", "")
+                        .param("regionName", region.getName())
+                        .when()
+                        .get("/api/v1/travelcourses")
+                        .then()
+                        .statusCode(400);
+            }
         }
 
-        @Test
-        void 여행_목록_조회_지역명이_없어도_200_응답을_보낸다() {
-            RestAssured.given()
-                    .param("countryName", country.getName())
-                    .param("regionName", "")
-                    .when()
-                    .get("/api/v1/travelcourses")
-                    .then()
-                    .statusCode(200);
+        @Nested
+        @DisplayName("날짜순_조회_동작_테스트")
+        class UploadDateFilterTest{
+            @Test
+            void 여행목록_날짜순_조회_성공하면_200_응답을_보낸다() {
+                RestAssured.given()
+                        .param("filter","uploadDate")
+                        .param("countryName", country.getName())
+                        .param("regionName", region.getName())
+                        .when()
+                        .get("/api/v1/travelcourses")
+                        .then()
+                        .statusCode(200);
+            }
+
+            @Test
+            void 여행목록_날짜순_조회_지역명이_없어도_200_응답을_보낸다() {
+                RestAssured.given()
+                        .param("filter","uploadDate")
+                        .param("countryName", country.getName())
+                        .param("regionName", "")
+                        .when()
+                        .get("/api/v1/travelcourses")
+                        .then()
+                        .statusCode(200);
+            }
+
+            @Test
+            void 여행목록_날짜순_조회_나라명이_null이면_400_응답을_보낸다() {
+                RestAssured.given()
+                        .param("filter","uploadDate")
+                        .param("countryName", (Object) null)
+                        .param("regionName", region.getName())
+                        .when()
+                        .get("/api/v1/travelcourses")
+                        .then()
+                        .statusCode(400);
+            }
+
+            @Test
+            void 여행목록_날짜순_조회_나라명이_비어있으면_400_응답을_보낸다() {
+                RestAssured.given()
+                        .param("filter","uploadDate")
+                        .param("countryName", "")
+                        .param("regionName", region.getName())
+                        .when()
+                        .get("/api/v1/travelcourses")
+                        .then()
+                        .statusCode(400);
+            }
         }
 
-        @Test
-        void 여행_목록_조회_나라명이_null이면_400_응답을_보낸다() {
-            RestAssured.given()
-                    .param("countryName", (Object) null)
-                    .param("regionName", region.getName())
-                    .when()
-                    .get("/api/v1/travelcourses")
-                    .then()
-                    .statusCode(400);
+        @Nested
+        @DisplayName("조회순_조회_동작_테스트")
+        class ViewCountFilterTest{
+            @Test
+            void 여행목록_조회순_조회_성공하면_200_응답을_보낸다() {
+                RestAssured.given()
+                        .param("filter","viewCount")
+                        .param("countryName", country.getName())
+                        .param("regionName", region.getName())
+                        .when()
+                        .get("/api/v1/travelcourses")
+                        .then()
+                        .statusCode(200);
+            }
+
+            @Test
+            void 여행목록_조회순_조회_지역명이_없어도_200_응답을_보낸다() {
+                RestAssured.given()
+                        .param("filter","viewCount")
+                        .param("countryName", country.getName())
+                        .param("regionName", "")
+                        .when()
+                        .get("/api/v1/travelcourses")
+                        .then()
+                        .statusCode(200);
+            }
+
+            @Test
+            void 여행목록_조회순_조회_나라명이_null이면_400_응답을_보낸다() {
+                RestAssured.given()
+                        .param("filter","viewCount")
+                        .param("countryName", (Object) null)
+                        .param("regionName", region.getName())
+                        .when()
+                        .get("/api/v1/travelcourses")
+                        .then()
+                        .statusCode(400);
+            }
+
+            @Test
+            void 여행목록_조회순_조회_나라명이_비어있으면_400_응답을_보낸다() {
+                RestAssured.given()
+                        .param("filter","viewCount")
+                        .param("countryName", "")
+                        .param("regionName", region.getName())
+                        .when()
+                        .get("/api/v1/travelcourses")
+                        .then()
+                        .statusCode(400);
+            }
         }
 
-        @Test
-        void 여행_목록_조회_나라명이_비어있으면_400_응답을_보낸다() {
-            RestAssured.given()
-                    .param("countryName", "")
-                    .param("regionName", region.getName())
-                    .when()
-                    .get("/api/v1/travelcourses")
-                    .then()
-                    .statusCode(400);
-        }
     }
 
     @Nested
