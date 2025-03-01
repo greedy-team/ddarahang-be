@@ -9,12 +9,15 @@ import java.util.List;
 public interface TravelCourseRepository extends JpaRepository<TravelCourse, Long> {
 
     List<TravelCourse> findAllByCountryName(String countryName);
+
     List<TravelCourse> findAllByRegionName(String regionName);
 
     List<TravelCourse> findAllByCountryNameOrderByVideoUploadDateDesc(String countryName);
+
     List<TravelCourse> findAllByRegionNameOrderByVideoUploadDateDesc(String regionName);
 
     List<TravelCourse> findAllByCountryNameOrderByVideoViewCountDesc(String countryName);
+
     List<TravelCourse> findAllByRegionNameOrderByVideoViewCountDesc(String regionName);
 
 }
