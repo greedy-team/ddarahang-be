@@ -1,6 +1,5 @@
 package org.greedy.ddarahang.db.country;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

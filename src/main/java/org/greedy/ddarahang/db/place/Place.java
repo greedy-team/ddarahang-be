@@ -35,8 +35,11 @@ public class Place {
     @Column(nullable = false)
     private String address;
 
+    private Double latitude;
+
+    private Double longitude;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "region_id", nullable = false)
     private Region region;
-
 }
