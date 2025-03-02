@@ -24,13 +24,13 @@ public class TravelCourseController {
             @RequestParam String countryName,
             @RequestParam String regionName
     ) {
-        log.info("GET /api/v1/travelcourses - filter: {}, countryName: {}, regionName: {}", filter, countryName, regionName);
+        log.info("GET /travelcourses - filter: {}, countryName: {}, regionName: {}", filter, countryName, regionName);
         return ResponseEntity.ok(travelCourseService.getTravelCourses(filter, countryName, regionName));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<TravelCourseResponse> getTravelCourseDetail(@PathVariable Long id) {
-        log.info("GET /api/v1/travelcourses/{} - Fetching travel course detail", id);
+        log.info("GET /travelcourses/{}", id);
         return ResponseEntity.ok(travelCourseService.getTravelCourseDetail(id));
     }
 }
