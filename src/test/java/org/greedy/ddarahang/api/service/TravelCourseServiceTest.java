@@ -87,16 +87,15 @@ class TravelCourseServiceTest extends BaseTest {
         place = placeRepository.save(PlaceFixture.getMockPlace_1(region));
         video = videoRepository.save(VideoFixture.getMockVideo_1(LocalDate.now()));
         travelCourse = travelCourseRepository.save(TravelCourseFixture.getMockTravelCourse(video, country, region));
-        travelCourseDetail = travelCourseDetailRepository.save(TravelCourseDetailFixture.getMockTravelCourseDetail(travelCourse,place));
+        travelCourseDetail = travelCourseDetailRepository.save(TravelCourseDetailFixture.getMockTravelCourseDetail(travelCourse, place));
     }
-
 
     @Nested
     class GetTravelCourseListMethod {
 
         @Nested
         @DisplayName("기본_조회_서비스_테스트")
-        class defaultFilterServiceTest{
+        class defaultFilterServiceTest {
             @Test
             void countryName과_regionName이_모두_있으면_데이터가_정상적으로_반환된다() {
                 // Given & When
@@ -136,7 +135,7 @@ class TravelCourseServiceTest extends BaseTest {
 
         @Nested
         @DisplayName("날짜순_조회_서비스_테스트")
-        class uploadDateFilterServiceTest{
+        class uploadDateFilterServiceTest {
             @Test
             void countryName과_regionName이_모두_있으면_데이터가_정상적으로_반환된다() {
                 // Given & When
@@ -174,10 +173,9 @@ class TravelCourseServiceTest extends BaseTest {
             }
         }
 
-
         @Nested
         @DisplayName("조회순_조회_서비스_테스트")
-        class viewCountFilterServiceTest{
+        class viewCountFilterServiceTest {
             @Test
             void countryName과_regionName이_모두_있으면_데이터가_정상적으로_반환된다() {
                 // Given & When

@@ -13,7 +13,7 @@ public record TravelCourseResponse(
         Long viewCount,
         LocalDate uploadDate,
         List<TravelCourseDetailResponse> details
-){
+) {
     public static TravelCourseResponse from(Video video, List<TravelCourseDetailResponse> details) {
         return new TravelCourseResponse(
                 details.size(),
