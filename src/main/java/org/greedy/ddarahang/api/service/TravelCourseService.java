@@ -80,7 +80,7 @@ public class TravelCourseService {
         List<TravelCourseDetailResponse> travelCourseDetails = travelCourseDetailRepository.findAllByTravelCourseId(id)
                 .stream().map(TravelCourseDetailResponse::from).toList();
 
-        return TravelCourseResponse.from(travelCourse.getVideo(), travelCourseDetails);
+        return TravelCourseResponse.from(travelCourse.getTravelDays(),travelCourse.getVideo(), travelCourseDetails);
     }
 
     private void validateCountryName(String countryName) {

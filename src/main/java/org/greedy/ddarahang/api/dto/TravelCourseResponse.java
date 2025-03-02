@@ -14,9 +14,9 @@ public record TravelCourseResponse(
         LocalDate uploadDate,
         List<TravelCourseDetailResponse> details
 ) {
-    public static TravelCourseResponse from(Video video, List<TravelCourseDetailResponse> details) {
+    public static TravelCourseResponse from(int travelDays, Video video, List<TravelCourseDetailResponse> details) {
         return new TravelCourseResponse(
-                details.size(),
+                travelDays,
                 video.getCreator(),
                 video.getTitle(),
                 video.getVideoUrl(),
