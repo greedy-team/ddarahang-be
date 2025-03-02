@@ -9,6 +9,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(InvalidFilterException.class)
+    public ResponseEntity<String> invalidFilterException(InvalidFilterException e) {
+        log.error("InvalidFilterException 발생: {}", e.getMessage(), e);
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
     @ExceptionHandler(NotFoundTravelCourseDetailException.class)
     public ResponseEntity<String> notFoundTravelCourseDetailException(NotFoundTravelCourseDetailException e) {
         log.error("NotFoundTravelCourseDetailException 발생: {}", e.getMessage(), e);
