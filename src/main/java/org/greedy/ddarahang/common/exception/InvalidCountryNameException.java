@@ -1,6 +1,6 @@
 package org.greedy.ddarahang.common.exception;
 
-public class InvalidCountryNameException extends RuntimeException {
+public class InvalidCountryNameException extends DdarahangException {
     public InvalidCountryNameException(String message) {
         super(message);
     }

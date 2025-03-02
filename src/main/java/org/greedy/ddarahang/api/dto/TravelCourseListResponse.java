@@ -3,6 +3,7 @@ package org.greedy.ddarahang.api.dto;
 import org.greedy.ddarahang.db.travelCourse.TravelCourse;
 
 import java.time.LocalDate;
+
 import org.greedy.ddarahang.db.video.Video;
 
 public record TravelCourseListResponse(
