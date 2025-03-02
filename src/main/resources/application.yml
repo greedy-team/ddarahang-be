@@ -1,4 +1,12 @@
+server:
+  port: 8080
+  forward-headers-strategy: framework
+  servlet:
+    context-path: /
+    encoding:
+      charset: utf-8
+      enabled: true
+
 spring:
   profiles:
     active: prod
-

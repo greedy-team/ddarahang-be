@@ -1,11 +1,11 @@
 package org.greedy.ddarahang.api.service;
 
-import jakarta.transaction.Transactional;
 import org.greedy.ddarahang.api.dto.TravelCourseListResponse;
 import org.greedy.ddarahang.api.dto.TravelCourseResponse;
 import org.greedy.ddarahang.common.exception.InvalidCountryNameException;
 import org.greedy.ddarahang.common.exception.MissingIdException;
 import org.greedy.ddarahang.common.exception.NotFoundTravelCourseDetailException;
+import org.greedy.ddarahang.common.BaseTest;
 import org.greedy.ddarahang.common.fixture.CountryFixture;
 import org.greedy.ddarahang.common.fixture.PlaceFixture;
 import org.greedy.ddarahang.common.fixture.RegionFixture;
@@ -25,14 +25,12 @@ import org.greedy.ddarahang.db.travelCourseDetail.TravelCourseDetailRepository;
 import org.greedy.ddarahang.db.video.Video;
 import org.greedy.ddarahang.db.video.VideoRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -41,11 +39,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(MockitoExtension.class)
-@AutoConfigureMockMvc
-@SpringBootTest
-@ActiveProfiles("local")
-@SuppressWarnings("NonAsciiCharacters")
-class TravelCourseServiceTest {
+class TravelCourseServiceTest extends BaseTest {
 
     @Autowired
     private TravelCourseService travelCourseService;
@@ -93,55 +87,135 @@ class TravelCourseServiceTest {
         place = placeRepository.save(PlaceFixture.getMockPlace_1(region));
         video = videoRepository.save(VideoFixture.getMockVideo_1(LocalDate.now()));
         travelCourse = travelCourseRepository.save(TravelCourseFixture.getMockTravelCourse(video, country, region));
-        travelCourseDetail = travelCourseDetailRepository.save(TravelCourseDetailFixture.getMockTravelCourseDetail(travelCourse,place));
+        travelCourseDetail = travelCourseDetailRepository.save(TravelCourseDetailFixture.getMockTravelCourseDetail(travelCourse, place));
     }
 
-
     @Nested
-    @Transactional
-    class c {
+    class GetTravelCourseListMethod {
 
-        @Test
-        void countryName과_regionName이_모두_있으면_데이터가_정상적으로_반환된다() {
-            // Given & When
-            List<TravelCourseListResponse> responses = travelCourseService.getTravelCourses(country.getName(), region.getName());
+        @Nested
+        @DisplayName("기본_조회_서비스_테스트")
+        class defaultFilterServiceTest {
+            @Test
+            void countryName과_regionName이_모두_있으면_데이터가_정상적으로_반환된다() {
+                // Given & When
+                List<TravelCourseListResponse> responses = travelCourseService.getTravelCourses("default", country.getName(), region.getName());
 
-            // Then
-            assertThat(responses.get(0).creator()).isEqualTo(video.getCreator());
-            assertThat(responses.get(0).thumbnailUrl()).isEqualTo(video.getThumbnailUrl());
+                // Then
+                assertThat(responses.get(0).creator()).isEqualTo(video.getCreator());
+                assertThat(responses.get(0).thumbnailUrl()).isEqualTo(video.getThumbnailUrl());
+            }
+
+            @Test
+            void countryName은_있고_regionName이_없어도_데이터가_정상적으로_반환된다() {
+                // Given & When
+                List<TravelCourseListResponse> responses = travelCourseService.getTravelCourses("default", country.getName(), "");
+
+                // Then
+                assertThat(responses.get(0).creator()).isEqualTo(video.getCreator());
+                assertThat(responses.get(0).thumbnailUrl()).isEqualTo(video.getThumbnailUrl());
+            }
+
+            @Test
+            void countryName이_null이면_InvalidCountryNameException이_터진다() {
+                // When & Then
+                assertThatThrownBy(() -> travelCourseService.getTravelCourses("default", null, region.getName()))
+                        .isInstanceOf(InvalidCountryNameException.class)
+                        .hasMessage("invalid country name");
+            }
+
+            @Test
+            void countryName이_비어있으면_InvalidCountryNameException이_터진다() {
+                // When & Then
+                assertThatThrownBy(() -> travelCourseService.getTravelCourses("default", "", region.getName()))
+                        .isInstanceOf(InvalidCountryNameException.class)
+                        .hasMessage("invalid country name");
+            }
         }
 
-        @Test
-        void countryName은_있고_regionName이_없어도_데이터가_정상적으로_반환된다() {
-            // Given & When
-            List<TravelCourseListResponse> responses = travelCourseService.getTravelCourses(country.getName(), "");
+        @Nested
+        @DisplayName("날짜순_조회_서비스_테스트")
+        class uploadDateFilterServiceTest {
+            @Test
+            void countryName과_regionName이_모두_있으면_데이터가_정상적으로_반환된다() {
+                // Given & When
+                List<TravelCourseListResponse> responses = travelCourseService.getTravelCourses("uploadDate", country.getName(), region.getName());
 
-            // Then
-            assertThat(responses.get(0).creator()).isEqualTo(video.getCreator());
-            assertThat(responses.get(0).thumbnailUrl()).isEqualTo(video.getThumbnailUrl());
+                // Then
+                assertThat(responses.get(0).creator()).isEqualTo(video.getCreator());
+                assertThat(responses.get(0).thumbnailUrl()).isEqualTo(video.getThumbnailUrl());
+            }
+
+            @Test
+            void countryName은_있고_regionName이_없어도_데이터가_정상적으로_반환된다() {
+                // Given & When
+                List<TravelCourseListResponse> responses = travelCourseService.getTravelCourses("uploadDate", country.getName(), "");
+
+                // Then
+                assertThat(responses.get(0).creator()).isEqualTo(video.getCreator());
+                assertThat(responses.get(0).thumbnailUrl()).isEqualTo(video.getThumbnailUrl());
+            }
+
+            @Test
+            void countryName이_null이면_InvalidCountryNameException이_터진다() {
+                // When & Then
+                assertThatThrownBy(() -> travelCourseService.getTravelCourses("uploadDate", null, region.getName()))
+                        .isInstanceOf(InvalidCountryNameException.class)
+                        .hasMessage("invalid country name");
+            }
+
+            @Test
+            void countryName이_비어있으면_InvalidCountryNameException이_터진다() {
+                // When & Then
+                assertThatThrownBy(() -> travelCourseService.getTravelCourses("uploadDate", "", region.getName()))
+                        .isInstanceOf(InvalidCountryNameException.class)
+                        .hasMessage("invalid country name");
+            }
         }
 
-        @Test
-        void countryName이_null이면_InvalidCountryNameException이_터진다() {
-            // When & Then
-            assertThatThrownBy(() -> travelCourseService.getTravelCourses(null, region.getName()))
-                    .isInstanceOf(InvalidCountryNameException.class)
-                    .hasMessage("invalid country name");
-        }
+        @Nested
+        @DisplayName("조회순_조회_서비스_테스트")
+        class viewCountFilterServiceTest {
+            @Test
+            void countryName과_regionName이_모두_있으면_데이터가_정상적으로_반환된다() {
+                // Given & When
+                List<TravelCourseListResponse> responses = travelCourseService.getTravelCourses("viewCount", country.getName(), region.getName());
 
-        @Test
-        void countryName이_비어있으면_InvalidCountryNameException이_터진다() {
-            // When & Then
-            assertThatThrownBy(() -> travelCourseService.getTravelCourses("", region.getName()))
-                    .isInstanceOf(InvalidCountryNameException.class)
-                    .hasMessage("invalid country name");
+                // Then
+                assertThat(responses.get(0).creator()).isEqualTo(video.getCreator());
+                assertThat(responses.get(0).thumbnailUrl()).isEqualTo(video.getThumbnailUrl());
+            }
+
+            @Test
+            void countryName은_있고_regionName이_없어도_데이터가_정상적으로_반환된다() {
+                // Given & When
+                List<TravelCourseListResponse> responses = travelCourseService.getTravelCourses("viewCount", country.getName(), "");
+
+                // Then
+                assertThat(responses.get(0).creator()).isEqualTo(video.getCreator());
+                assertThat(responses.get(0).thumbnailUrl()).isEqualTo(video.getThumbnailUrl());
+            }
+
+            @Test
+            void countryName이_null이면_InvalidCountryNameException이_터진다() {
+                // When & Then
+                assertThatThrownBy(() -> travelCourseService.getTravelCourses("viewCount", null, region.getName()))
+                        .isInstanceOf(InvalidCountryNameException.class)
+                        .hasMessage("invalid country name");
+            }
+
+            @Test
+            void countryName이_비어있으면_InvalidCountryNameException이_터진다() {
+                // When & Then
+                assertThatThrownBy(() -> travelCourseService.getTravelCourses("viewCount", "", region.getName()))
+                        .isInstanceOf(InvalidCountryNameException.class)
+                        .hasMessage("invalid country name");
+            }
         }
     }
 
-
     @Nested
-    @Transactional
-    class d {
+    class GetTravelCourseDetailMethod {
 
         @Test
         void 존재하는_id를_조회하면_정상적으로_반환된다() {

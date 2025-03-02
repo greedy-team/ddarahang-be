@@ -6,14 +6,18 @@ public record TravelCourseDetailResponse(
         int day,
         int orderInDay,
         String placeName,
-        String placeAddress
+        String placeAddress,
+        Double latitude,
+        Double longitude
 ) {
     public static TravelCourseDetailResponse from(TravelCourseDetail travelCourseDetail) {
         return new TravelCourseDetailResponse(
                 travelCourseDetail.getDay(),
                 travelCourseDetail.getOrderInDay(),
                 travelCourseDetail.getPlace().getName(),
-                travelCourseDetail.getPlace().getAddress()
+                travelCourseDetail.getPlace().getAddress(),
+                travelCourseDetail.getPlace().getLatitude(),
+                travelCourseDetail.getPlace().getLongitude()
         );
     }
 }
