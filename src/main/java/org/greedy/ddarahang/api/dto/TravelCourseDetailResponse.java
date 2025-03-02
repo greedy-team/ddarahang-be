@@ -7,8 +7,8 @@ public record TravelCourseDetailResponse(
         int orderInDay,
         String placeName,
         String placeAddress,
-        Double latitude,
-        Double longitude
+        Double lat,
+        Double lng
 ) {
     public static TravelCourseDetailResponse from(TravelCourseDetail travelCourseDetail) {
         return new TravelCourseDetailResponse(
