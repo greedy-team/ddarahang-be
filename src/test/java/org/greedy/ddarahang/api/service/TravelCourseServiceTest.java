@@ -1,5 +1,6 @@
 package org.greedy.ddarahang.api.service;
 
+import jakarta.persistence.EntityManagerFactory;
 import org.greedy.ddarahang.api.dto.TravelCourseListResponse;
 import org.greedy.ddarahang.api.dto.TravelCourseResponse;
 import org.greedy.ddarahang.common.exception.InvalidCountryNameException;
@@ -24,6 +25,8 @@ import org.greedy.ddarahang.db.travelCourseDetail.TravelCourseDetail;
 import org.greedy.ddarahang.db.travelCourseDetail.TravelCourseDetailRepository;
 import org.greedy.ddarahang.db.video.Video;
 import org.greedy.ddarahang.db.video.VideoRepository;
+import org.hibernate.SessionFactory;
+import org.hibernate.stat.Statistics;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -37,9 +40,13 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
 class TravelCourseServiceTest extends BaseTest {
+
+    @Autowired
+    private EntityManagerFactory entityManagerFactory;
 
     @Autowired
     private TravelCourseService travelCourseService;
@@ -242,4 +249,20 @@ class TravelCourseServiceTest extends BaseTest {
                     .hasMessage("travel course not found");
         }
     }
+
+    @Test
+    void getTravelCourses_N_plus_1_개선_검증_테스트() {
+
+        SessionFactory sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
+        Statistics stats = sessionFactory.getStatistics();
+        stats.setStatisticsEnabled(true);
+
+        List<TravelCourseListResponse> response = travelCourseService.getTravelCourses("default", "Korea", "");
+
+        long queryCount = stats.getQueryExecutionCount();
+        System.out.println("Executed queries: " + queryCount);
+
+        assertTrue(queryCount < 2);
+    }
 }
+
