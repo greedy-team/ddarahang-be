@@ -13,3 +13,10 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,metrics,prometheus"
+      base-path: "/ddarahang/monitoring/0929"
