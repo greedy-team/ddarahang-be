@@ -42,6 +42,9 @@ dependencies {
     // spring actuator
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
+    // prometheus
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+
 }
 
 tasks.named('test') {
