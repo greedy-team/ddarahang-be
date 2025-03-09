@@ -39,6 +39,9 @@ dependencies {
     // RestAssured
     testImplementation 'io.rest-assured:rest-assured:5.3.0'
 
+    // spring actuator
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
 }
 
 tasks.named('test') {
