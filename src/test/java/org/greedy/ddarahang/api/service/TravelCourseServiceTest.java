@@ -42,32 +42,32 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class TravelCourseServiceTest extends BaseTest {
 
     @Autowired
-    private TravelCourseService travelCourseService;
+    TravelCourseService travelCourseService;
 
     @Autowired
-    private CountryRepository countryRepository;
+    CountryRepository countryRepository;
 
     @Autowired
-    private RegionRepository regionRepository;
+    RegionRepository regionRepository;
 
     @Autowired
-    private PlaceRepository placeRepository;
+    PlaceRepository placeRepository;
 
     @Autowired
-    private VideoRepository videoRepository;
+     VideoRepository videoRepository;
 
     @Autowired
-    private TravelCourseRepository travelCourseRepository;
+    TravelCourseRepository travelCourseRepository;
 
     @Autowired
-    private TravelCourseDetailRepository travelCourseDetailRepository;
+    TravelCourseDetailRepository travelCourseDetailRepository;
 
-    private Country country;
-    private Region region;
-    private Place place;
-    private Video video;
-    private TravelCourse travelCourse;
-    private TravelCourseDetail travelCourseDetail;
+    Country country;
+    Region region;
+    Place place;
+    Video video;
+    TravelCourse travelCourse;
+    TravelCourseDetail travelCourseDetail;
 
     @BeforeEach
     void setUp() {
