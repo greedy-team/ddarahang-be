@@ -97,6 +97,14 @@ class TravelCourseServiceTest extends BaseTest {
         travelCourseDetail = travelCourseDetailRepository.save(TravelCourseDetailFixture.getMockTravelCourseDetail(travelCourse, place));
     }
 
+    private Statistics getStatistics() {
+        SessionFactory sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
+        Statistics stats = sessionFactory.getStatistics();
+        stats.setStatisticsEnabled(true);
+        stats.clear();
+        return stats;
+    }
+
     @Nested
     class GetTravelCourseListMethod {
 
@@ -252,13 +260,28 @@ class TravelCourseServiceTest extends BaseTest {
 
     @Test
     void getTravelCourses_N_plus_1_개선_검증_테스트() {
+        // Given
+        Statistics stats = getStatistics();
 
-        SessionFactory sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
-        Statistics stats = sessionFactory.getStatistics();
-        stats.setStatisticsEnabled(true);
+        // When
+        travelCourseService.getTravelCourses("default", "대한민국", "서울");
 
+        // Then
         long queryCount = stats.getQueryExecutionCount();
+        assertTrue(queryCount < 2);
+    }
 
+    @Test
+    void getTravelCourseDetail_N_plus_1_개선_검증_테스트() {
+        // Given
+        Statistics stats = getStatistics();
+        Long id = travelCourse.getId();
+
+        // When
+        travelCourseService.getTravelCourseDetail(id);
+
+        // Then
+        long queryCount = stats.getQueryExecutionCount();
         assertTrue(queryCount < 2);
     }
 }
