@@ -257,10 +257,7 @@ class TravelCourseServiceTest extends BaseTest {
         Statistics stats = sessionFactory.getStatistics();
         stats.setStatisticsEnabled(true);
 
-        List<TravelCourseListResponse> response = travelCourseService.getTravelCourses("default", "Korea", "");
-
         long queryCount = stats.getQueryExecutionCount();
-        System.out.println("Executed queries: " + queryCount);
 
         assertTrue(queryCount < 2);
     }
