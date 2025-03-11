@@ -40,7 +40,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 class TravelCourseServiceTest extends BaseTest {
@@ -268,7 +268,7 @@ class TravelCourseServiceTest extends BaseTest {
 
         // Then
         long queryCount = stats.getQueryExecutionCount();
-        assertTrue(queryCount < 2);
+        assertEquals(1, queryCount);
     }
 
     @Test
@@ -282,7 +282,6 @@ class TravelCourseServiceTest extends BaseTest {
 
         // Then
         long queryCount = stats.getQueryExecutionCount();
-        assertTrue(queryCount < 2);
+        assertEquals(1, queryCount);
     }
 }
-
