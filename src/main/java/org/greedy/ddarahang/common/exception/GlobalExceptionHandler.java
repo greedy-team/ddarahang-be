@@ -51,6 +51,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
+    @ExceptionHandler(DataSyncException.class)
+    public ResponseEntity<String> dataSyncException(DataSyncException e) {
+        log.error("DataSyncException 발생: {}", e.getMessage(), e);
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
     @ExceptionHandler(DdarahangException.class)
     public ResponseEntity<String> handleExceptions(DdarahangException e) {
         log.error("DdarahangException 발생: {}", e.getMessage(), e);
