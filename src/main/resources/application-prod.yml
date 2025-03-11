@@ -14,9 +14,22 @@ spring:
         show_sql: true
         format_sql: true
 
+
   google:
     sheets:
       application-name: "구글 시트 api"
       service-account-key-path: ${GOOGLE_SERVICE_ACCOUNT_PATH}
       spreadsheet-id: ${GOOGLE_SPREADSHEET_ID}
 
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,metrics,prometheus"
+      base-path: "/ddarahang/monitoring/only1team"
+
+  prometheus:
+    metrics:
+      export:
+        enabled: true
