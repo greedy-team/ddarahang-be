@@ -258,30 +258,35 @@ class TravelCourseServiceTest extends BaseTest {
         }
     }
 
-    @Test
-    void getTravelCourses_N_plus_1_개선_검증_테스트() {
-        // Given
-        Statistics stats = getStatistics();
+    @Nested
+    class Query_Improvement_Test {
 
-        // When
-        travelCourseService.getTravelCourses("default", "대한민국", "서울");
+        @Test
+        void getTravelCourses_N_plus_1_개선_검증_테스트() {
+            // Given
+            Statistics stats = getStatistics();
 
-        // Then
-        long queryCount = stats.getQueryExecutionCount();
-        assertEquals(1, queryCount);
+            // When
+            travelCourseService.getTravelCourses("default", "대한민국", "서울");
+
+            // Then
+            long queryCount = stats.getQueryExecutionCount();
+            assertEquals(1, queryCount);
+        }
+
+        @Test
+        void getTravelCourseDetail_N_plus_1_개선_검증_테스트() {
+            // Given
+            Statistics stats = getStatistics();
+            Long id = travelCourse.getId();
+
+            // When
+            travelCourseService.getTravelCourseDetail(id);
+
+            // Then
+            long queryCount = stats.getQueryExecutionCount();
+            assertEquals(1, queryCount);
+        }
     }
 
-    @Test
-    void getTravelCourseDetail_N_plus_1_개선_검증_테스트() {
-        // Given
-        Statistics stats = getStatistics();
-        Long id = travelCourse.getId();
-
-        // When
-        travelCourseService.getTravelCourseDetail(id);
-
-        // Then
-        long queryCount = stats.getQueryExecutionCount();
-        assertEquals(1, queryCount);
-    }
 }
