@@ -10,3 +10,9 @@ server:
 spring:
   profiles:
     active: prod
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info"
