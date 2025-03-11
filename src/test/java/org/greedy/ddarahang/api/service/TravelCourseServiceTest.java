@@ -1,5 +1,6 @@
 package org.greedy.ddarahang.api.service;
 
+import jakarta.persistence.EntityManagerFactory;
 import org.greedy.ddarahang.api.dto.TravelCourseListResponse;
 import org.greedy.ddarahang.api.dto.TravelCourseResponse;
 import org.greedy.ddarahang.common.exception.InvalidCountryNameException;
@@ -24,6 +25,8 @@ import org.greedy.ddarahang.db.travelCourseDetail.TravelCourseDetail;
 import org.greedy.ddarahang.db.travelCourseDetail.TravelCourseDetailRepository;
 import org.greedy.ddarahang.db.video.Video;
 import org.greedy.ddarahang.db.video.VideoRepository;
+import org.hibernate.SessionFactory;
+import org.hibernate.stat.Statistics;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -37,9 +40,13 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 class TravelCourseServiceTest extends BaseTest {
+
+    @Autowired
+    private EntityManagerFactory entityManagerFactory;
 
     @Autowired
     private TravelCourseService travelCourseService;
@@ -88,6 +95,14 @@ class TravelCourseServiceTest extends BaseTest {
         video = videoRepository.save(VideoFixture.getMockVideo_1(LocalDate.now()));
         travelCourse = travelCourseRepository.save(TravelCourseFixture.getMockTravelCourse(video, country, region));
         travelCourseDetail = travelCourseDetailRepository.save(TravelCourseDetailFixture.getMockTravelCourseDetail(travelCourse, place));
+    }
+
+    private Statistics getStatistics() {
+        SessionFactory sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
+        Statistics stats = sessionFactory.getStatistics();
+        stats.setStatisticsEnabled(true);
+        stats.clear();
+        return stats;
     }
 
     @Nested
@@ -242,4 +257,36 @@ class TravelCourseServiceTest extends BaseTest {
                     .hasMessage("travel course not found");
         }
     }
+
+    @Nested
+    class Query_Improvement_Test {
+
+        @Test
+        void getTravelCourses_N_plus_1_개선_검증_테스트() {
+            // Given
+            Statistics stats = getStatistics();
+
+            // When
+            travelCourseService.getTravelCourses("default", "대한민국", "서울");
+
+            // Then
+            long queryCount = stats.getQueryExecutionCount();
+            assertEquals(1, queryCount);
+        }
+
+        @Test
+        void getTravelCourseDetail_N_plus_1_개선_검증_테스트() {
+            // Given
+            Statistics stats = getStatistics();
+            Long id = travelCourse.getId();
+
+            // When
+            travelCourseService.getTravelCourseDetail(id);
+
+            // Then
+            long queryCount = stats.getQueryExecutionCount();
+            assertEquals(1, queryCount);
+        }
+    }
+
 }
