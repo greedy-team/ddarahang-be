@@ -23,7 +23,6 @@ import java.util.List;
 public class GoogleSheetService {
 
     private final GoogleSheetsProperties googleSheetsProperties;
-    private static final String SPREADSHEET_ID = "1FN2MLyVqHEKBQrHJI4K-fNa9z4CHRu8sVVlfeFmdvUs";
 
     private Sheets getSheetsService() throws IOException, GeneralSecurityException {
         GoogleCredentials credentials;
@@ -55,7 +54,7 @@ public class GoogleSheetService {
         Sheets service = getSheetsService();
         String fullRange = sheetName + "!" + range;
         ValueRange response = service.spreadsheets().values()
-                .get(SPREADSHEET_ID, fullRange)
+                .get(googleSheetsProperties.getSpreadsheetId(), fullRange)
                 .execute();
         return response.getValues();
     }
