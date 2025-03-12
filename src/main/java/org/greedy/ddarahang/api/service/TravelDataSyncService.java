@@ -37,7 +37,7 @@ public class TravelDataSyncService {
     }};
 
     @Transactional
-    @Scheduled(cron = "0 0 0 * * TUE")
+    @Scheduled(cron = "0 0 0 * * WED")
     public void syncGoogleSheetWithDB() throws GeneralSecurityException, IOException {
 
         syncData("Country", "countries", "INSERT INTO countries (name, location_type) VALUES (?, ?)",
