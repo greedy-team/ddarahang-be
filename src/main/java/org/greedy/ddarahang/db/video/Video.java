@@ -28,19 +28,19 @@ public class Video {
     private Long id;
 
     @Column(nullable = false)
-    private String creator;
-
-    @Column(nullable = false)
-    private String title;
-
-    @Column(nullable = false)
     private String videoUrl;
 
     @Column(nullable = false)
     private String thumbnailUrl;
 
     @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
     private Long viewCount;
+
+    @Column(nullable = false)
+    private String creator;
 
     @Column(nullable = false)
     private LocalDate uploadDate;

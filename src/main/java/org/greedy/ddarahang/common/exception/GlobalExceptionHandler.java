@@ -33,6 +33,30 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
+    @ExceptionHandler(NotFoundCountryException.class)
+    public ResponseEntity<String> notFoundCountryException(NotFoundCountryException e) {
+        log.error("NotFoundCountryException 발생: {}", e.getMessage(), e);
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(NotFoundRegionException.class)
+    public ResponseEntity<String> notFoundRegionException(NotFoundRegionException e) {
+        log.error("NotFoundRegionException 발생: {}", e.getMessage(), e);
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(InvalidDateFormat.class)
+    public ResponseEntity<String> invalidDateFormat(InvalidDateFormat e) {
+        log.error("InvalidDateFormat 발생: {}", e.getMessage(), e);
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(DataSyncException.class)
+    public ResponseEntity<String> dataSyncException(DataSyncException e) {
+        log.error("DataSyncException 발생: {}", e.getMessage(), e);
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
     @ExceptionHandler(DdarahangException.class)
     public ResponseEntity<String> handleExceptions(DdarahangException e) {
         log.error("DdarahangException 발생: {}", e.getMessage(), e);
