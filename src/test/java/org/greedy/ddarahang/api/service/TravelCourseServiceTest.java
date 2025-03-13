@@ -54,7 +54,7 @@ class TravelCourseServiceTest extends BaseTest {
     PlaceRepository placeRepository;
 
     @Autowired
-     VideoRepository videoRepository;
+    VideoRepository videoRepository;
 
     @Autowired
     TravelCourseRepository travelCourseRepository;
