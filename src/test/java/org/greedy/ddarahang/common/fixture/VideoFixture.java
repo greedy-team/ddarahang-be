@@ -12,7 +12,7 @@ public class VideoFixture {
                 .videoUrl("https://youtube.com/v1")
                 .thumbnailUrl("https://img.youtube.com/1.jpg")
                 .viewCount(10000L)
-                .uploadDate(now)
+                .uploadDate(now.minusDays(1))
                 .build();
     }
 
@@ -23,7 +23,7 @@ public class VideoFixture {
                 .videoUrl("https://youtube.com/v2")
                 .thumbnailUrl("https://img.youtube.com/2.jpg")
                 .viewCount(20000L)
-                .uploadDate(now.plusDays(1))
+                .uploadDate(now)
                 .build();
     }
 }
