@@ -26,13 +26,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class TravelCourseSortingServiceTest {
 
     @InjectMocks
-    private final TravelCourseService travelCourseService = new TravelCourseService(new TravelCourseRepository());
+    private TravelCourseService travelCourseService;
 
     @Mock
     private TravelCourseRepository travelCourseRepository;
