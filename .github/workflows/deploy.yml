@@ -67,8 +67,8 @@ jobs:
 
       - name: Decode Google Service Account JSON
         run: |
-          echo "${{ secrets.SERVICE_ACCOUNT_JSON }}" | base64 -d > /home/ubuntu/ddarahang/ddarahang-account.json
-          ls -la /home/ubuntu/ddarahang/service-account.json
+          sudo sh -c 'echo "${{ secrets.SERVICE_ACCOUNT_JSON }}" | base64 -d > /home/ubuntu/ddarahang/ddarahang-account.json'
+          ls -la /home/ubuntu/ddarahang/ddarahang-account.json
 
       - name: Run application
         run: |
