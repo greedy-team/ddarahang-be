@@ -1,5 +1,6 @@
 package org.greedy.ddarahang.api.service;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +42,8 @@ public class TravelDataSyncService {
     }};
 
     @Transactional
-    @Scheduled(cron = "0 0 0 * * WED")
+    @PostConstruct
+//    @Scheduled(cron = "0 0 0 * * WED")
     public void syncGoogleSheetWithDB() throws GeneralSecurityException, IOException {
 
         syncData("Country", "countries", "INSERT INTO countries (name, location_type) VALUES (?, ?)",

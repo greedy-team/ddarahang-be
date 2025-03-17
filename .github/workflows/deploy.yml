@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feat/36-feat-google-sheet-api-db-automation
 
 jobs:
   build-and-deploy:

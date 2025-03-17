@@ -39,7 +39,6 @@ dependencies {
     // RestAssured
     testImplementation 'io.rest-assured:rest-assured:5.3.0'
 
-
     // Google Sheets API
     implementation 'com.google.api-client:google-api-client:2.0.0'
     implementation 'com.google.auth:google-auth-library-oauth2-http:1.18.0'
