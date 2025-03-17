@@ -42,7 +42,7 @@ public class TravelDataSyncService {
     }};
 
     @Transactional
-    @PostConstruct
+//    @PostConstruct
 //    @Scheduled(cron = "0 0 0 * * WED")
     public void syncGoogleSheetWithDB() throws GeneralSecurityException, IOException {
 
