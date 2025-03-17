@@ -7,6 +7,7 @@ import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
+import java.io.FileInputStream;
 import lombok.RequiredArgsConstructor;
 import org.greedy.ddarahang.common.config.GoogleSheetsProperties;
 import org.springframework.core.io.ClassPathResource;
@@ -27,7 +28,8 @@ public class GoogleSheetService {
     private Sheets getSheetsService() throws IOException, GeneralSecurityException {
         GoogleCredentials credentials;
 
-        try (InputStream serviceAccountStream = new ClassPathResource("ddarahang-684ec417dfa8.json").getInputStream()) {
+        try (InputStream serviceAccountStream =
+                     new ClassPathResource("ddarahang-local-381179c8ef0e.json").getInputStream()) {
             credentials = GoogleCredentials.fromStream(serviceAccountStream)
                     .createScoped(Collections.singleton(SheetsScopes.SPREADSHEETS));
         } catch (IOException e) {
@@ -36,7 +38,7 @@ public class GoogleSheetService {
                 throw new IOException("Google Service Account JSON 파일 경로가 설정되지 않았습니다.");
             }
 
-            try (InputStream serviceAccountStream = new ClassPathResource(serviceAccountPath).getInputStream()) {
+            try (InputStream serviceAccountStream = new FileInputStream(serviceAccountPath)) {
                 credentials = GoogleCredentials.fromStream(serviceAccountStream)
                         .createScoped(Collections.singleton(SheetsScopes.SPREADSHEETS));
             }
@@ -49,6 +51,7 @@ public class GoogleSheetService {
                 .setApplicationName(googleSheetsProperties.getApplicationName())
                 .build();
     }
+
 
     public List<List<Object>> getSheetData(String sheetName, String range) throws IOException, GeneralSecurityException {
         Sheets service = getSheetsService();
