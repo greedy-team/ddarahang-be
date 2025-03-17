@@ -1,6 +1,5 @@
 package org.greedy.ddarahang.api.service;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +7,6 @@ import org.greedy.ddarahang.common.exception.DataSyncException;
 import org.greedy.ddarahang.db.country.LocationType;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -42,8 +40,6 @@ public class TravelDataSyncService {
     }};
 
     @Transactional
-//    @PostConstruct
-//    @Scheduled(cron = "0 0 0 * * WED")
     public void syncGoogleSheetWithDB() throws GeneralSecurityException, IOException {
 
         syncData("Country", "countries", "INSERT INTO countries (name, location_type) VALUES (?, ?)",
