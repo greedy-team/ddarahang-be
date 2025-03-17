@@ -12,7 +12,7 @@ public class VideoFixture {
                 .videoUrl("https://youtube.com/v1")
                 .thumbnailUrl("https://img.youtube.com/1.jpg")
                 .viewCount(10000L)
-                .uploadDate(now)
+                .uploadDate(now.minusDays(1))
                 .build();
     }
 
