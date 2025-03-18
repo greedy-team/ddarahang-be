@@ -26,7 +26,7 @@ public class Place {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private Long id;
 
     @Column(nullable = false)
@@ -34,6 +34,8 @@ public class Place {
 
     @Column(nullable = false)
     private String address;
+
+    private String tag;
 
     private Double latitude;
 
