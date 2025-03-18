@@ -5,7 +5,7 @@ services:
     image: prom/prometheus
     container_name: prometheus
     volumes:
-      - /Users/sinji/ddarahang-be/prometheus.yml:/etc/prometheus/prometheus.yml
+      - /home/ubuntu/ddarahang-be/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus-data:/prometheus
     ports:
       - "9090:9090"
@@ -14,7 +14,6 @@ services:
     restart: always
     networks:
       - monitoring
-
 
   grafana:
     image: grafana/grafana
