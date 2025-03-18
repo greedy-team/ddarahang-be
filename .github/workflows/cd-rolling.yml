@@ -1,3 +1,4 @@
+# CI/CD workflow
 name: CI/CD workflow
 
 on:
@@ -8,15 +9,14 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: [ self-hosted ]
-
+    runs-on: [self-hosted]
     defaults:
       run:
         shell: bash
 
     env:
       PROJECT_DIR: /home/ubuntu/actions-runner/_work/ddarahang-be
-      DEPLOY_DIR: /home/ubuntu/ddarahang
+      DEPLOY_DIR: /home/ubuntu/cicd   # cicd 폴더로 설정
       JAR_NAME: ddarahang.jar
 
     steps:
@@ -59,6 +59,7 @@ jobs:
             echo "No running application found."
           fi
 
+      # Copy JAR to cicd directory (new JAR file for deployment)
       - name: Copy jar to deployment folder
         run: sudo cp build/libs/$JAR_NAME $DEPLOY_DIR
 
@@ -71,12 +72,18 @@ jobs:
           -DRDS_HOST=${{ secrets.RDS_HOST }} \
           -DRDS_USERNAME=${{ secrets.RDS_USERNAME }} \
           -DRDS_PASSWORD=${{ secrets.RDS_PASSWORD }} \
+          -Dserver.port=8080 \
           $DEPLOY_DIR/$JAR_NAME > /home/ubuntu/application.log 2>&1 &
 
-      # Rollback if deploy fails
+      # Run rolling deployment using deploy.sh
       - name: Run rolling deployment (deploy.sh)
         run: |
           chmod +x ./scripts/deploy.sh
           ./scripts/deploy.sh
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      # Ensure Nginx routes traffic to the correct application
+      - name: Ensure Nginx routes traffic properly
+        run: |
+          sudo service nginx reload
