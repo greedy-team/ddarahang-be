@@ -17,6 +17,9 @@ bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
+### Google Sheets Json ###
+ddarahang-local-381179c8ef0e.json
+
 ### IntelliJ IDEA ###
 .idea
 *.iws
