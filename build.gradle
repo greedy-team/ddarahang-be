@@ -49,8 +49,17 @@ dependencies {
 
     // prometheus
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+
+    // 무중단 배포
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+tasks.named("jar") {
+    enabled = false
+}
+
