@@ -1,0 +1,17 @@
+{
+	"ulid": "01JPMF2245DCRHZ6WCS5D4YCDZ",
+	"minTime": 1742285321925,
+	"maxTime": 1742292000000,
+	"stats": {
+		"numSamples": 324162,
+		"numSeries": 783,
+		"numChunks": 2361
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01JPMF2245DCRHZ6WCS5D4YCDZ"
+		]
+	},
+	"version": 1
+}

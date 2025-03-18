@@ -27,8 +27,6 @@ management:
     web:
       exposure:
         include: "health,info,metrics,prometheus"
-      base-path: "/ddarahang/monitoring/only1team"
-
   prometheus:
     metrics:
       export:
