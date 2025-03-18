@@ -87,12 +87,14 @@ sudo service nginx reload
 
 # 8081 포트에서 실행 중인 프로세스 종료
 echo "Stopping process on port $PORT1..."
-sudo fuser -k -TERM $PORT1/tcp
-if [ $? -ne 0 ]; then
-    echo "Failed to stop the process on port $PORT1. Aborting..."
-    exit 1
+PID=$(sudo lsof -t -i :8081 || echo "")
+
+if [ -n "$PID" ]; then
+    echo "Stopping existing application on port $PORT1 with PID $PID..."
+    sudo kill -9 "$PID"
+else
+    echo "No running application found on port $PORT1."
 fi
-echo "Process on port $PORT1 stopped."
 
 deploy $PORT1
 if [ $? -ne 0 ]; then
@@ -111,12 +113,14 @@ sudo service nginx reload
 
 # 8082 포트에서 실행 중인 프로세스 종료
 echo "Stopping process on port $PORT2..."
-sudo fuser -k -TERM $PORT2/tcp
-if [ $? -ne 0 ]; then
-    echo "Failed to stop the process on port $PORT2. Aborting..."
-    exit 1
+PID=$(sudo lsof -t -i :8082 || echo "")
+
+if [ -n "$PID" ]; then
+    echo "Stopping existing application on port $PORT2 with PID $PID..."
+    sudo kill -9 "$PID"
+else
+    echo "No running application found on port $PORT2."
 fi
-echo "Process on port $PORT2 stopped."
 
 deploy $PORT2
 if [ $? -ne 0 ]; then
