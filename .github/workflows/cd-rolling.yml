@@ -64,17 +64,18 @@ jobs:
       - name: Grant execute permission for JAR
         run: sudo chmod +x $DEPLOY_DIR/$JAR_NAME
 
-      - name: Decode Google Service Account JSON
-        run: |
-          sudo sh -c 'echo "${{ secrets.SERVICE_ACCOUNT_JSON }}" | base64 -d > /home/ubuntu/ddarahang/ddarahang-account.json'
-          ls -la /home/ubuntu/ddarahang/ddarahang-account.json
-
       - name: Run application
         run: |
           sudo nohup java -jar \
           -DRDS_HOST=${{ secrets.RDS_HOST }} \
           -DRDS_USERNAME=${{ secrets.RDS_USERNAME }} \
           -DRDS_PASSWORD=${{ secrets.RDS_PASSWORD }} \
-          -DGOOGLE_SPREADSHEET_ID=${{ secrets.GOOGLE_SPREADSHEET_ID }} \
-          -DGOOGLE_SERVICE_ACCOUNT_PATH=/home/ubuntu/ddarahang/ddarahang-account.json \
           $DEPLOY_DIR/$JAR_NAME > /home/ubuntu/application.log 2>&1 &
+
+      # Rollback if deploy fails
+      - name: Run rolling deployment (deploy.sh)
+        run: |
+          chmod +x ./scripts/deploy.sh
+          ./scripts/deploy.sh
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
