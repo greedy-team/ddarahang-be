@@ -9,6 +9,7 @@ public class PlaceFixture {
                 .name("경복궁")
                 .address("서울 종로구 세종로 1-1")
                 .region(region)
+                .tag("관광")
                 .build();
     }
 
@@ -17,6 +18,7 @@ public class PlaceFixture {
                 .name("광안리 해수욕장")
                 .address("부산 광안리")
                 .region(region)
+                .tag("관광")
                 .build();
     }
 }
