@@ -61,10 +61,10 @@ jobs:
             echo "${{ secrets.SERVICE_ACCOUNT_JSON }}" | base64 -d > /home/ubuntu/ddarahang/ddarahang-account.json
             chmod 600 /home/ubuntu/ddarahang/ddarahang-account.json
 
-            PID=$(lsof -t -i :8080 || echo "")
+            PID=$(sudo lsof -t -i :8080 || echo "")
             if [ -n "$PID" ]; then
               echo "Stopping existing application with PID $PID..."
-              kill -9 "$PID"
+              sudo kill -9 "$PID"
             else
               echo "No running application found."
             fi
