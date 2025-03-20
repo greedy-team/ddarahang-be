@@ -14,11 +14,6 @@ jobs:
       run:
         shell: bash
 
-    env:
-      PROJECT_DIR: /home/ubuntu/actions-runner/_work/ddarahang-be
-      DEPLOY_DIR: /home/ubuntu/ddarahang
-      JAR_NAME: ddarahang.jar
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -60,7 +55,7 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "build/libs/*.jar"
+          source: "${{ github.workspace }}/build/libs/*.jar"
           target: "/home/ubuntu/ddarahang"
 
       - name: Execute JAR and Setup Google Service Account JSON
