@@ -1,6 +1,4 @@
-![mysql](https://github.com/user-attachments/assets/b0528e1b-a9fc-4ba4-b7aa-c741788ed4b5)# ddarahang-backend
-
-<h1 align="center">🚀 프로젝트명</h1>
+<h1 align="center">🚀 따라행 🚀</h1>
 <p align="center">
   <img src="https://img.shields.io/badge/version-1.0.0-blue?style=flat-square" />
   <img src="https://img.shields.io/badge/build-passing-brightgreen?style=flat-square" />
@@ -9,9 +7,16 @@
 
 <p align="center">
   📝 여행 코스  <br>
-  🌟 멋진 기능과 기술 스택을 포함한 설명 <br>
-  
+  🌟 기능과 기술 스택을 포함한 설명 <br>
+
 </p>
+
+![image](https://github.com/user-attachments/assets/d8c1261b-09ec-4569-a980-99ee889e4639)
+
+![image](https://github.com/user-attachments/assets/0715f421-2b4f-4894-86c8-802fc2959890)
+
+![image](https://github.com/user-attachments/assets/0fed2ab9-83e2-4a42-b866-d2d0e0ca4b34)
+
 
 ---
 ## 🙋🏻‍♂️ Member  
@@ -58,12 +63,12 @@
   </tbody>
 </table>
 
-
+---
 ## 📷 서비스 화면
 <div style="display: flex; justify-content: center; gap: 10px;">
-  <img src="https://github.com/user-attachments/assets/e9436e2b-307c-4468-a656-0ecebbec0c0c" width="30%" />
-  <img src="https://github.com/user-attachments/assets/e5d371b8-c7c2-4031-a89f-eaf20a128b29" width="30%" />
-  <img src="https://github.com/user-attachments/assets/0de07b5e-eb5d-4a45-a616-47d4a4226538" width="30%" />
+  <img src="https://github.com/user-attachments/assets/e9436e2b-307c-4468-a656-0ecebbec0c0c" width="31%" />
+  <img src="https://github.com/user-attachments/assets/e5d371b8-c7c2-4031-a89f-eaf20a128b29" width="31%" />
+  <img src="https://github.com/user-attachments/assets/0de07b5e-eb5d-4a45-a616-47d4a4226538" width="31%" />
 </div>
 
 --- 
@@ -87,35 +92,23 @@
 
 ## 🛠 기술 스택
 ### BE
-java
-spring
-spring data jpa
-mysql
-h2
-
+  <img src="https://github.com/user-attachments/assets/d789896e-3a1a-4ac7-ae8f-14d440904c02" width="80%" />
+  
+### FE
+  <img src="https://github.com/user-attachments/assets/d809fbf5-855b-4914-8298-0f70f6ec0f8a" width="80%" />
 
 ### 인프라
-깃허브액션
-도커
-엔지닉스
-그라파나
-프로메테우스
-이씨투
-에쓰쓰리
-클라우드프론트
+  <img src="https://github.com/user-attachments/assets/9c914425-6b81-4b77-8cbc-ff62d05ab523" width="80%" />
 
 --- 
 
 ## 🔧 서비스 요청 흐름도
 ## BE
-  <img src="https://github.com/user-attachments/assets/ff9f2647-a446-4cd3-acf6-28ca01f37e52" width="80%" />
-  
-### CI/CD
-  <img src="https://github.com/user-attachments/assets/ff9f2647-a446-4cd3-acf6-28ca01f37e52" width="80%" />
+  <img src="https://github.com/user-attachments/assets/5b792778-17a7-4c28-8232-316bac9b4a41" width="80%" />
 
 ## FE
-  <img src="" width="80%" />
+  <img src="https://github.com/user-attachments/assets/ecd56f2e-d262-4ba3-b19a-90f3f5a3d27c" width="80%" />
   
-### CI/CD
-  <img src="https://github.com/user-attachments/assets/7e2795bc-71f1-46e4-a158-2a9a999d0397" width="80%" />
+## CI/CD
+  <img src="https://github.com/user-attachments/assets/fe992d81-7ae3-4e50-8544-601cf2c8fd80" width="80%" />
 
