@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/ddarahang_test?rewriteBatchedStatements=true&profileSQL=true&logger=Slf4JLogger&maxQuerySizeToLog=999999
     username: root
-    password: 1234
+    password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -13,12 +13,6 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
-
-  google:
-    sheets:
-      application-name: "구글 시트 api"
-      service-account-key-path: google-service-key
-      spreadsheet-id: "1qYl6Q0Dg5jTDec9VUilSA0M3PF7DePFk3HRBftB84VE"
 
 management:
   endpoints:
