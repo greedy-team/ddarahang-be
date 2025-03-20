@@ -2,6 +2,7 @@ package org.greedy.ddarahang.api.controller;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+
 import lombok.RequiredArgsConstructor;
 import org.greedy.ddarahang.api.service.TravelDataSyncService;
 import org.springframework.http.ResponseEntity;
