@@ -28,9 +28,6 @@ jobs:
       - name: Set Up Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: CheckOut
-        uses: actions/checkout@v4
-
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
@@ -43,19 +40,13 @@ jobs:
           ls -al
           ls -al build/libs
 
-      - name: Upload JAR artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ddarahang-artifact
-          path: build/libs/*.jar
-
       - name: Deploy to AWS EC2
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "${{ github.workspace }}/build/libs/*.jar"
+          source: "build/libs/*.jar"
           target: "/home/ubuntu/ddarahang"
 
       - name: Execute JAR and Setup Google Service Account JSON
