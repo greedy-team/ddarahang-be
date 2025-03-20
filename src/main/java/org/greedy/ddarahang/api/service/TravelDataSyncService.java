@@ -41,6 +41,7 @@ public class TravelDataSyncService {
 
     @Transactional
     public void syncGoogleSheetWithDB() throws GeneralSecurityException, IOException {
+        log.info("Google Sheets 데이터 동기화 시작");
 
         syncData("Country", "countries", "INSERT INTO countries (name, location_type) VALUES (?, ?)",
                 (ps, row) -> {
@@ -167,9 +168,13 @@ public class TravelDataSyncService {
                         throw new DataSyncException("Failed to insert data into travel_course_details");
                     }
                 });
+
+        log.info("Google Sheets 데이터 동기화 완료");
     }
 
     private void syncData(String sheetName, String tableName, String sql, BiConsumer<PreparedStatement, List<Object>> setter) {
+        log.info("{} 시트 -> {} 테이블 동기화 시작", sheetName, tableName);
+
         try {
             Long lastProcessedRow = getLastProcessedRow(tableName);
             String endCell = sheetEndCellMap.get(sheetName);
@@ -185,6 +190,8 @@ public class TravelDataSyncService {
 
             batchInsert(data, sql, setter);
             updateLastProcessedRow(tableName, lastProcessedRow + data.size());
+
+            log.info("{} 테이블 동기화 완료 (총 {}개 데이터 삽입됨)", tableName, data.size());
 
         } catch (IOException e) {
             log.error(sheetName + " 시트 동기화 중 Google Sheets API 호출 실패", e);
@@ -202,6 +209,7 @@ public class TravelDataSyncService {
         try {
             return jdbcTemplate.queryForObject("SELECT last_row FROM sync_status WHERE sheet_name = ?", Long.class, tableName);
         } catch (Exception e) {
+            log.warn("마지막 처리된 행 정보 없음. 새로운 행을 추가합니다.");
             jdbcTemplate.update("INSERT INTO sync_status (sheet_name, last_row) VALUES (?, ?)", tableName, 1L);
             return 1L;
         }
@@ -211,6 +219,7 @@ public class TravelDataSyncService {
         try {
             jdbcTemplate.update("UPDATE sync_status SET last_row = ? WHERE sheet_name = ?", lastRow, tableName);
         } catch (Exception e) {
+            log.error("마지막 처리된 행 업데이트 실패");
             throw new DataSyncException("Failed to update last processed row for table: " + tableName);
         }
     }
@@ -222,6 +231,7 @@ public class TravelDataSyncService {
                 jdbcTemplate.batchUpdate(sql, batch, batch.size(), setter::accept);
             }
         } catch (Exception e) {
+            log.error("Batch Insert 실패");
             throw new DataSyncException("Batch insert failed");
         }
     }
