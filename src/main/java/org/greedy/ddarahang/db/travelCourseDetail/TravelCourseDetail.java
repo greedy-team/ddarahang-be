@@ -1,14 +1,6 @@
 package org.greedy.ddarahang.db.travelCourseDetail;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,8 +14,12 @@ import org.greedy.ddarahang.db.travelCourse.TravelCourse;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Table(name = "travel_course_details")
-public class TravelCourseDetail {
+@Table(
+        name = "travel_course_detail",
+        indexes = {
+                @Index(name = "idx_travel_course_id", columnList = "travel_course_id", unique = false)
+        }
+)public class TravelCourseDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
