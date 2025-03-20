@@ -49,8 +49,7 @@ jobs:
           source: "build/libs/ddarahang.jar"
           target: "/home/ubuntu/ddarahang"
           overwrite: true
-          strip_components: 1
-          debug: true
+          strip_components: 2
 
       - name: Execute JAR and Setup Google Service Account JSON
         uses: appleboy/ssh-action@v1.0.3
@@ -76,4 +75,4 @@ jobs:
               -DRDS_PASSWORD='${{ secrets.RDS_PASSWORD }}' \
               -DGOOGLE_SPREADSHEET_ID='${{ secrets.GOOGLE_SPREADSHEET_ID }}' \
               -DGOOGLE_SERVICE_ACCOUNT_PATH='/home/ubuntu/ddarahang/ddarahang-account.json' \
-              /home/ubuntu/ddarahang/build/libs/*.jar > /home/ubuntu/application.log 2>&1 &
+              /home/ubuntu/ddarahang/*.jar > /home/ubuntu/application.log 2>&1 &
