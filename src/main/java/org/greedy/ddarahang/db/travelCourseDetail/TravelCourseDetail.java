@@ -14,7 +14,7 @@ import org.greedy.ddarahang.db.travelCourse.TravelCourse;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Table
+@Table(name = "travel_course_details")
 public class TravelCourseDetail {
 
     @Id
