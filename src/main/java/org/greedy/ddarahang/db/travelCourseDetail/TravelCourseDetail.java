@@ -14,12 +14,8 @@ import org.greedy.ddarahang.db.travelCourse.TravelCourse;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Table(
-        name = "travel_course_detail",
-        indexes = {
-                @Index(name = "idx_travel_course_id", columnList = "travel_course_id", unique = false)
-        }
-)public class TravelCourseDetail {
+@Table
+public class TravelCourseDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
