@@ -48,6 +48,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "build/libs/*.jar"
           target: "/home/ubuntu/ddarahang"
+          strip_components: 2
 
       - name: Execute JAR and Setup Google Service Account JSON
         uses: appleboy/ssh-action@v1.0.3
