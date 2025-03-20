@@ -7,6 +7,7 @@ public record TravelCourseDetailResponse(
         int orderInDay,
         String placeName,
         String placeAddress,
+        String tag,
         Double lat,
         Double lng
 ) {
@@ -16,6 +17,7 @@ public record TravelCourseDetailResponse(
                 travelCourseDetail.getOrderInDay(),
                 travelCourseDetail.getPlace().getName(),
                 travelCourseDetail.getPlace().getAddress(),
+                travelCourseDetail.getPlace().getTag(),
                 travelCourseDetail.getPlace().getLatitude(),
                 travelCourseDetail.getPlace().getLongitude()
         );
