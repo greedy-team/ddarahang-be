@@ -34,12 +34,6 @@ jobs:
       - name: Build and test
         run: ./gradlew build
 
-      - name: Debug workspace paths
-        run: |
-          echo "Current dir: $(pwd)"
-          ls -al
-          ls -al build/libs
-
       - name: Deploy to AWS EC2
         uses: appleboy/scp-action@v0.1.7
         with:
