@@ -42,6 +42,12 @@ jobs:
       - name: Build and test
         run: ./gradlew build
 
+      - name: Debug workspace paths
+        run: |
+          echo "Current dir: $(pwd)"
+          ls -al
+          ls -al build/libs
+
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
         with:
