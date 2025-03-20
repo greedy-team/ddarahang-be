@@ -46,9 +46,10 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "build/libs/*.jar"
+          source: "build/libs/ddarahang.jar"
           target: "/home/ubuntu/ddarahang"
           overwrite: true
+          strip_components: 1
           debug: true
 
       - name: Execute JAR and Setup Google Service Account JSON
@@ -75,4 +76,4 @@ jobs:
               -DRDS_PASSWORD='${{ secrets.RDS_PASSWORD }}' \
               -DGOOGLE_SPREADSHEET_ID='${{ secrets.GOOGLE_SPREADSHEET_ID }}' \
               -DGOOGLE_SERVICE_ACCOUNT_PATH='/home/ubuntu/ddarahang/ddarahang-account.json' \
-              /home/ubuntu/ddarahang/*.jar > /home/ubuntu/application.log 2>&1 &
+              /home/ubuntu/ddarahang/build/libs/*.jar > /home/ubuntu/application.log 2>&1 &
