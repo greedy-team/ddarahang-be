@@ -54,7 +54,7 @@ rollback() {
 deploy() {
     local port=$1
     local current_version_jar="/home/ubuntu/ddarahang/app-${port}.jar"
-    local new_version_jar="/home/ubuntu/ddarahang/ddarahang.jar"
+    local new_version_jar="/home/ubuntu/ddarahang/build/libs/ddarahang.jar"  # 경로 수정
 
     echo "Deploying new version to port $port..."
 
@@ -142,6 +142,6 @@ fi
 echo "Re-routing traffic to port $PORT2..."
 sudo sed -i '/upstream backend {/,/}/ s/server 127.0.0.1:'"$PORT2"' down;/server 127.0.0.1:'"$PORT2"';/' /etc/nginx/sites-available/default
 sudo service nginx reload
-sudo rm /home/ubuntu/ddarahang/ddarahang.jar
+sudo rm /home/ubuntu/ddarahang/build/libs/ddarahang.jar  # 경로 수정
 
 echo "Rolling deployment complete. Both ports are now running the new version."
