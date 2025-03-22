@@ -33,40 +33,35 @@ jobs:
       - name: Build and test
         run: ./gradlew build
 
-      - name: Deploy to AWS EC2
+      - name: Deploy to AWS EC2 with deploy.sh
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "build/libs/ddarahang.jar"
+          source: "build/libs/ddarahang.jar,  scripts/deploy.sh"  # deploy.sh 추가
           target: "/home/ubuntu/ddarahang"
           overwrite: true
           strip_components: 2
 
-      - name: Execute JAR and Setup Google Service Account JSON
+      - name: Execute deploy.sh on EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            # Google Service Account JSON 설정
             echo "${{ secrets.SERVICE_ACCOUNT_JSON }}" | base64 -d > /home/ubuntu/ddarahang/ddarahang-account.json
             chmod 600 /home/ubuntu/ddarahang/ddarahang-account.json
 
-            PID=$(sudo lsof -t -i :8080 || echo "")
-            if [ -n "$PID" ]; then
-              echo "Stopping existing application with PID $PID..."
-              sudo kill -9 "$PID"
-            else
-              echo "No running application found."
-            fi
+            # 환경 변수 설정
+            export RDS_HOST='${{ secrets.RDS_HOST }}'
+            export RDS_USERNAME='${{ secrets.RDS_USERNAME }}'
+            export RDS_PASSWORD='${{ secrets.RDS_PASSWORD }}'
+            export GOOGLE_SPREADSHEET_ID='${{ secrets.GOOGLE_SPREADSHEET_ID }}'
+            export GOOGLE_SERVICE_ACCOUNT_PATH='/home/ubuntu/ddarahang/ddarahang-account.json'
 
-            nohup java -jar \
-              -DRDS_HOST='${{ secrets.RDS_HOST }}' \
-              -DRDS_USERNAME='${{ secrets.RDS_USERNAME }}' \
-              -DRDS_PASSWORD='${{ secrets.RDS_PASSWORD }}' \
-              -DGOOGLE_SPREADSHEET_ID='${{ secrets.GOOGLE_SPREADSHEET_ID }}' \
-              -DGOOGLE_SERVICE_ACCOUNT_PATH='/home/ubuntu/ddarahang/ddarahang-account.json' \
-              /home/ubuntu/ddarahang/*.jar > /home/ubuntu/application.log 2>&1 &
-
+            # deploy.sh 실행
+            chmod +x /home/ubuntu/ddarahang/deploy.sh
+            /home/ubuntu/ddarahang/deploy.sh
