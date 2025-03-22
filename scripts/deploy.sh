@@ -108,6 +108,23 @@ switch_traffic() {
     sudo service nginx reload
 }
 
+# 초기화 체크: 첫 배포에서만 8081 종료
+INIT_FILE="/home/ubuntu/ddarahang/.bluegreen_initialized"
+if [ ! -f "$INIT_FILE" ]; then
+    echo "Initializing Blue-Green deployment..."
+    if sudo fuser $GREEN_PORT/tcp >/dev/null 2>&1; then
+        echo "Stopping $GREEN_PORT to start with $BLUE_PORT..."
+        sudo fuser -k -TERM $GREEN_PORT/tcp
+        sleep 5
+    fi
+    # Nginx 초기화: 8080만 남기기
+    sudo sed -i '/upstream backend {/,/}/ s/server 127.0.0.1:'"$GREEN_PORT"';//g' /etc/nginx/sites-available/default
+    sudo sed -i '/upstream backend {/,/}/ s/server 127.0.0.1:'"$BLUE_PORT"' down;/server 127.0.0.1:'"$BLUE_PORT"';/' /etc/nginx/sites-available/default
+    sudo service nginx reload
+    touch "$INIT_FILE"  # 초기화 완료 표시
+fi
+
+# 현재 포트 확인 및 배포
 current_port=$(get_current_port)
 case "$current_port" in
     "$BLUE_PORT")
@@ -125,8 +142,11 @@ case "$current_port" in
         echo "Blue-Green deployment complete. Only port $BLUE_PORT is running."
         ;;
     *)
-        echo "Error: Both ports are either running or stopped. Manual intervention required."
-        exit 1
+        # 둘 다 꺼져 있거나 예외 상태면 8080에 배포 시작
+        echo "No ports running or unexpected state. Starting deployment on $BLUE_PORT..."
+        deploy "$BLUE_PORT" || exit 1
+        switch_traffic "$GREEN_PORT" "$BLUE_PORT"
+        echo "Blue-Green deployment complete. Only port $BLUE_PORT is running."
         ;;
 esac
 
