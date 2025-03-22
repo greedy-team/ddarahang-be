@@ -13,6 +13,17 @@ GREEN_PORT=8081
 
 timestamp=$(date +"%Y%m%d%H%M%S")
 
+# 현재 실행 중인 포트 식별
+get_current_port() {
+    if sudo fuser $BLUE_PORT/tcp >/dev/null 2>&1 && ! sudo fuser $GREEN_PORT/tcp >/dev/null 2>&1; then
+        echo "$BLUE_PORT"
+    elif sudo fuser $GREEN_PORT/tcp >/dev/null 2>&1 && ! sudo fuser $BLUE_PORT/tcp >/dev/null 2>&1; then
+        echo "$GREEN_PORT"
+    else
+        echo "none"
+    fi
+}
+
 health_check() {
     local port=$1
     local CHECK_URL="http://localhost:$port/actuator/health"
@@ -22,11 +33,11 @@ health_check() {
     echo "Checking health on port $port..."
 
     while [ $RETRY_COUNT -lt $MAX_RETRY ]; do
-        if curl_output=$(curl --silent --head "$CHECK_URL" 2>&1); then
+        if curl --silent --head "$CHECK_URL" >/dev/null 2>&1; then
             echo "Health check passed on port $port"
             return 0
         fi
-        echo "Retry $((RETRY_COUNT+1))/$MAX_RETRY: $curl_output"
+        echo "Retry $((RETRY_COUNT+1))/$MAX_RETRY: Health check not passed yet"
         sleep 5
         RETRY_COUNT=$((RETRY_COUNT+1))
     done
@@ -90,64 +101,57 @@ deploy() {
     echo "Deployment successful on port $port"
 }
 
-get_current_port() {
-    if sudo fuser $BLUE_PORT/tcp >/dev/null 2>&1 && ! sudo fuser $GREEN_PORT/tcp >/dev/null 2>&1; then
-        echo "$BLUE_PORT"
-    elif sudo fuser $GREEN_PORT/tcp >/dev/null 2>&1 && ! sudo fuser $BLUE_PORT/tcp >/dev/null 2>&1; then
-        echo "$GREEN_PORT"
-    else
-        echo "none"
-    fi
-}
-
+# Nginx 트래픽 전환
 switch_traffic() {
     local old_port=$1
     local new_port=$2
-    sudo sed -i '/upstream backend {/,/}/ s/server 127.0.0.1:'"$old_port"';//g' /etc/nginx/sites-available/default
-    sudo sed -i '/upstream backend {/,/}/ s/server 127.0.0.1:'"$new_port"' down;/server 127.0.0.1:'"$new_port"';/' /etc/nginx/sites-available/default
-    sudo service nginx reload
+    local config_file="/etc/nginx/sites-available/default"
+    local new_proxy_pass="proxy_pass http://127.0.0.1:$new_port;"
+
+    # 백업 생성
+    cp "$config_file" "$config_file.bak"
+
+    # listen 80과 443의 location / 블록 내 proxy_pass 변경
+    sudo sed -i '/location \/ {/!b;n;s|proxy_pass http://127.0.0.1:.*;|'"$new_proxy_pass"'|' "$config_file"
+
+    # 설정 검증
+    if sudo nginx -t >/dev/null 2>&1; then
+        sudo service nginx reload
+        if [ $? -ne 0 ]; then
+            echo "Nginx reload failed, restoring backup..."
+            sudo mv "$config_file.bak" "$config_file"
+            sudo service nginx restart
+            exit 1
+        fi
+    else
+        echo "Nginx config test failed, restoring backup..."
+        sudo mv "$config_file.bak" "$config_file"
+        sudo service nginx restart
+        exit 1
+    fi
 }
 
-# 초기화 체크: 첫 배포에서만 8081 종료
-INIT_FILE="/home/ubuntu/ddarahang/.bluegreen_initialized"
-if [ ! -f "$INIT_FILE" ]; then
-    echo "Initializing Blue-Green deployment..."
-    if sudo fuser $GREEN_PORT/tcp >/dev/null 2>&1; then
-        echo "Stopping $GREEN_PORT to start with $BLUE_PORT..."
-        sudo fuser -k -TERM $GREEN_PORT/tcp
-        sleep 5
-    fi
-    # Nginx 초기화: 8080만 남기기
-    sudo sed -i '/upstream backend {/,/}/ s/server 127.0.0.1:'"$GREEN_PORT"';//g' /etc/nginx/sites-available/default
-    sudo sed -i '/upstream backend {/,/}/ s/server 127.0.0.1:'"$BLUE_PORT"' down;/server 127.0.0.1:'"$BLUE_PORT"';/' /etc/nginx/sites-available/default
-    sudo service nginx reload
-    touch "$INIT_FILE"  # 초기화 완료 표시
-fi
-
-# 현재 포트 확인 및 배포
+# 현재 포트 확인
 current_port=$(get_current_port)
-case "$current_port" in
-    "$BLUE_PORT")
+if [ "$current_port" = "none" ]; then
+    echo "No ports running or both ports are active. Starting deployment on $BLUE_PORT..."
+    deploy "$BLUE_PORT" || exit 1
+    switch_traffic "$GREEN_PORT" "$BLUE_PORT"
+    echo "Blue-Green deployment complete. Only port $BLUE_PORT is running."
+else
+    if [ "$current_port" -eq "$BLUE_PORT" ]; then
         echo "$BLUE_PORT is running, deploying to $GREEN_PORT..."
         deploy "$GREEN_PORT" || exit 1
         switch_traffic "$BLUE_PORT" "$GREEN_PORT"
         sudo fuser -k -TERM "$BLUE_PORT"/tcp
         echo "Blue-Green deployment complete. Only port $GREEN_PORT is running."
-        ;;
-    "$GREEN_PORT")
+    else
         echo "$GREEN_PORT is running, deploying to $BLUE_PORT..."
         deploy "$BLUE_PORT" || exit 1
         switch_traffic "$GREEN_PORT" "$BLUE_PORT"
         sudo fuser -k -TERM "$GREEN_PORT"/tcp
         echo "Blue-Green deployment complete. Only port $BLUE_PORT is running."
-        ;;
-    *)
-        # 둘 다 꺼져 있거나 예외 상태면 8080에 배포 시작
-        echo "No ports running or unexpected state. Starting deployment on $BLUE_PORT..."
-        deploy "$BLUE_PORT" || exit 1
-        switch_traffic "$GREEN_PORT" "$BLUE_PORT"
-        echo "Blue-Green deployment complete. Only port $BLUE_PORT is running."
-        ;;
-esac
+    fi
+fi
 
 sudo rm /home/ubuntu/ddarahang/build/libs/ddarahang.jar
