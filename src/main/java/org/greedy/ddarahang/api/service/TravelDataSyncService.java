@@ -40,7 +40,7 @@ public class TravelDataSyncService {
     }};
 
     @Transactional
-    public void syncGoogleSheetWithDB() throws GeneralSecurityException, IOException {
+    public void syncGoogleSheetWithDB() {
         log.info("Google Sheets 데이터 동기화 시작");
 
         syncData("Country", "countries", "INSERT INTO countries (name, location_type) VALUES (?, ?)",
@@ -194,13 +194,13 @@ public class TravelDataSyncService {
             log.info("{} 테이블 동기화 완료 (총 {}개 데이터 삽입됨)", tableName, data.size());
 
         } catch (IOException e) {
-            log.error(sheetName + " 시트 동기화 중 Google Sheets API 호출 실패", e);
+            log.error("{} 시트 동기화 중 Google Sheets API 호출 실패 : {}", sheetName, e.getMessage());
             throw new DataSyncException(sheetName + " 시트 동기화 중 Google API 오류" + e.getMessage());
         } catch (DataIntegrityViolationException e) {
-            log.error(sheetName + " 시트 동기화 중 DB 무결성 오류", e);
+            log.error("{} 시트 동기화 중 DB 무결성 오류 : {}", sheetName, e.getMessage());
             throw new DataSyncException(sheetName + " 시트 데이터 저장 중 DB 오류 발생" + e.getMessage());
         } catch (Exception e) {
-            log.error(sheetName + " 시트 동기화 중 알 수 없는 오류 발생", e);
+            log.error("{} 시트 동기화 중 알 수 없는 오류 발생 : {}", sheetName, e.getMessage());
             throw new DataSyncException(sheetName + " 시트 데이터 동기화 실패" + e.getMessage());
         }
     }
@@ -219,7 +219,7 @@ public class TravelDataSyncService {
         try {
             jdbcTemplate.update("UPDATE sync_status SET last_row = ? WHERE sheet_name = ?", lastRow, tableName);
         } catch (Exception e) {
-            log.error("마지막 처리된 행 업데이트 실패");
+            log.error("마지막 처리된 행 업데이트 실패 : {}", e.getMessage());
             throw new DataSyncException("Failed to update last processed row for table: " + tableName);
         }
     }
@@ -231,7 +231,7 @@ public class TravelDataSyncService {
                 jdbcTemplate.batchUpdate(sql, batch, batch.size(), setter::accept);
             }
         } catch (Exception e) {
-            log.error("Batch Insert 실패");
+            log.error("Batch Insert 실패 : {}", e.getMessage());
             throw new DataSyncException("Batch insert failed");
         }
     }
