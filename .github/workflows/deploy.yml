@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - chore/59-rolling-deployment
 
 jobs:
   build-and-deploy:
