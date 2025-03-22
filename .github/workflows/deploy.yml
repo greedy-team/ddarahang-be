@@ -40,7 +40,7 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "build/libs/ddarahang.jar,  scripts/deploy.sh"  # deploy.sh 추가
+          source: "build/libs/ddarahang.jar, scripts/deploy.sh"
           target: "/home/ubuntu/ddarahang"
           overwrite: true
           strip_components: 2
