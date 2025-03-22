@@ -1,10 +1,8 @@
 #!/bin/bash
 
-# 포트 설정
 BLUE_PORT=8080
 GREEN_PORT=8081
 
-# 환경 변수 체크
 : "${RDS_HOST?RDS_HOST is required}"
 : "${RDS_USERNAME?RDS_USERNAME is required}"
 : "${RDS_PASSWORD?RDS_PASSWORD is required}"
@@ -13,7 +11,6 @@ GREEN_PORT=8081
 
 timestamp=$(date +"%Y%m%d%H%M%S")
 
-# 현재 실행 중인 포트 식별
 get_current_port() {
     if sudo fuser $BLUE_PORT/tcp >/dev/null 2>&1 && ! sudo fuser $GREEN_PORT/tcp >/dev/null 2>&1; then
         echo "$BLUE_PORT"
@@ -131,7 +128,6 @@ switch_traffic() {
     fi
 }
 
-# 현재 포트 확인
 current_port=$(get_current_port)
 if [ "$current_port" = "none" ]; then
     echo "No ports running or both ports are active. Starting deployment on $BLUE_PORT..."
