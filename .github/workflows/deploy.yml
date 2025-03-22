@@ -51,20 +51,14 @@ jobs:
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            # Google Service Account JSON 설정
             echo "${{ secrets.SERVICE_ACCOUNT_JSON }}" | base64 -d > /home/ubuntu/ddarahang/ddarahang-account.json
             chmod 600 /home/ubuntu/ddarahang/ddarahang-account.json
 
-            # 환경 변수 설정
             export RDS_HOST='${{ secrets.RDS_HOST }}'
             export RDS_USERNAME='${{ secrets.RDS_USERNAME }}'
             export RDS_PASSWORD='${{ secrets.RDS_PASSWORD }}'
             export GOOGLE_SPREADSHEET_ID='${{ secrets.GOOGLE_SPREADSHEET_ID }}'
             export GOOGLE_SERVICE_ACCOUNT_PATH='/home/ubuntu/ddarahang/ddarahang-account.json'
 
-            # 디버깅용 디렉토리 확인 (선택적)
-            ls -l /home/ubuntu/ddarahang/scripts/
-
-            # deploy.sh 실행
             chmod +x /home/ubuntu/ddarahang/scripts/deploy.sh
             /home/ubuntu/ddarahang/scripts/deploy.sh
