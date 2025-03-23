@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - chore/61-blue-green-deploy
 
 jobs:
   build-and-deploy:
