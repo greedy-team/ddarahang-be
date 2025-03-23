@@ -19,7 +19,6 @@ health_check() {
     local retry_count=0
     local max_retry=10
 
-    echo "$1 포트에서 헬스 체크 중..."
     while [ "$retry_count" -lt "$max_retry" ]; do
         if curl --silent --head "$check_url" >/dev/null 2>&1; then
             echo "$1 포트에서 헬스 체크 통과"
@@ -38,7 +37,6 @@ rollback() {
     local backup_jar="/home/ubuntu/ddarahang/old_build/app-${port}-${TIMESTAMP}.jar"
     local current_jar="/home/ubuntu/ddarahang/app-${port}.jar"
 
-    echo "$port 포트에서 롤백 중..."
     sudo fuser -k -TERM "$port/tcp" >/dev/null 2>&1
     if [ -f "$backup_jar" ]; then
         mv "$backup_jar" "$current_jar"
@@ -62,7 +60,6 @@ deploy() {
     local new_jar="$app_dir/build/libs/ddarahang.jar"
     local backup_dir="$app_dir/old_build"
 
-    echo "$port 포트에 새 버전 배포 중..."
     if [ ! -f "$new_jar" ]; then
         echo "오류: $new_jar 파일을 찾을 수 없습니다. 배포 중단..."
         exit 1
@@ -92,7 +89,6 @@ switch_traffic() {
     local config_file="/etc/nginx/sites-available/default"
     local new_proxy_pass="proxy_pass http://127.0.0.1:$1;"
 
-    echo "Nginx 트래픽을 $1 포트로 전환합니다..."
     sudo cp "$config_file" "$config_file.bak"
     sudo sed -i '/location \/ {/!b;n;s|proxy_pass http://127.0.0.1:.*;|'"$new_proxy_pass"'|' "$config_file"
 
@@ -116,19 +112,16 @@ switch_traffic() {
 
 current_port=$(get_current_port)
 if [ "$current_port" = "none" ]; then
-    echo "실행 중인 포트가 없거나 두 포트 모두 활성화 상태입니다. $BLUE_PORT 포트에서 배포 시작..."
     deploy "$BLUE_PORT" || exit 1
     switch_traffic "$BLUE_PORT"
     echo "블루-그린 배포 완료: $BLUE_PORT 포트에서만 실행 중"
 else
     if [ "$current_port" -eq "$BLUE_PORT" ]; then
-        echo "$BLUE_PORT 포트 실행 중, $GREEN_PORT 포트로 배포 시작..."
         deploy "$GREEN_PORT" || exit 1
         switch_traffic "$GREEN_PORT"
         sudo fuser -k -TERM "$BLUE_PORT/tcp" >/dev/null 2>&1
         echo "블루-그린 배포 완료: $GREEN_PORT 포트에서만 실행 중"
     else
-        echo "$GREEN_PORT 포트 실행 중, $BLUE_PORT 포트로 배포 시작..."
         deploy "$BLUE_PORT" || exit 1
         switch_traffic "$BLUE_PORT"
         sudo fuser -k -TERM "$GREEN_PORT/tcp" >/dev/null 2>&1
