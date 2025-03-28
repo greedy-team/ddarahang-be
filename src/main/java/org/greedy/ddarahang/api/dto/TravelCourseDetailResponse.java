@@ -11,7 +11,9 @@ public record TravelCourseDetailResponse(
         Double lat,
         Double lng
 ) {
-    public static TravelCourseDetailResponse from(TravelCourseDetail travelCourseDetail) {
+    public static TravelCourseDetailResponse from(
+            TravelCourseDetail travelCourseDetail
+    ) {
         return new TravelCourseDetailResponse(
                 travelCourseDetail.getDay(),
                 travelCourseDetail.getOrderInDay(),
