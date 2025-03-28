@@ -31,22 +31,12 @@ public class TravelCourseService {
     public Page<TravelCourseListResponse> getTravelCourses(TravelCourseListRequest request) {
         Pageable pageable = PageRequest.of(request.pageNumber(), request.pageSize());
 
-        Page<TravelCourse> travelCourses;
-        if ("viewCount".equals(request.sortField())) {
-            travelCourses = travelCourseRepository.findAllByViewCount(
-                    request.countryName(), request.regionName(), pageable
-            );
-        }
-        else if ("uploadDate".equals(request.sortField())) {
-            travelCourses = travelCourseRepository.findAllByUploadDate(
-                    request.countryName(), request.regionName(), pageable
-            );
-        }
-        else {
-            travelCourses = travelCourseRepository.findAllByOrderByIdDesc(
-                    request.countryName(), request.regionName(), pageable
-            );
-        }
+        Page<TravelCourse> travelCourses = travelCourseRepository.findAllSortedNative(
+                request.countryName(),
+                request.regionName(),
+                request.sortField(),
+                pageable
+        );
 
         log.info("여행 목록 정렬 성공: {}", request.sortField());
 
@@ -54,6 +44,7 @@ public class TravelCourseService {
                 TravelCourseListResponse.from(travelCourse, travelCourse.getVideo())
         );
     }
+
 
     public TravelCourseResponse getTravelCourseDetail(Long id) {
         validateId(id);
