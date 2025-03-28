@@ -1,10 +1,9 @@
 package org.greedy.ddarahang.api.dto;
 
 import org.greedy.ddarahang.db.travelCourse.TravelCourse;
+import org.greedy.ddarahang.db.video.Video;
 
 import java.time.LocalDate;
-
-import org.greedy.ddarahang.db.video.Video;
 
 public record TravelCourseListResponse(
         Long travelCourseId,
@@ -14,7 +13,10 @@ public record TravelCourseListResponse(
         Long viewCount,
         LocalDate uploadDate
 ) {
-    public static TravelCourseListResponse from(TravelCourse travelCourse, Video video) {
+    public static TravelCourseListResponse from(
+            TravelCourse travelCourse,
+            Video video
+    ) {
         return new TravelCourseListResponse(
                 travelCourse.getId(),
                 video.getCreator(),
