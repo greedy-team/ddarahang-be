@@ -10,11 +10,4 @@ public class RegionFixture {
                 .country(country)
                 .build();
     }
-
-    public static Region getMockRegion_2(Country country) {
-        return Region.builder()
-                .name("부산")
-                .country(country)
-                .build();
-    }
 }
