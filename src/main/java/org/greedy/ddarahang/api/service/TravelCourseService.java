@@ -14,6 +14,7 @@ import org.greedy.ddarahang.db.travelCourseDetail.TravelCourseDetailRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,22 +30,21 @@ public class TravelCourseService {
     private final TravelCourseDetailRepository travelCourseDetailRepository;
 
     public Page<TravelCourseListResponse> getTravelCourses(TravelCourseListRequest request) {
-        Pageable pageable = PageRequest.of(request.pageNumber(), request.pageSize());
+        Sort sort = Sort.by(Sort.Direction.DESC, "video." + request.sortField());
 
-        Page<TravelCourse> travelCourses = travelCourseRepository.findAllSortedNative(
-                request.countryName(),
-                request.regionName(),
-                request.sortField(),
-                pageable
-        );
+        Pageable pageable = PageRequest.of(request.pageNumber(), request.pageSize(), sort);
+
+        Page<TravelCourse> travelCourses;
+        if (request.regionName().isBlank()) {
+            travelCourses = travelCourseRepository.findTravelCoursesByCountryName(request.countryName(), pageable);
+        }
+        else {
+            travelCourses = travelCourseRepository.findTravelCoursesByRegionName(request.regionName(), pageable);
+        }
 
         log.info("여행 목록 정렬 성공: {}", request.sortField());
-
-        return travelCourses.map(travelCourse ->
-                TravelCourseListResponse.from(travelCourse, travelCourse.getVideo())
-        );
+        return travelCourses.map(course -> TravelCourseListResponse.from(course, course.getVideo()));
     }
-
 
     public TravelCourseResponse getTravelCourseDetail(Long id) {
         validateId(id);
