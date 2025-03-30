@@ -1,6 +1,7 @@
 package org.greedy.ddarahang.api.dto;
 
 import org.greedy.ddarahang.db.travelCourse.TravelCourse;
+import org.greedy.ddarahang.db.video.Video;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,17 +19,18 @@ public record TravelCourseResponse(
 ) {
     public static TravelCourseResponse from(
             TravelCourse course,
+            Video video,
             List<TravelCourseDetailResponse> details
     ) {
         return new TravelCourseResponse(
                 course.getCountry().getName(),
                 course.getRegion().getName(),
                 course.getTravelDays(),
-                course.getVideo().getCreator(),
-                course.getVideo().getTitle(),
-                course.getVideo().getVideoUrl(),
-                course.getVideo().getViewCount(),
-                course.getVideo().getUploadDate(),
+                video.getCreator(),
+                video.getTitle(),
+                video.getVideoUrl(),
+                video.getViewCount(),
+                video.getUploadDate(),
                 details
         );
     }
