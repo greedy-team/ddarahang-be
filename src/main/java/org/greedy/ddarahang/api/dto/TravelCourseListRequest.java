@@ -13,20 +13,13 @@ public record TravelCourseListRequest(
         @NotNull
         String regionName,
 
+        @NotNull
         @Min(value = 0, message = "페이지 번호에 음수는 입력될 수 없습니다.")
         @Max(value = Integer.MAX_VALUE, message = "페이지 번호의 최대값을 초과했습니다.")
         Integer pageNumber,
 
-        @Pattern(regexp = "^(viewCount|uploadDate|)")
+        @NotNull
+        @Pattern(regexp = "^(viewCount|uploadDate)")
         String sortField
 ) {
-        public TravelCourseListRequest {
-                if (pageNumber == null) {
-                        pageNumber = 0;
-                }
-
-                if (sortField == null || sortField.isBlank()) {
-                        sortField = "uploadDate";
-                }
-        }
 }
