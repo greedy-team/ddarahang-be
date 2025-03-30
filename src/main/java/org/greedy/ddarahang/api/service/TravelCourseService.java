@@ -55,6 +55,6 @@ public class TravelCourseService {
         List<TravelCourseDetailResponse> travelCourseDetails = travelCourseDetailRepository.findAllByTravelCourseId(id)
                 .stream().map(TravelCourseDetailResponse::from).toList();
 
-        return TravelCourseResponse.from(travelCourse, travelCourseDetails);
+        return TravelCourseResponse.from(travelCourse, travelCourse.getVideo(), travelCourseDetails);
     }
 }
