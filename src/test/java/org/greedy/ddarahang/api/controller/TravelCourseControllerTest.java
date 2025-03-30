@@ -72,66 +72,15 @@ public class TravelCourseControllerTest extends BaseTest {
     class GetTravelCourseListAPI {
 
         @Nested
-        @DisplayName("기본_조회_동작_테스트")
-        class DefaultFilterTest {
-            @Test
-            void 여행목록_기본_조회_성공하면_200_응답을_보낸다() {
-                RestAssured.given()
-                        .param("filter", "default")
-                        .param("countryName", country.getName())
-                        .param("regionName", region.getName())
-                        .when()
-                        .get("/api/v1/travelcourses")
-                        .then()
-                        .statusCode(200);
-            }
-
-            @Test
-            void 여행목록_기본_조회_지역명이_없어도_200_응답을_보낸다() {
-                RestAssured.given()
-                        .param("filter", "default")
-                        .param("countryName", country.getName())
-                        .param("regionName", "")
-                        .when()
-                        .get("/api/v1/travelcourses")
-                        .then()
-                        .statusCode(200);
-            }
-
-            @Test
-            void 여행목록_기본_조회_나라명이_null이면_400_응답을_보낸다() {
-                RestAssured.given()
-                        .param("filter", "default")
-                        .param("countryName", (Object) null)
-                        .param("regionName", region.getName())
-                        .when()
-                        .get("/api/v1/travelcourses")
-                        .then()
-                        .statusCode(400);
-            }
-
-            @Test
-            void 여행목록_기본_조회_나라명이_비어있으면_400_응답을_보낸다() {
-                RestAssured.given()
-                        .param("filter", "default")
-                        .param("countryName", "")
-                        .param("regionName", region.getName())
-                        .when()
-                        .get("/api/v1/travelcourses")
-                        .then()
-                        .statusCode(400);
-            }
-        }
-
-        @Nested
         @DisplayName("날짜순_조회_동작_테스트")
         class UploadDateFilterTest {
             @Test
             void 여행목록_날짜순_조회_성공하면_200_응답을_보낸다() {
                 RestAssured.given()
-                        .param("filter", "uploadDate")
                         .param("countryName", country.getName())
                         .param("regionName", region.getName())
+                        .param("pageNumber", 0)
+                        .param("sortField", "uploadDate")
                         .when()
                         .get("/api/v1/travelcourses")
                         .then()
@@ -141,9 +90,10 @@ public class TravelCourseControllerTest extends BaseTest {
             @Test
             void 여행목록_날짜순_조회_지역명이_없어도_200_응답을_보낸다() {
                 RestAssured.given()
-                        .param("filter", "uploadDate")
                         .param("countryName", country.getName())
                         .param("regionName", "")
+                        .param("pageNumber", 0)
+                        .param("sortField", "uploadDate")
                         .when()
                         .get("/api/v1/travelcourses")
                         .then()
@@ -153,9 +103,10 @@ public class TravelCourseControllerTest extends BaseTest {
             @Test
             void 여행목록_날짜순_조회_나라명이_null이면_400_응답을_보낸다() {
                 RestAssured.given()
-                        .param("filter", "uploadDate")
                         .param("countryName", (Object) null)
                         .param("regionName", region.getName())
+                        .param("pageNumber", 0)
+                        .param("sortField", "uploadDate")
                         .when()
                         .get("/api/v1/travelcourses")
                         .then()
@@ -165,9 +116,10 @@ public class TravelCourseControllerTest extends BaseTest {
             @Test
             void 여행목록_날짜순_조회_나라명이_비어있으면_400_응답을_보낸다() {
                 RestAssured.given()
-                        .param("filter", "uploadDate")
                         .param("countryName", "")
                         .param("regionName", region.getName())
+                        .param("pageNumber", 0)
+                        .param("sortField", "uploadDate")
                         .when()
                         .get("/api/v1/travelcourses")
                         .then()
@@ -181,9 +133,10 @@ public class TravelCourseControllerTest extends BaseTest {
             @Test
             void 여행목록_조회순_조회_성공하면_200_응답을_보낸다() {
                 RestAssured.given()
-                        .param("filter", "viewCount")
                         .param("countryName", country.getName())
                         .param("regionName", region.getName())
+                        .param("pageNumber", 0)
+                        .param("sortField", "viewCount")
                         .when()
                         .get("/api/v1/travelcourses")
                         .then()
@@ -193,9 +146,10 @@ public class TravelCourseControllerTest extends BaseTest {
             @Test
             void 여행목록_조회순_조회_지역명이_없어도_200_응답을_보낸다() {
                 RestAssured.given()
-                        .param("filter", "viewCount")
                         .param("countryName", country.getName())
                         .param("regionName", "")
+                        .param("pageNumber", 0)
+                        .param("sortField", "viewCount")
                         .when()
                         .get("/api/v1/travelcourses")
                         .then()
@@ -205,9 +159,10 @@ public class TravelCourseControllerTest extends BaseTest {
             @Test
             void 여행목록_조회순_조회_나라명이_null이면_400_응답을_보낸다() {
                 RestAssured.given()
-                        .param("filter", "viewCount")
                         .param("countryName", (Object) null)
                         .param("regionName", region.getName())
+                        .param("pageNumber", 0)
+                        .param("sortField", "viewCount")
                         .when()
                         .get("/api/v1/travelcourses")
                         .then()
@@ -217,9 +172,10 @@ public class TravelCourseControllerTest extends BaseTest {
             @Test
             void 여행목록_조회순_조회_나라명이_비어있으면_400_응답을_보낸다() {
                 RestAssured.given()
-                        .param("filter", "viewCount")
                         .param("countryName", "")
                         .param("regionName", region.getName())
+                        .param("pageNumber", 0)
+                        .param("sortField", "viewCount")
                         .when()
                         .get("/api/v1/travelcourses")
                         .then()
@@ -239,6 +195,15 @@ public class TravelCourseControllerTest extends BaseTest {
                     .get("/api/v1/travelcourses/{id}")
                     .then()
                     .statusCode(200);
+        }
+
+        @Test
+        void 여행_상세_조회_id가_없으면_404_응답을_보낸다() {
+            RestAssured.given()
+                    .when()
+                    .get("/api/v1/travelcourses/") // id 없이 호출
+                    .then()
+                    .statusCode(404);
         }
     }
 }

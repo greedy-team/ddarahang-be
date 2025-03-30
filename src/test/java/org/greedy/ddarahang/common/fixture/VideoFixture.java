@@ -19,7 +19,7 @@ public class VideoFixture {
     public static Video getMockVideo_2(LocalDate now) {
         return Video.builder()
                 .creator("여행유튜버B")
-                .title("부산 여행 브이로그")
+                .title("서울 여행 브이로그")
                 .videoUrl("https://youtube.com/v2")
                 .thumbnailUrl("https://img.youtube.com/2.jpg")
                 .viewCount(20000L)
