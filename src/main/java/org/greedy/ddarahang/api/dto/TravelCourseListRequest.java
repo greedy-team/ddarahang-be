@@ -21,7 +21,18 @@ public record TravelCourseListRequest(
         @Max(value = Integer.MAX_VALUE, message = "페이지 사이즈의 최대값을 초과했습니다.")
         Integer pageSize,
 
-        @Pattern(regexp = "^(viewCount|uploadDate)")
+        @Pattern(regexp = "^(viewCount|uploadDate|)")
         String sortField
 ) {
+        public TravelCourseListRequest {
+                if (pageNumber == null) {
+                        pageNumber = 0;
+                }
+                if (pageSize == null) {
+                        pageSize = 8;
+                }
+                if (sortField == null || sortField.isBlank()) {
+                        sortField = "uploadDate";
+                }
+        }
 }
