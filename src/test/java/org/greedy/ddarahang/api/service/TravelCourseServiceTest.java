@@ -5,7 +5,6 @@ import org.greedy.ddarahang.api.dto.TravelCourseListRequest;
 import org.greedy.ddarahang.api.dto.TravelCourseListResponse;
 import org.greedy.ddarahang.api.dto.TravelCourseResponse;
 import org.greedy.ddarahang.common.BaseTest;
-import org.greedy.ddarahang.common.exception.MissingIdException;
 import org.greedy.ddarahang.common.exception.NotFoundTravelCourseDetailException;
 import org.greedy.ddarahang.common.fixture.CountryFixture;
 import org.greedy.ddarahang.common.fixture.PlaceFixture;
@@ -197,14 +196,6 @@ class TravelCourseServiceTest extends BaseTest {
 
             // Then
             assertThat(response.creator()).isEqualTo(travelCourse.getVideo().getCreator());
-        }
-
-        @Test
-        void 여행_상세_조회_아이디가_null이면_MissingIdException_발생() {
-            // When & Then
-            assertThatThrownBy(() -> travelCourseService.getTravelCourseDetail(null))
-                    .isInstanceOf(MissingIdException.class)
-                    .hasMessage("invalid id");
         }
 
         @Test

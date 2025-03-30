@@ -204,5 +204,14 @@ public class TravelCourseControllerTest extends BaseTest {
                     .then()
                     .statusCode(200);
         }
+
+        @Test
+        void 여행_상세_조회_id가_없으면_404_응답을_보낸다() {
+            RestAssured.given()
+                    .when()
+                    .get("/api/v1/travelcourses/") // id 없이 호출
+                    .then()
+                    .statusCode(404);
+        }
     }
 }
