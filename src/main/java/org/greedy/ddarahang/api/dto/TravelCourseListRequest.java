@@ -24,13 +24,16 @@ public record TravelCourseListRequest(
         @Pattern(regexp = "^(viewCount|uploadDate|)")
         String sortField
 ) {
+
+        private static final int DEFAULT_PAGE_SIZE = 8;
+
         public TravelCourseListRequest {
                 if (pageNumber == null) {
                         pageNumber = 0;
                 }
-                if (pageSize == null) {
-                        pageSize = 8;
-                }
+
+                pageSize = DEFAULT_PAGE_SIZE;
+
                 if (sortField == null || sortField.isBlank()) {
                         sortField = "uploadDate";
                 }
