@@ -6,7 +6,6 @@ import org.greedy.ddarahang.api.dto.TravelCourseDetailResponse;
 import org.greedy.ddarahang.api.dto.TravelCourseListRequest;
 import org.greedy.ddarahang.api.dto.TravelCourseListResponse;
 import org.greedy.ddarahang.api.dto.TravelCourseResponse;
-import org.greedy.ddarahang.common.exception.MissingIdException;
 import org.greedy.ddarahang.common.exception.NotFoundTravelCourseDetailException;
 import org.greedy.ddarahang.db.travelCourse.TravelCourse;
 import org.greedy.ddarahang.db.travelCourse.TravelCourseRepository;
@@ -47,8 +46,6 @@ public class TravelCourseService {
     }
 
     public TravelCourseResponse getTravelCourseDetail(Long id) {
-        validateId(id);
-
         TravelCourse travelCourse = travelCourseRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("해당 id를 가진 여행 상세 정보가 존재하지 않습니다. ID: {}", id);
@@ -59,14 +56,5 @@ public class TravelCourseService {
                 .stream().map(TravelCourseDetailResponse::from).toList();
 
         return TravelCourseResponse.from(travelCourse, travelCourseDetails);
-    }
-
-    private void validateId(Long id) {
-        log.info("여행 목록 상세 조회: ID: {}", id);
-
-        if (id == null) {
-            log.error("유효하지 않은 Id값 입니다. id: null");
-            throw new MissingIdException("invalid id");
-        }
     }
 }
