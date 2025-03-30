@@ -27,8 +27,8 @@ public class TravelCourseController {
     public ResponseEntity<Page<TravelCourseListResponse>> getTravelCourses(
             @Valid @ModelAttribute TravelCourseListRequest request
     ) {
-        log.info("GET /travelcourses - sortField: {}, countryName: {}, regionName: {}, pageNumber: {}, pageSize: {}",
-                request.sortField(), request.countryName(), request.regionName(), request.pageNumber(), request.pageSize());
+        log.info("GET /travelcourses - sortField: {}, countryName: {}, regionName: {}, pageNumber: {}",
+                request.sortField(), request.countryName(), request.regionName(), request.pageNumber());
         return ResponseEntity.ok(travelCourseService.getTravelCourses(request));
     }
 

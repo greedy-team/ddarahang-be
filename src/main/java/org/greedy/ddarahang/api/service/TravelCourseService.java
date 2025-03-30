@@ -25,13 +25,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TravelCourseService {
 
+    private final static int PAGE_SIZE = 8;
+
     private final TravelCourseRepository travelCourseRepository;
     private final TravelCourseDetailRepository travelCourseDetailRepository;
 
     public Page<TravelCourseListResponse> getTravelCourses(TravelCourseListRequest request) {
         Sort sort = Sort.by(Sort.Direction.DESC, "video." + request.sortField());
 
-        Pageable pageable = PageRequest.of(request.pageNumber(), request.pageSize(), sort);
+        Pageable pageable = PageRequest.of(request.pageNumber(), PAGE_SIZE, sort);
 
         Page<TravelCourse> travelCourses;
         if (request.regionName().isBlank()) {
