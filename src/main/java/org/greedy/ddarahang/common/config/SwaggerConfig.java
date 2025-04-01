@@ -23,4 +23,3 @@ public class SwaggerConfig {
                 .version("1.0.0");
     }
 }
-//https://infinitecode.tistory.com/65
