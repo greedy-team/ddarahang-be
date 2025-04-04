@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/data")
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/data")
 @Tag(name = "Google Sheet", description = "구글 시트 동기화 API")
 public class GoogleSheetController implements GoogleSheetSpecification {
 
