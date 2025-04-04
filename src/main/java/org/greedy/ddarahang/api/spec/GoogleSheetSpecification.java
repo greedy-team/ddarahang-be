@@ -3,11 +3,13 @@ package org.greedy.ddarahang.api.spec;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
+@Tag(name = "Google Sheet", description = "구글 시트 동기화 API")
 public interface GoogleSheetSpecification {
 
     @Operation(summary = "Google Sheet 동기화",

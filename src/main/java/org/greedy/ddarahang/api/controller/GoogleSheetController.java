@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/data")
-@Tag(name = "Google Sheet", description = "구글 시트 동기화 API")
 public class GoogleSheetController implements GoogleSheetSpecification {
 
     private final TravelDataSyncService travelDataSyncService;

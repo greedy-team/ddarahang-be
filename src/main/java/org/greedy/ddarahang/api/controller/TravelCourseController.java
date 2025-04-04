@@ -16,7 +16,6 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/travelcourses")
-@Tag(name = "Travel Course", description = "여행 코스 조회 API")
 public class TravelCourseController implements TravelCourseSpecification {
 
     private final TravelCourseService travelCourseService;
