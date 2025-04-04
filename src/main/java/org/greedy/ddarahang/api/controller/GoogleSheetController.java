@@ -3,17 +3,19 @@ package org.greedy.ddarahang.api.controller;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.greedy.ddarahang.api.service.TravelDataSyncService;
+import org.greedy.ddarahang.api.spec.GoogleSheetSpecification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/data")
 @RequiredArgsConstructor
-public class GoogleSheetController {
+@RequestMapping("/api/v1/data")
+public class GoogleSheetController implements GoogleSheetSpecification {
 
     private final TravelDataSyncService travelDataSyncService;
 
