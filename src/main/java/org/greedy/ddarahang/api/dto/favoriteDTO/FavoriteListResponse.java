@@ -4,13 +4,13 @@ import org.greedy.ddarahang.db.favoriteList.FavoriteList;
 
 import java.util.List;
 
-public record CreateFavoriteListResponse(
+public record FavoriteListResponse(
         Long id,
         String listName,
         List<FavoritePlaceResponse> places
 ) {
-    public static CreateFavoriteListResponse from(FavoriteList favoriteList) {
-        return new CreateFavoriteListResponse(
+    public static FavoriteListResponse from(FavoriteList favoriteList) {
+        return new FavoriteListResponse(
                 favoriteList.getId(),
                 favoriteList.getListName(),
                 favoriteList.getPlaces().stream()
