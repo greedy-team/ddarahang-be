@@ -6,13 +6,14 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.greedy.ddarahang.api.dto.TravelCourseListRequest;
 import org.greedy.ddarahang.api.dto.TravelCourseListResponse;
 import org.greedy.ddarahang.api.dto.TravelCourseResponse;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.List;
 
 @Tag(name = "Travel Course", description = "여행 코스 조회 API")
 public interface TravelCourseSpecification {
@@ -22,12 +23,9 @@ public interface TravelCourseSpecification {
             @ApiResponse(responseCode = "200", description = "조회 성공"),
             @ApiResponse(responseCode = "400", description = "필수 파라미터 누락 또는 잘못된 값")
     })
-    @Parameters({
-            @Parameter(name = "filter", description = "정렬 필터: viewCount | uploadDate", example = "viewCount"),
-            @Parameter(name = "countryName", description = "국가명", example = "대한민국"),
-            @Parameter(name = "regionName", description = "지역명 (빈 문자열 허용)", example = "서울")
-    })
-    public ResponseEntity<List<TravelCourseListResponse>> getTravelCourses(@RequestParam String filter, @RequestParam String countryName, @RequestParam String regionName);
+    public ResponseEntity<Page<TravelCourseListResponse>> getTravelCourses(
+            @Valid @ModelAttribute TravelCourseListRequest request
+    );
 
     @Operation(summary = "여행 코스 상세 조회", description = "ID를 통해 여행 코스 상세 정보를 조회합니다.")
     @ApiResponses(value = {
