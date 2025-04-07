@@ -2,6 +2,8 @@ package org.greedy.ddarahang.common.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -54,6 +56,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataSyncException.class)
     public ResponseEntity<String> dataSyncException(DataSyncException e) {
         log.error("DataSyncException 발생: {}", e.getMessage(), e);
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(BindException.class)
+    public ResponseEntity<String> handleBindException(BindException e) {
+        log.error("BindException 발생: {}", e.getMessage(), e);
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        log.error("MethodArgumentNotValidException 발생: {}", e.getMessage(), e);
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 

@@ -15,8 +15,8 @@ public class PlaceFixture {
 
     public static Place getMockPlace_2(Region region) {
         return Place.builder()
-                .name("광안리 해수욕장")
-                .address("부산 광안리")
+                .name("우리집")
+                .address("서울 도봉구 쌍문동")
                 .region(region)
                 .tag("관광")
                 .build();
