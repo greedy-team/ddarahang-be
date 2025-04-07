@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.greedy.ddarahang.api.dto.favoriteDTO.*;
 import org.greedy.ddarahang.api.service.FavoriteListService;
 import org.greedy.ddarahang.api.service.FavoritePlaceService;
+import org.greedy.ddarahang.db.favoriteList.FavoriteListRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +19,7 @@ public class FavoriteController {
 
     private final FavoriteListService favoriteListService;
     private final FavoritePlaceService favoritePlaceService;
+    private final FavoriteListRepository favoriteListRepository;
 
     @PostMapping("/list")
     public ResponseEntity<FavoriteListResponse> createFavoriteList(@RequestBody CreateFavoriteListRequest request) {
@@ -31,12 +33,20 @@ public class FavoriteController {
 
     @DeleteMapping("/list/{favoriteListId}")
     public ResponseEntity<DeleteFavoriteListResponse> deleteFavoriteList(@PathVariable Long favoriteListId) {
-        String listName = favoriteListService.deleteFavoriteList(favoriteListId);
-        return ResponseEntity.ok(new DeleteFavoriteListResponse(listName + "이(가) 삭제되었습니다."));
+        DeleteFavoriteListResponse response = favoriteListService.deleteFavoriteList(favoriteListId);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/places")
     public ResponseEntity<FavoritePlaceResponse> placeFavoriteList(@RequestBody AddFavoritePlace request) {
         return ResponseEntity.ok(favoritePlaceService.addFavoritePlace(request));
     }
+
+    @DeleteMapping("/list/{favoriteListId}/places/{placeId}")
+    public ResponseEntity<DeleteFavoritePlaceResponse> deleteFavoritePlace(@PathVariable Long favoriteListId,
+                                                                           @PathVariable Long placeId) {
+        DeleteFavoritePlaceResponse response = favoritePlaceService.deleteFavoritePlace(favoriteListId, placeId);
+        return ResponseEntity.ok(response);
+    }
+
 }
