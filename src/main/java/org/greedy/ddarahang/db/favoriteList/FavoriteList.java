@@ -2,7 +2,6 @@ package org.greedy.ddarahang.db.favoriteList;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.greedy.ddarahang.db.place.Place;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,11 +22,7 @@ public class FavoriteList {
     @Column(nullable = false)
     private String listName;
 
-    @ManyToMany
-    @JoinTable(name = "favorite_list_place",
-            joinColumns = @JoinColumn(name = "favorite_list_id"),
-            inverseJoinColumns = @JoinColumn(name = "place_id")
-    )
+    @OneToMany(mappedBy = "favoriteList", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<Place> places = new ArrayList<>();
+    private List<FavoriteListPlace> favoriteListPlaces = new ArrayList<>();
 }

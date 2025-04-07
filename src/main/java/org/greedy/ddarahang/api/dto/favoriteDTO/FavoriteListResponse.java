@@ -13,8 +13,8 @@ public record FavoriteListResponse(
         return new FavoriteListResponse(
                 favoriteList.getId(),
                 favoriteList.getListName(),
-                favoriteList.getPlaces().stream()
-                        .map(FavoritePlaceResponse::from)
+                favoriteList.getFavoriteListPlaces().stream()
+                        .map(favoriteListPlace -> FavoritePlaceResponse.from(favoriteListPlace.getPlace(), favoriteListPlace.getOrderInList()))
                         .toList()
         );
     }

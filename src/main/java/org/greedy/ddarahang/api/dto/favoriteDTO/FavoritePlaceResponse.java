@@ -7,15 +7,17 @@ public record FavoritePlaceResponse(
         String placeName,
         String address,
         Double latitude,
-        Double longitude
+        Double longitude,
+        Integer orderInList
 ) {
-    public static FavoritePlaceResponse from(Place place) {
+    public static FavoritePlaceResponse from(Place place, Integer orderInList) {
         return new FavoritePlaceResponse(
                 place.getId(),
                 place.getName(),
                 place.getAddress(),
                 place.getLatitude(),
-                place.getLongitude()
+                place.getLongitude(),
+                orderInList
         );
     }
 }
