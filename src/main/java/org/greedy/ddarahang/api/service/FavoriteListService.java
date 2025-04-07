@@ -20,7 +20,7 @@ public class FavoriteListService {
     private final FavoriteListRepository favoriteListRepository;
 
     @Transactional
-    public FavoriteListResponse createFavoriteListResponse(String listName) {
+    public FavoriteListResponse createFavoriteList(String listName) {
         FavoriteList favoriteList = FavoriteList.builder()
                 .listName(listName)
                 .build();
