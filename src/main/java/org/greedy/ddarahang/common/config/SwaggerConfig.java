@@ -19,7 +19,7 @@ public class SwaggerConfig {
                 .info(apiInfo())
                 .servers(List.of(
                         new Server().url("http://localhost:8080").description("Local Server"),
-                        new Server().url("https://ddarahang.site").description("Production Server")
+                        new Server().url("http://43.200.171.33").description("Production Server")
                 ));
     }
 
