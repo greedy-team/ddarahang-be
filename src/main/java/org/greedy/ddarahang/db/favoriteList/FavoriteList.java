@@ -22,6 +22,9 @@ public class FavoriteList {
     @Column(nullable = false)
     private String listName;
 
+    @Column(nullable = false)
+    private String description;
+
     @OneToMany(mappedBy = "favoriteList", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<FavoriteListPlace> favoriteListPlaces = new ArrayList<>();
