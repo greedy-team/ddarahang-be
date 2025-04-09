@@ -47,8 +47,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
-    @ExceptionHandler(InvalidDateFormat.class)
-    public ResponseEntity<String> invalidDateFormat(InvalidDateFormat e) {
+    @ExceptionHandler(InvalidDateFormatException.class)
+    public ResponseEntity<String> invalidDateFormat(InvalidDateFormatException e) {
         log.error("InvalidDateFormat 발생: {}", e.getMessage(), e);
         return ResponseEntity.badRequest().body(e.getMessage());
     }
