@@ -23,7 +23,7 @@ public class FavoriteController {
 
     @PostMapping("/list")
     public ResponseEntity<FavoriteListResponse> createFavoriteList(@RequestBody CreateFavoriteListRequest request) {
-        return ResponseEntity.ok(favoriteListService.createFavoriteList(request.listName()));
+        return ResponseEntity.ok(favoriteListService.createFavoriteList(request.listName(), request.description()));
     }
 
     @GetMapping("/list")

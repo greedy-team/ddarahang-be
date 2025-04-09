@@ -21,9 +21,10 @@ public class FavoriteListService {
     private final FavoriteListRepository favoriteListRepository;
 
     @Transactional
-    public FavoriteListResponse createFavoriteList(String listName) {
+    public FavoriteListResponse createFavoriteList(String listName, String description) {
         FavoriteList favoriteList = FavoriteList.builder()
                 .listName(listName)
+                .description(description)
                 .build();
         FavoriteList saved = favoriteListRepository.save(favoriteList);
         return FavoriteListResponse.from(saved);
