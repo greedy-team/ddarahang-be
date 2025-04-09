@@ -12,7 +12,7 @@ public enum LocationType {
 
     public static LocationType getLocationType(String Country) {
         if(Country == null || Country.isEmpty()) {
-            throw new NotFoundCountryException("Country is null or empty");
+            throw new NotFoundCountryException();
         }
 
         if(Country.equals("대한민국")) {

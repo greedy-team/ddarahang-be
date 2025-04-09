@@ -1,7 +1,7 @@
 package org.greedy.ddarahang.common.exception;
 
 public class InvalidDateFormatException extends DdarahangException {
-    public InvalidDateFormatException(String message) {
-        super(message);
+    public InvalidDateFormatException() {
+        super(ErrorMessage.INVALID_DATE_FORMAT_EXCEPTION);
     }
 }
