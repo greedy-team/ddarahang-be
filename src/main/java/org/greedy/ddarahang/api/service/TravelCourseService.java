@@ -51,7 +51,7 @@ public class TravelCourseService {
         TravelCourse travelCourse = travelCourseRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("해당 id를 가진 여행 상세 정보가 존재하지 않습니다. ID: {}", id);
-                    return new NotFoundTravelCourseDetailException("travel course not found");
+                    return new NotFoundTravelCourseDetailException();
                 });
 
         List<TravelCourseDetailResponse> travelCourseDetails = travelCourseDetailRepository.findAllByTravelCourseId(id)

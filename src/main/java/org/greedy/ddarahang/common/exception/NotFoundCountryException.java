@@ -1,7 +1,7 @@
 package org.greedy.ddarahang.common.exception;
 
 public class NotFoundCountryException extends DdarahangException {
-  public NotFoundCountryException(String message) {
-    super(message);
+  public NotFoundCountryException() {
+    super(ErrorMessage.NOT_FOUND_COUNTRY_EXCEPTION);
   }
 }

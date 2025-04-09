@@ -1,7 +1,7 @@
 package org.greedy.ddarahang.common.exception;
 
 public class InvalidFilterException extends DdarahangException {
-    public InvalidFilterException(String message) {
-        super(message);
+    public InvalidFilterException() {
+        super(ErrorMessage.INVALID_COUNTRY_NAME_EXCEPTION);
     }
 }
