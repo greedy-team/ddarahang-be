@@ -2,6 +2,6 @@ package org.greedy.ddarahang.common.exception;
 
 public class MissingIdException extends DdarahangException {
     public MissingIdException() {
-        super(ErrorMessage.MISSING_ID_EXCEPTION);
+        super(ErrorMessage.MISSING_ID);
     }
 }
