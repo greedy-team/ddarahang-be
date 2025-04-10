@@ -6,6 +6,8 @@ import org.greedy.ddarahang.api.dto.TravelCourseDetailResponse;
 import org.greedy.ddarahang.api.dto.TravelCourseListRequest;
 import org.greedy.ddarahang.api.dto.TravelCourseListResponse;
 import org.greedy.ddarahang.api.dto.TravelCourseResponse;
+import org.greedy.ddarahang.common.exception.ErrorMessage;
+import org.greedy.ddarahang.common.exception.NotFoundDataException;
 import org.greedy.ddarahang.db.travelCourse.TravelCourse;
 import org.greedy.ddarahang.db.travelCourse.TravelCourseRepository;
 import org.greedy.ddarahang.db.travelCourseDetail.TravelCourseDetailRepository;
@@ -50,7 +52,7 @@ public class TravelCourseService {
         TravelCourse travelCourse = travelCourseRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("해당 id를 가진 여행 상세 정보가 존재하지 않습니다. ID: {}", id);
-                    return new NotFoundTravelCourseDetailException();
+                    return new NotFoundDataException(ErrorMessage.FAILED_TO_INSERT_TRAVEL_COURSE_DETAILS);
                 });
 
         List<TravelCourseDetailResponse> travelCourseDetails = travelCourseDetailRepository.findAllByTravelCourseId(id)
