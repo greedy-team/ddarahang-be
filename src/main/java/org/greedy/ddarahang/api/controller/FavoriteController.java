@@ -38,7 +38,7 @@ public class FavoriteController {
     }
 
     @PostMapping("/places")
-    public ResponseEntity<FavoritePlaceResponse> placeFavoriteList(@RequestBody AddFavoritePlace request) {
+    public ResponseEntity<FavoritePlaceResponse> placeFavoriteList(@RequestBody AddFavoritePlaceRequest request) {
         return ResponseEntity.ok(favoritePlaceService.addFavoritePlace(request));
     }
 

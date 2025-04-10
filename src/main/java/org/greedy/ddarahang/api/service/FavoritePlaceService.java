@@ -3,7 +3,7 @@ package org.greedy.ddarahang.api.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.greedy.ddarahang.api.dto.favoriteDTO.AddFavoritePlace;
+import org.greedy.ddarahang.api.dto.favoriteDTO.AddFavoritePlaceRequest;
 import org.greedy.ddarahang.api.dto.favoriteDTO.DeleteFavoritePlaceResponse;
 import org.greedy.ddarahang.api.dto.favoriteDTO.FavoritePlaceResponse;
 import org.greedy.ddarahang.common.exception.NotFoundFavoriteListException;
@@ -27,13 +27,13 @@ public class FavoritePlaceService {
     private final FavoriteListPlaceRepository favoriteListPlaceRepository;
 
     @Transactional
-    public FavoritePlaceResponse addFavoritePlace(AddFavoritePlace request) {
+    public FavoritePlaceResponse addFavoritePlace(AddFavoritePlaceRequest request) {
 
         FavoriteList favoriteList = favoriteListRepository.findById(request.favoriteListId())
-                .orElseThrow(() -> new NotFoundFavoriteListException("찜 목록을 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundFavoriteListException("해당 Id를 갖는 찜 목록을 찾을 수 없습니다."));
 
-        Place place = placeRepository.findByLatitudeAndLongitude(request.latitude(), request.longitude())
-                .orElseThrow(() -> new NotFoundPlaceException("해당 위경도의 장소가 존재하지 않습니다."));
+        Place place = placeRepository.findById(request.placeId())
+                .orElseThrow(() -> new NotFoundPlaceException("해당 Id를 갖는 장소를 찾을 수 없습니다."));
 
         int orderInList = favoriteList.getFavoriteListPlaces().size() + 1;
 
