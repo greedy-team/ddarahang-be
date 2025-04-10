@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.greedy.ddarahang.common.exception.DataSyncException;
 import org.greedy.ddarahang.common.exception.ErrorMessage;
+import org.greedy.ddarahang.common.exception.InvalidDataException;
 import org.greedy.ddarahang.db.country.LocationType;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -48,6 +49,10 @@ public class TravelDataSyncService {
                 (ps, row) -> {
                     try {
                         String countryName = row.get(1).toString().trim();
+
+                        if (countryName == null || countryName.isEmpty()) {
+                            throw new InvalidDataException(ErrorMessage.COUNTRY_NAME_REQUIRED);
+                        }
                         String locationType = LocationType.getLocationType(countryName).toString();
 
                         ps.setString(1, countryName);
