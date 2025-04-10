@@ -1,62 +1,49 @@
 package org.greedy.ddarahang.common.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import org.greedy.ddarahang.api.dto.ErrorResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.View;
 
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    private final View error;
+
+    public GlobalExceptionHandler(View error) {
+        this.error = error;
+    }
+
     @ExceptionHandler(InvalidDataException.class)
-    public ResponseEntity<String> invalidFilterException(InvalidDataException e) {
-        log.error("InvalidFilterException 발생: {}", e.getMessage(), e);
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<ErrorResponse> invalidFilterException(InvalidDataException e) {
+        ErrorMessage error = e.getErrorMessage();
+        log.error("{} 발생: {}", error.name(), e.getMessage(), e);
+
+        ErrorResponse response = new ErrorResponse(error.getHttpStatus(), error.getMessage());
+        return ResponseEntity.status(error.getHttpStatus()).body(response);
     }
 
     @ExceptionHandler(NotFoundDataException.class)
-    public ResponseEntity<String> notFoundTravelCourseDetailException(NotFoundDataException e) {
-        log.error("NotFoundTravelCourseDetailException 발생: {}", e.getMessage(), e);
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
+    public ResponseEntity<ErrorResponse> notFoundTravelCourseDetailException(NotFoundDataException e) {
+        ErrorMessage error = e.getErrorMessage();
+        log.error("{} 발생: {}", error.name(), e.getMessage(), e);
 
-    @ExceptionHandler(InvalidDataException.class)
-    public ResponseEntity<String> invalidCountryNameException(InvalidDataException e) {
-        log.error("InvalidCountryNameException 발생: {}", e.getMessage(), e);
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
-    @ExceptionHandler(InvalidDataException.class)
-    public ResponseEntity<String> missingIdException(InvalidDataException e) {
-        log.error("MissingIdException 발생: {}", e.getMessage(), e);
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
-    @ExceptionHandler(NotFoundDataException.class)
-    public ResponseEntity<String> notFoundCountryException(NotFoundDataException e) {
-        log.error("NotFoundCountryException 발생: {}", e.getMessage(), e);
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
-    @ExceptionHandler(NotFoundDataException.class)
-    public ResponseEntity<String> notFoundRegionException(NotFoundDataException e) {
-        log.error("NotFoundRegionException 발생: {}", e.getMessage(), e);
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
-    @ExceptionHandler(InvalidDataException.class)
-    public ResponseEntity<String> invalidDateFormat(InvalidDataException e) {
-        log.error("InvalidDateFormat 발생: {}", e.getMessage(), e);
-        return ResponseEntity.badRequest().body(e.getMessage());
+        ErrorResponse response = new ErrorResponse(error.getHttpStatus(), error.getMessage());
+        return ResponseEntity.status(error.getHttpStatus()).body(response);
     }
 
     @ExceptionHandler(DataSyncException.class)
-    public ResponseEntity<String> dataSyncException(DataSyncException e) {
-        log.error("DataSyncException 발생: {}", e.getMessage(), e);
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<ErrorResponse> dataSyncException(DataSyncException e) {
+        ErrorMessage error = e.getErrorMessage();
+        log.error("{} 발생: {}", error.name(), e.getMessage(), e);
+
+        ErrorResponse response = new ErrorResponse(error.getHttpStatus(), error.getMessage());
+        return ResponseEntity.status(error.getHttpStatus()).body(response);
     }
 
     @ExceptionHandler(BindException.class)
