@@ -11,9 +11,6 @@ public enum LocationType {
     INTERNATIONAL;
 
     public static LocationType getLocationType(String Country) {
-        if(Country == null || Country.isEmpty()) {
-            throw new NotFoundDataException();
-        }
 
         if(Country.equals("대한민국")) {
             return DOMESTIC;
