@@ -11,44 +11,44 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(InvalidFilterException.class)
-    public ResponseEntity<String> invalidFilterException(InvalidFilterException e) {
+    @ExceptionHandler(InvalidDataException.class)
+    public ResponseEntity<String> invalidFilterException(InvalidDataException e) {
         log.error("InvalidFilterException 발생: {}", e.getMessage(), e);
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
-    @ExceptionHandler(NotFoundTravelCourseDetailException.class)
-    public ResponseEntity<String> notFoundTravelCourseDetailException(NotFoundTravelCourseDetailException e) {
+    @ExceptionHandler(NotFoundDataException.class)
+    public ResponseEntity<String> notFoundTravelCourseDetailException(NotFoundDataException e) {
         log.error("NotFoundTravelCourseDetailException 발생: {}", e.getMessage(), e);
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
-    @ExceptionHandler(InvalidCountryNameException.class)
-    public ResponseEntity<String> invalidCountryNameException(InvalidCountryNameException e) {
+    @ExceptionHandler(InvalidDataException.class)
+    public ResponseEntity<String> invalidCountryNameException(InvalidDataException e) {
         log.error("InvalidCountryNameException 발생: {}", e.getMessage(), e);
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
-    @ExceptionHandler(MissingIdException.class)
-    public ResponseEntity<String> missingIdException(MissingIdException e) {
+    @ExceptionHandler(InvalidDataException.class)
+    public ResponseEntity<String> missingIdException(InvalidDataException e) {
         log.error("MissingIdException 발생: {}", e.getMessage(), e);
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
-    @ExceptionHandler(NotFoundCountryException.class)
-    public ResponseEntity<String> notFoundCountryException(NotFoundCountryException e) {
+    @ExceptionHandler(NotFoundDataException.class)
+    public ResponseEntity<String> notFoundCountryException(NotFoundDataException e) {
         log.error("NotFoundCountryException 발생: {}", e.getMessage(), e);
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
-    @ExceptionHandler(NotFoundRegionException.class)
-    public ResponseEntity<String> notFoundRegionException(NotFoundRegionException e) {
+    @ExceptionHandler(NotFoundDataException.class)
+    public ResponseEntity<String> notFoundRegionException(NotFoundDataException e) {
         log.error("NotFoundRegionException 발생: {}", e.getMessage(), e);
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
-    @ExceptionHandler(InvalidDateFormatException.class)
-    public ResponseEntity<String> invalidDateFormat(InvalidDateFormatException e) {
+    @ExceptionHandler(InvalidDataException.class)
+    public ResponseEntity<String> invalidDateFormat(InvalidDataException e) {
         log.error("InvalidDateFormat 발생: {}", e.getMessage(), e);
         return ResponseEntity.badRequest().body(e.getMessage());
     }

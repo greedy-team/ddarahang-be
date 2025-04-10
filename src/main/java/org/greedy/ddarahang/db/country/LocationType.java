@@ -2,7 +2,7 @@ package org.greedy.ddarahang.db.country;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.greedy.ddarahang.common.exception.NotFoundCountryException;
+import org.greedy.ddarahang.common.exception.NotFoundDataException;
 
 @Getter
 @AllArgsConstructor
@@ -12,7 +12,7 @@ public enum LocationType {
 
     public static LocationType getLocationType(String Country) {
         if(Country == null || Country.isEmpty()) {
-            throw new NotFoundCountryException();
+            throw new NotFoundDataException();
         }
 
         if(Country.equals("대한민국")) {
