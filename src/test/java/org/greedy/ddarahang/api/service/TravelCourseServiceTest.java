@@ -5,7 +5,6 @@ import org.greedy.ddarahang.api.dto.TravelCourseListRequest;
 import org.greedy.ddarahang.api.dto.TravelCourseListResponse;
 import org.greedy.ddarahang.api.dto.TravelCourseResponse;
 import org.greedy.ddarahang.common.BaseTest;
-import org.greedy.ddarahang.common.exception.NotFoundTravelCourseDetailException;
 import org.greedy.ddarahang.common.fixture.CountryFixture;
 import org.greedy.ddarahang.common.fixture.PlaceFixture;
 import org.greedy.ddarahang.common.fixture.RegionFixture;

@@ -6,7 +6,6 @@ import org.greedy.ddarahang.api.dto.TravelCourseDetailResponse;
 import org.greedy.ddarahang.api.dto.TravelCourseListRequest;
 import org.greedy.ddarahang.api.dto.TravelCourseListResponse;
 import org.greedy.ddarahang.api.dto.TravelCourseResponse;
-import org.greedy.ddarahang.common.exception.NotFoundTravelCourseDetailException;
 import org.greedy.ddarahang.db.travelCourse.TravelCourse;
 import org.greedy.ddarahang.db.travelCourse.TravelCourseRepository;
 import org.greedy.ddarahang.db.travelCourseDetail.TravelCourseDetailRepository;
