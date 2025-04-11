@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.greedy.ddarahang.api.dto.favoriteDTO.AddFavoritePlaceRequest;
 import org.greedy.ddarahang.api.dto.favoriteDTO.DeleteFavoritePlaceResponse;
 import org.greedy.ddarahang.api.dto.favoriteDTO.FavoritePlaceResponse;
+import org.greedy.ddarahang.common.exception.DuplicateFavoritePlaceException;
 import org.greedy.ddarahang.common.exception.NotFoundFavoriteListException;
 import org.greedy.ddarahang.common.exception.NotFoundFavoritePlaceException;
 import org.greedy.ddarahang.common.exception.NotFoundPlaceException;
@@ -34,6 +35,12 @@ public class FavoritePlaceService {
 
         Place place = placeRepository.findById(request.placeId())
                 .orElseThrow(() -> new NotFoundPlaceException("해당 Id를 갖는 장소를 찾을 수 없습니다."));
+
+        boolean isAlreadyAdded = favoriteList.getFavoriteListPlaces().stream()
+                .anyMatch(favoriteListPlace -> favoriteListPlace.getPlace().getId().equals(place.getId()));
+        if (isAlreadyAdded) {
+            throw new DuplicateFavoritePlaceException("해당 장소는 이미 찜 목록에 추가되어 있습니다.");
+        }
 
         int orderInList = favoriteList.getFavoriteListPlaces().size() + 1;
 
