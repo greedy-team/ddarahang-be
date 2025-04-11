@@ -36,19 +36,21 @@ public class FavoritePlaceService {
         Place place = placeRepository.findById(request.placeId())
                 .orElseThrow(() -> new NotFoundPlaceException("해당 Id를 갖는 장소를 찾을 수 없습니다."));
 
-        boolean isAlreadyAdded = favoriteList.getFavoriteListPlaces().stream()
-                .anyMatch(favoriteListPlace -> favoriteListPlace.getPlace().getId().equals(place.getId()));
+        boolean isAlreadyAdded = favoriteListPlaceRepository.existsByFavoriteListIdAndPlaceId(
+                request.favoriteListId(), request.placeId());
+
         if (isAlreadyAdded) {
             throw new DuplicateFavoritePlaceException("해당 장소는 이미 찜 목록에 추가되어 있습니다.");
         }
 
-        int orderInList = favoriteList.getFavoriteListPlaces().size() + 1;
+        int orderInList = favoriteListPlaceRepository.countByFavoriteListId(request.favoriteListId()) + 1;
 
         FavoriteListPlace favoriteListPlace = FavoriteListPlace.builder()
                 .favoriteList(favoriteList)
                 .place(place)
                 .orderInList(orderInList)
                 .build();
+
         favoriteListPlaceRepository.save(favoriteListPlace);
 
         return FavoritePlaceResponse.from(place, orderInList);
@@ -57,22 +59,16 @@ public class FavoritePlaceService {
     @Transactional
     public DeleteFavoritePlaceResponse deleteFavoritePlace(Long favoriteListId, Long placeId) {
 
-        FavoriteList favoriteList = favoriteListRepository.findById(favoriteListId)
-                .orElseThrow(() -> new NotFoundFavoriteListException("해당 찜 목록을 찾을 수 없습니다."));
-
-        FavoriteListPlace favoriteListPlace = favoriteList.getFavoriteListPlaces().stream()
-                .filter(flp -> flp.getPlace().getId().equals(placeId))
-                .findFirst()
+        FavoriteListPlace favoriteListPlace = favoriteListPlaceRepository
+                .findByFavoriteListIdAndPlaceId(favoriteListId, placeId)
                 .orElseThrow(() -> new NotFoundFavoritePlaceException("해당 찜 장소를 찾을 수 없습니다."));
 
-        String listName = favoriteList.getListName();
+        String listName = favoriteListPlace.getFavoriteList().getListName();
         String placeName = favoriteListPlace.getPlace().getName();
 
-        favoriteList.getFavoriteListPlaces().remove(favoriteListPlace);
         favoriteListPlaceRepository.delete(favoriteListPlace);
 
         String message = listName + " 의 " + placeName + " 이(가) 삭제되었습니다.";
         return new DeleteFavoritePlaceResponse(message);
     }
-
 }
