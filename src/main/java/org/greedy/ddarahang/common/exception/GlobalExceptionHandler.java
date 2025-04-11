@@ -2,7 +2,6 @@ package org.greedy.ddarahang.common.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.greedy.ddarahang.api.dto.ErrorResponse;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -21,17 +20,17 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidDataException.class)
-    public ResponseEntity<ErrorResponse> invalidFilterException(InvalidDataException e) {
+    public ResponseEntity<ErrorResponse> handleInvalidDataException(InvalidDataException e) {
         return createErrorResponse(e.getErrorMessage(), e);
     }
 
     @ExceptionHandler(NotFoundDataException.class)
-    public ResponseEntity<ErrorResponse> notFoundTravelCourseDetailException(NotFoundDataException e) {
+    public ResponseEntity<ErrorResponse> handleNotFoundDataException(NotFoundDataException e) {
         return createErrorResponse(e.getErrorMessage(), e);
     }
 
     @ExceptionHandler(DataSyncException.class)
-    public ResponseEntity<ErrorResponse> dataSyncException(DataSyncException e) {
+    public ResponseEntity<ErrorResponse> handleDataSyncException(DataSyncException e) {
         return createErrorResponse(e.getErrorMessage(), e);
     }
 
@@ -46,7 +45,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(DdarahangException.class)
-    public ResponseEntity<ErrorResponse> handleExceptions(DdarahangException e) {
+    public ResponseEntity<ErrorResponse> handleDdarahangException(DdarahangException e) {
         return createErrorResponse(e.getErrorMessage(), e);
     }
 
