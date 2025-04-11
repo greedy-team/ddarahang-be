@@ -16,6 +16,9 @@ public class FavoriteListPlace {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "order_in_list", nullable = false)
+    private Integer orderInList;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "favorite_list_id", nullable = false)
     private FavoriteList favoriteList;
@@ -23,7 +26,4 @@ public class FavoriteListPlace {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id", nullable = false)
     private Place place;
-
-    @Column(name = "order_in_list", nullable = false)
-    private Integer orderInList;
 }
