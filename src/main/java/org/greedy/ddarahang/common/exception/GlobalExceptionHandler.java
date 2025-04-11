@@ -2,6 +2,7 @@ package org.greedy.ddarahang.common.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.greedy.ddarahang.api.dto.ErrorResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -21,46 +22,38 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidDataException.class)
     public ResponseEntity<ErrorResponse> invalidFilterException(InvalidDataException e) {
-        ErrorMessage error = e.getErrorMessage();
-        log.error("{} 발생: {}", error.name(), e.getMessage(), e);
-
-        ErrorResponse response = new ErrorResponse(error.getHttpStatus(), error.getMessage());
-        return ResponseEntity.status(error.getHttpStatus()).body(response);
+        return createErrorResponse(e.getErrorMessage(), e);
     }
 
     @ExceptionHandler(NotFoundDataException.class)
     public ResponseEntity<ErrorResponse> notFoundTravelCourseDetailException(NotFoundDataException e) {
-        ErrorMessage error = e.getErrorMessage();
-        log.error("{} 발생: {}", error.name(), e.getMessage(), e);
-
-        ErrorResponse response = new ErrorResponse(error.getHttpStatus(), error.getMessage());
-        return ResponseEntity.status(error.getHttpStatus()).body(response);
+        return createErrorResponse(e.getErrorMessage(), e);
     }
 
     @ExceptionHandler(DataSyncException.class)
     public ResponseEntity<ErrorResponse> dataSyncException(DataSyncException e) {
-        ErrorMessage error = e.getErrorMessage();
-        log.error("{} 발생: {}", error.name(), e.getMessage(), e);
-
-        ErrorResponse response = new ErrorResponse(error.getHttpStatus(), error.getMessage());
-        return ResponseEntity.status(error.getHttpStatus()).body(response);
+        return createErrorResponse(e.getErrorMessage(), e);
     }
 
     @ExceptionHandler(BindException.class)
-    public ResponseEntity<String> handleBindException(BindException e) {
-        log.error("BindException 발생: {}", e.getMessage(), e);
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<ErrorResponse> handleBindException(BindException e) {
+        return createErrorResponse(ErrorMessage.VALIDATION_BIND_ERROR, e);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        log.error("MethodArgumentNotValidException 발생: {}", e.getMessage(), e);
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        return createErrorResponse(ErrorMessage.VALIDATION_ARGUMENT_NOT_VALID, e);
     }
 
     @ExceptionHandler(DdarahangException.class)
-    public ResponseEntity<String> handleExceptions(DdarahangException e) {
-        log.error("DdarahangException 발생: {}", e.getMessage(), e);
-        return ResponseEntity.internalServerError().body("프로그램 내 에러가 발생했습니다.");
+    public ResponseEntity<ErrorResponse> handleExceptions(DdarahangException e) {
+        return createErrorResponse(e.getErrorMessage(), e);
+    }
+
+    private ResponseEntity<ErrorResponse> createErrorResponse(ErrorMessage error, Exception exception) {
+        log.error("{} 발생: {}", error.name(), exception.getMessage(), exception);
+
+        ErrorResponse response = new ErrorResponse(error.getHttpStatus(), error.getMessage());
+        return ResponseEntity.status(error.getHttpStatus()).body(response);
     }
 }
