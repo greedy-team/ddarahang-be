@@ -6,6 +6,7 @@ public record FavoritePlaceResponse(
         Long id,
         String placeName,
         String address,
+        String tag,
         Double latitude,
         Double longitude,
         Integer orderInList
@@ -15,6 +16,7 @@ public record FavoritePlaceResponse(
                 place.getId(),
                 place.getName(),
                 place.getAddress(),
+                place.getTag(),
                 place.getLatitude(),
                 place.getLongitude(),
                 orderInList
