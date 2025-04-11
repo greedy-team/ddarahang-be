@@ -3,9 +3,6 @@ package org.greedy.ddarahang.db.favoriteList;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,8 +21,4 @@ public class FavoriteList {
 
     @Column(nullable = false)
     private String description;
-
-    @OneToMany(mappedBy = "favoriteList", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<FavoriteListPlace> favoriteListPlaces = new ArrayList<>();
 }

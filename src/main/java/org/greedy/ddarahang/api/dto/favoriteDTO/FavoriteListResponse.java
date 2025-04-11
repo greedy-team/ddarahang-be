@@ -10,14 +10,12 @@ public record FavoriteListResponse(
         String description,
         List<FavoritePlaceResponse> places
 ) {
-    public static FavoriteListResponse from(FavoriteList favoriteList) {
+    public static FavoriteListResponse from(FavoriteList favoriteList, List<FavoritePlaceResponse> places) {
         return new FavoriteListResponse(
                 favoriteList.getId(),
                 favoriteList.getListName(),
                 favoriteList.getDescription(),
-                favoriteList.getFavoriteListPlaces().stream()
-                        .map(favoriteListPlace -> FavoritePlaceResponse.from(favoriteListPlace.getPlace(), favoriteListPlace.getOrderInList()))
-                        .toList()
+                places
         );
     }
 }
