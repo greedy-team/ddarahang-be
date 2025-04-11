@@ -9,7 +9,7 @@ import org.greedy.ddarahang.db.place.Place;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Table(name = "favorite_list_place")
+@Table(name = "favorite_list_places")
 public class FavoriteListPlace {
 
     @Id
