@@ -29,7 +29,11 @@ public enum ErrorMessage {
     DATA_SYNC_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "시트 데이터 동기화에 실패했습니다."),
 
     FAILED_TO_UPDATE_LAST_PROCESSED_ROW(HttpStatus.INTERNAL_SERVER_ERROR, "테이블의 마지막 처리된 행 정보를 업데이트하는 데 실패했습니다."),
-    BATCH_INSERT_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "배치 삽입에 실패했습니다.");
+    BATCH_INSERT_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "배치 삽입에 실패했습니다."),
+
+    // BindException, MethodArgumentNotValidException
+    VALIDATION_BIND_ERROR(HttpStatus.BAD_REQUEST, "요청 데이터 바인딩에 실패했습니다."),
+    VALIDATION_ARGUMENT_NOT_VALID(HttpStatus.BAD_REQUEST, "요청 데이터 유효성 검사에 실패했습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
