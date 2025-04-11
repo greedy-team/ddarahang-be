@@ -1,5 +1,6 @@
 package org.greedy.ddarahang.api.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.greedy.ddarahang.api.dto.favoriteDTO.*;
@@ -22,7 +23,7 @@ public class FavoriteController {
     private final FavoriteListRepository favoriteListRepository;
 
     @PostMapping("/list")
-    public ResponseEntity<FavoriteListResponse> createFavoriteList(@RequestBody CreateFavoriteListRequest request) {
+    public ResponseEntity<FavoriteListResponse> createFavoriteList(@Valid @RequestBody CreateFavoriteListRequest request) {
         return ResponseEntity.ok(favoriteListService.createFavoriteList(request.listName(), request.description()));
     }
 
@@ -38,7 +39,7 @@ public class FavoriteController {
     }
 
     @PostMapping("/places")
-    public ResponseEntity<FavoritePlaceResponse> placeFavoriteList(@RequestBody AddFavoritePlaceRequest request) {
+    public ResponseEntity<FavoritePlaceResponse> placeFavoriteList(@Valid @RequestBody AddFavoritePlaceRequest request) {
         return ResponseEntity.ok(favoritePlaceService.addFavoritePlace(request));
     }
 
