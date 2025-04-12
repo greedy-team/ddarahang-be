@@ -41,7 +41,7 @@ public class FavoriteController implements FavoriteSpecification {
 
     @Override
     @PostMapping("/places")
-    public ResponseEntity<FavoritePlaceResponse> placeFavoriteList(@Valid @RequestBody AddFavoritePlaceRequest request) {
+    public ResponseEntity<FavoritePlaceResponse> addFavoritePlace(@Valid @RequestBody AddFavoritePlaceRequest request) {
         return ResponseEntity.ok(favoritePlaceService.addFavoritePlace(request));
     }
 

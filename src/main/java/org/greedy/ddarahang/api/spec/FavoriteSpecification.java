@@ -38,7 +38,7 @@ public interface FavoriteSpecification {
             @ApiResponse(responseCode = "200", description = "장소 추가 성공"),
             @ApiResponse(responseCode = "404", description = "찜 목록 또는 장소를 찾을 수 없음")
     })
-    ResponseEntity<FavoritePlaceResponse> placeFavoriteList(AddFavoritePlaceRequest request);
+    ResponseEntity<FavoritePlaceResponse> addFavoritePlace(AddFavoritePlaceRequest request);
 
     @Operation(summary = "찜 목록에서 장소 삭제", description = "찜 목록에서 특정 장소를 제거합니다.")
     @ApiResponses({
