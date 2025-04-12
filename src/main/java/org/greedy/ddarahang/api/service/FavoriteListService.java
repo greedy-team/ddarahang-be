@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -42,12 +44,24 @@ public class FavoriteListService {
         return FavoriteListResponse.from(savedFavoriteList, favoritePlaces);
     }
 
+    @Transactional(readOnly = true)
     public List<FavoriteListResponse> getFavoriteLists() {
-        return favoriteListRepository.findAll()
-                .stream()
+
+        List<FavoriteList> favoriteLists = favoriteListRepository.findAll();
+
+        List<Long> favoriteListIds = favoriteLists.stream()
+                .map(FavoriteList::getId)
+                .toList();
+
+        List<FavoriteListPlace> favoriteListPlaces = favoriteListPlaceRepository.findAllByFavoriteListIdIn(favoriteListIds);
+
+        Map<Long, List<FavoriteListPlace>> groupedPlaces = favoriteListPlaces.stream()
+                .collect(Collectors.groupingBy(flp -> flp.getFavoriteList().getId()));
+
+        return favoriteLists.stream()
                 .map(favoriteList -> {
-                    List<FavoritePlaceResponse> places = favoriteListPlaceRepository
-                            .findAllByFavoriteListId(favoriteList.getId())
+                    List<FavoritePlaceResponse> places = groupedPlaces
+                            .getOrDefault(favoriteList.getId(), List.of())
                             .stream()
                             .map(FavoritePlaceResponse::from)
                             .toList();

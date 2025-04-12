@@ -15,4 +15,7 @@ public interface FavoriteListPlaceRepository extends JpaRepository<FavoriteListP
     Optional<FavoriteListPlace> findByFavoriteListIdAndPlaceId(Long favoriteListId, Long placeId);
 
     List<FavoriteListPlace> findAllByFavoriteListId(Long favoriteListId);
+
+    List<FavoriteListPlace> findAllByFavoriteListIdIn(List<Long> favoriteListIds);
+
 }
