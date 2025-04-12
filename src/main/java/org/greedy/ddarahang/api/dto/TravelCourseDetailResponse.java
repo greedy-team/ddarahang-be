@@ -5,6 +5,7 @@ import org.greedy.ddarahang.db.travelCourseDetail.TravelCourseDetail;
 public record TravelCourseDetailResponse(
         int day,
         int orderInDay,
+         Long placeId,
         String placeName,
         String placeAddress,
         String tag,
@@ -17,6 +18,7 @@ public record TravelCourseDetailResponse(
         return new TravelCourseDetailResponse(
                 travelCourseDetail.getDay(),
                 travelCourseDetail.getOrderInDay(),
+                travelCourseDetail.getPlace().getId(),
                 travelCourseDetail.getPlace().getName(),
                 travelCourseDetail.getPlace().getAddress(),
                 travelCourseDetail.getPlace().getTag(),
