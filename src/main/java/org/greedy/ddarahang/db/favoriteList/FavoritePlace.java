@@ -10,7 +10,7 @@ import org.greedy.ddarahang.db.place.Place;
 @AllArgsConstructor
 @Builder
 @Table(name = "favorite_list_places")
-public class FavoriteListPlace {
+public class FavoritePlace {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

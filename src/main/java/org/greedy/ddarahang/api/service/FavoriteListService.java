@@ -7,8 +7,8 @@ import org.greedy.ddarahang.api.dto.favoriteDTO.FavoriteListResponse;
 import org.greedy.ddarahang.api.dto.favoriteDTO.FavoritePlaceResponse;
 import org.greedy.ddarahang.common.exception.NotFoundFavoriteListException;
 import org.greedy.ddarahang.db.favoriteList.FavoriteList;
-import org.greedy.ddarahang.db.favoriteList.FavoriteListPlace;
-import org.greedy.ddarahang.db.favoriteList.FavoriteListPlaceRepository;
+import org.greedy.ddarahang.db.favoriteList.FavoritePlace;
+import org.greedy.ddarahang.db.favoriteList.FavoritePlaceRepository;
 import org.greedy.ddarahang.db.favoriteList.FavoriteListRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class FavoriteListService {
 
     private final FavoriteListRepository favoriteListRepository;
-    private final FavoriteListPlaceRepository favoriteListPlaceRepository;
+    private final FavoritePlaceRepository favoritePlaceRepository;
 
     public FavoriteListResponse createFavoriteList(String listName, String description) {
         FavoriteList favoriteList = FavoriteList.builder()
@@ -34,7 +34,7 @@ public class FavoriteListService {
 
         FavoriteList savedFavoriteList = favoriteListRepository.save(favoriteList);
 
-        List<FavoritePlaceResponse> favoritePlaces = favoriteListPlaceRepository
+        List<FavoritePlaceResponse> favoritePlaces = favoritePlaceRepository
                 .findAllByFavoriteListId(savedFavoriteList.getId())
                 .stream()
                 .map(FavoritePlaceResponse::from)
@@ -52,9 +52,9 @@ public class FavoriteListService {
                 .map(FavoriteList::getId)
                 .toList();
 
-        List<FavoriteListPlace> favoriteListPlaces = favoriteListPlaceRepository.findAllByFavoriteListIdIn(favoriteListIds);
+        List<FavoritePlace> favoritePlaces = favoritePlaceRepository.findAllByFavoriteListIdIn(favoriteListIds);
 
-        Map<Long, List<FavoriteListPlace>> groupedPlaces = favoriteListPlaces.stream()
+        Map<Long, List<FavoritePlace>> groupedPlaces = favoritePlaces.stream()
                 .collect(Collectors.groupingBy(flp -> flp.getFavoriteList().getId()));
 
         return favoriteLists.stream()
@@ -73,9 +73,9 @@ public class FavoriteListService {
         FavoriteList favoriteList = favoriteListRepository.findById(favoriteListId)
                 .orElseThrow(() -> new NotFoundFavoriteListException("해당 찜 목록을 찾을 수 없습니다."));
 
-        List<FavoriteListPlace> places = favoriteListPlaceRepository.findAllByFavoriteListId(favoriteListId);
+        List<FavoritePlace> places = favoritePlaceRepository.findAllByFavoriteListId(favoriteListId);
 
-        favoriteListPlaceRepository.deleteAll(places);
+        favoritePlaceRepository.deleteAll(places);
 
         favoriteListRepository.delete(favoriteList);
 

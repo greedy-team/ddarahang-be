@@ -7,15 +7,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface FavoriteListPlaceRepository extends JpaRepository<FavoriteListPlace, Long> {
+public interface FavoritePlaceRepository extends JpaRepository<FavoritePlace, Long> {
     boolean existsByFavoriteListIdAndPlaceId(Long favoriteListId, Long placeId);
 
     int countByFavoriteListId(Long favoriteListId);
 
-    Optional<FavoriteListPlace> findByFavoriteListIdAndPlaceId(Long favoriteListId, Long placeId);
+    Optional<FavoritePlace> findByFavoriteListIdAndPlaceId(Long favoriteListId, Long placeId);
 
-    List<FavoriteListPlace> findAllByFavoriteListId(Long favoriteListId);
+    List<FavoritePlace> findAllByFavoriteListId(Long favoriteListId);
 
-    List<FavoriteListPlace> findAllByFavoriteListIdIn(List<Long> favoriteListIds);
+    List<FavoritePlace> findAllByFavoriteListIdIn(List<Long> favoriteListIds);
 
 }

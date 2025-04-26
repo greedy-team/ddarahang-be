@@ -1,6 +1,6 @@
 package org.greedy.ddarahang.api.dto.favoriteDTO;
 
-import org.greedy.ddarahang.db.favoriteList.FavoriteListPlace;
+import org.greedy.ddarahang.db.favoriteList.FavoritePlace;
 import org.greedy.ddarahang.db.place.Place;
 
 public record FavoritePlaceResponse(
@@ -24,7 +24,7 @@ public record FavoritePlaceResponse(
         );
     }
 
-    public static FavoritePlaceResponse from(FavoriteListPlace favoriteListPlace) {
-        return from(favoriteListPlace.getPlace(), favoriteListPlace.getOrderInList());
+    public static FavoritePlaceResponse from(FavoritePlace favoritePlace) {
+        return from(favoritePlace.getPlace(), favoritePlace.getOrderInList());
     }
 }
