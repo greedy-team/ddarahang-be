@@ -7,6 +7,7 @@ import org.greedy.ddarahang.api.dto.favoriteDTO.*;
 import org.greedy.ddarahang.api.service.FavoriteListService;
 import org.greedy.ddarahang.api.service.FavoritePlaceService;
 import org.greedy.ddarahang.api.spec.FavoriteSpecification;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,8 @@ public class FavoriteController implements FavoriteSpecification {
     @Override
     @PostMapping("/list")
     public ResponseEntity<FavoriteListResponse> createFavoriteList(@Valid @RequestBody CreateFavoriteListRequest request) {
-        return ResponseEntity.ok(favoriteListService.createFavoriteList(request.listName(), request.description()));
+        FavoriteListResponse response = favoriteListService.createFavoriteList(request.listName(), request.description());
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Override
@@ -36,19 +38,20 @@ public class FavoriteController implements FavoriteSpecification {
     @Override
     @DeleteMapping("/list/{favoriteListId}")
     public ResponseEntity<DeleteFavoriteListResponse> deleteFavoriteList(@PathVariable Long favoriteListId) {
-        return ResponseEntity.ok(favoriteListService.deleteFavoriteList(favoriteListId));
+        return ResponseEntity.noContent().build();
     }
 
     @Override
     @PostMapping("/places")
     public ResponseEntity<FavoritePlaceResponse> addFavoritePlace(@Valid @RequestBody AddFavoritePlaceRequest request) {
-        return ResponseEntity.ok(favoritePlaceService.addFavoritePlace(request));
+        FavoritePlaceResponse response = favoritePlaceService.addFavoritePlace(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Override
     @DeleteMapping("/list/{favoriteListId}/places/{placeId}")
     public ResponseEntity<DeleteFavoritePlaceResponse> deleteFavoritePlace(@PathVariable Long favoriteListId,
                                                                            @PathVariable Long placeId) {
-        return ResponseEntity.ok(favoritePlaceService.deleteFavoritePlace(favoriteListId, placeId));
+        return ResponseEntity.noContent().build();
     }
 }
