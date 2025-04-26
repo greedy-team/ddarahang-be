@@ -1,6 +1,5 @@
 package org.greedy.ddarahang.api.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.greedy.ddarahang.api.dto.favoriteDTO.AddFavoritePlaceRequest;
@@ -17,9 +16,11 @@ import org.greedy.ddarahang.db.favoriteList.FavoriteListRepository;
 import org.greedy.ddarahang.db.place.Place;
 import org.greedy.ddarahang.db.place.PlaceRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class FavoritePlaceService {
 
@@ -27,7 +28,6 @@ public class FavoritePlaceService {
     private final PlaceRepository placeRepository;
     private final FavoriteListPlaceRepository favoriteListPlaceRepository;
 
-    @Transactional
     public FavoritePlaceResponse addFavoritePlace(AddFavoritePlaceRequest request) {
 
         FavoriteList favoriteList = favoriteListRepository.findById(request.favoriteListId())
@@ -56,7 +56,6 @@ public class FavoritePlaceService {
         return FavoritePlaceResponse.from(place, orderInList);
     }
 
-    @Transactional
     public DeleteFavoritePlaceResponse deleteFavoritePlace(Long favoriteListId, Long placeId) {
 
         FavoriteListPlace favoriteListPlace = favoriteListPlaceRepository

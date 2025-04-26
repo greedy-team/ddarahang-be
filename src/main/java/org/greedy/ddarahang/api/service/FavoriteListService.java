@@ -19,14 +19,13 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class FavoriteListService {
 
     private final FavoriteListRepository favoriteListRepository;
     private final FavoriteListPlaceRepository favoriteListPlaceRepository;
 
-    @Transactional
     public FavoriteListResponse createFavoriteList(String listName, String description) {
         FavoriteList favoriteList = FavoriteList.builder()
                 .listName(listName)
@@ -70,7 +69,6 @@ public class FavoriteListService {
                 .toList();
     }
 
-    @Transactional
     public DeleteFavoriteListResponse deleteFavoriteList(Long favoriteListId) {
         FavoriteList favoriteList = favoriteListRepository.findById(favoriteListId)
                 .orElseThrow(() -> new NotFoundFavoriteListException("해당 찜 목록을 찾을 수 없습니다."));
@@ -78,8 +76,6 @@ public class FavoriteListService {
         List<FavoriteListPlace> places = favoriteListPlaceRepository.findAllByFavoriteListId(favoriteListId);
 
         favoriteListPlaceRepository.deleteAll(places);
-
-        favoriteListPlaceRepository.flush();
 
         favoriteListRepository.delete(favoriteList);
 
