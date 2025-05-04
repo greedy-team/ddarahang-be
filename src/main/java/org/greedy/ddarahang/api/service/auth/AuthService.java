@@ -3,10 +3,10 @@ package org.greedy.ddarahang.api.service.auth;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.greedy.ddarahang.api.dto.auth.SignInRequest;
+import org.greedy.ddarahang.api.dto.auth.LoginRequest;
 import org.greedy.ddarahang.api.dto.auth.SignUpRequest;
 import org.greedy.ddarahang.api.dto.auth.TokenResponse;
-import org.greedy.ddarahang.common.security.JwtUtil;
+import org.greedy.ddarahang.common.security.JwtTokenProvider;
 import org.greedy.ddarahang.db.token.RefreshToken;
 import org.greedy.ddarahang.db.token.RefreshTokenRepository;
 import org.greedy.ddarahang.db.user.User;
@@ -20,7 +20,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final JwtUtil jwtUtil;
+    private final JwtTokenProvider jwtUtil;
 
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -51,7 +51,7 @@ public class AuthService {
     }
 
     @Transactional
-    public TokenResponse signIn(SignInRequest request) {
+    public TokenResponse login(LoginRequest request) {
 
         User user = userRepository.findByNickname(request.nickname())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));

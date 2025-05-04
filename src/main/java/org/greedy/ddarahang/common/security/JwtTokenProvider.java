@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Component
-public class JwtUtil {
+public class JwtTokenProvider {
 
     @Value("${jwt.access-token-expiration}")
     private Long accessTokenExpiration;
@@ -22,7 +22,7 @@ public class JwtUtil {
 
     private final SecretKey secretKey;
 
-    public JwtUtil(@Value("${jwt.secret}") String secret) {
+    public JwtTokenProvider(@Value("${jwt.secret}") String secret) {
         this.secretKey = new SecretKeySpec(
                 secret.getBytes(StandardCharsets.UTF_8),
                 "HmacSHA256");

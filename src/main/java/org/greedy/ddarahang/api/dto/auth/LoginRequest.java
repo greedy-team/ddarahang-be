@@ -1,6 +1,6 @@
 package org.greedy.ddarahang.api.dto.auth;
 
-public record SignInRequest (
+public record LoginRequest(
         String nickname,
         String password
 ){

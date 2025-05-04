@@ -1,7 +1,7 @@
 package org.greedy.ddarahang.api.controller.auth;
 
 import lombok.RequiredArgsConstructor;
-import org.greedy.ddarahang.api.dto.auth.SignInRequest;
+import org.greedy.ddarahang.api.dto.auth.LoginRequest;
 import org.greedy.ddarahang.api.dto.auth.SignUpRequest;
 import org.greedy.ddarahang.api.dto.auth.TokenResponse;
 import org.greedy.ddarahang.api.service.auth.AuthService;
@@ -19,7 +19,7 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/signUp")
+    @PostMapping("/signup")
     public ResponseEntity<TokenResponse> signUp(@RequestBody SignUpRequest request) {
         if (authService.findByNickname(request.nickname()).isPresent()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -27,8 +27,8 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.signUp(request));
     }
 
-    @PostMapping("/signIn")
-    public ResponseEntity<TokenResponse> signIn(@RequestBody SignInRequest request) {
-        return ResponseEntity.status(HttpStatus.OK).body(authService.signIn(request));
+    @PostMapping("/login")
+    public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest request) {
+        return ResponseEntity.status(HttpStatus.OK).body(authService.login(request));
     }
 }
