@@ -1,10 +1,10 @@
-package org.greedy.ddarahang.api.controller;
+package org.greedy.ddarahang.api.controller.auth;
 
 import lombok.RequiredArgsConstructor;
-import org.greedy.ddarahang.api.dto.SignInRequest;
-import org.greedy.ddarahang.api.dto.SignUpRequest;
-import org.greedy.ddarahang.api.dto.TokenResponse;
-import org.greedy.ddarahang.api.service.AuthService;
+import org.greedy.ddarahang.api.dto.auth.SignInRequest;
+import org.greedy.ddarahang.api.dto.auth.SignUpRequest;
+import org.greedy.ddarahang.api.dto.auth.TokenResponse;
+import org.greedy.ddarahang.api.service.auth.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

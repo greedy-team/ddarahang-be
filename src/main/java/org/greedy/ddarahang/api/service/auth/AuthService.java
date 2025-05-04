@@ -1,12 +1,12 @@
-package org.greedy.ddarahang.api.service;
+package org.greedy.ddarahang.api.service.auth;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.greedy.ddarahang.api.dto.SignInRequest;
-import org.greedy.ddarahang.api.dto.SignUpRequest;
-import org.greedy.ddarahang.api.dto.TokenResponse;
-import org.greedy.ddarahang.common.JwtUtil;
+import org.greedy.ddarahang.api.dto.auth.SignInRequest;
+import org.greedy.ddarahang.api.dto.auth.SignUpRequest;
+import org.greedy.ddarahang.api.dto.auth.TokenResponse;
+import org.greedy.ddarahang.common.security.JwtUtil;
 import org.greedy.ddarahang.db.token.RefreshToken;
 import org.greedy.ddarahang.db.token.RefreshTokenRepository;
 import org.greedy.ddarahang.db.user.User;

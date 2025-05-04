@@ -1,4 +1,4 @@
-package org.greedy.ddarahang.common;
+package org.greedy.ddarahang.common.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;

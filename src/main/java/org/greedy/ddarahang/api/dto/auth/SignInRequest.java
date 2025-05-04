@@ -1,4 +1,4 @@
-package org.greedy.ddarahang.api.dto;
+package org.greedy.ddarahang.api.dto.auth;
 
 public record SignInRequest (
         String nickname,
