@@ -53,7 +53,7 @@ public class AuthService {
     @Transactional
     public TokenResponse login(LoginRequest request) {
 
-        User user = userRepository.findByNickname(request.nickname())
+        User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
         if (!request.password().equals(user.getPassword())) {
@@ -82,7 +82,7 @@ public class AuthService {
                 .build();
     }
 
-    public Optional<User> findByNickname(String nickname) {
-        return userRepository.findByNickname(nickname);
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }
