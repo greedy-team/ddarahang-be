@@ -31,6 +31,6 @@ public class User {
     @Column(nullable = false)
     String password;
 
-    @Column(nullable = false)
-    String nickName;
+    @Column(name = "nickname", nullable = false)
+    String nickname;
 }
