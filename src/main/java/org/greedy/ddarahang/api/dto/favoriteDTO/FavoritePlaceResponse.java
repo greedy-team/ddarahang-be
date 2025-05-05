@@ -4,7 +4,7 @@ import org.greedy.ddarahang.db.favoriteList.FavoritePlace;
 import org.greedy.ddarahang.db.place.Place;
 
 public record FavoritePlaceResponse(
-        Long id,
+        Long placeId,
         String placeName,
         String address,
         String tag,
