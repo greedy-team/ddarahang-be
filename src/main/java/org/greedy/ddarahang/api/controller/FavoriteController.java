@@ -38,6 +38,7 @@ public class FavoriteController implements FavoriteSpecification {
     @Override
     @DeleteMapping("/list/{favoriteListId}")
     public ResponseEntity<DeleteFavoriteListResponse> deleteFavoriteList(@PathVariable Long favoriteListId) {
+        favoriteListService.deleteFavoriteList(favoriteListId);
         return ResponseEntity.noContent().build();
     }
 
