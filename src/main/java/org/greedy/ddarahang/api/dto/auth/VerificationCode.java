@@ -1,6 +1,5 @@
-package org.greedy.ddarahang.db.token;
+package org.greedy.ddarahang.api.dto.auth;
 
-import jakarta.persistence.Column;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

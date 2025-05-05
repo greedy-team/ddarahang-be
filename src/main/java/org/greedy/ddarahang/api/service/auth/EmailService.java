@@ -3,7 +3,7 @@ package org.greedy.ddarahang.api.service.auth;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.greedy.ddarahang.db.token.VerificationCode;
+import org.greedy.ddarahang.api.dto.auth.VerificationCode;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -14,9 +14,9 @@ import java.util.concurrent.ThreadLocalRandom;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MailService {
+public class EmailService {
 
-    private final MailSender mailSender;
+    private final EmailSender emailSender;
 
     private final Map<String, VerificationCode> codeMap = new ConcurrentHashMap<>();
 
@@ -26,15 +26,16 @@ public class MailService {
 
         codeMap.put(email, new VerificationCode(code, expireTime));
 
-        String title = "DDARAHANG(따라행) 이메일 인증 번호";
+        String title = "[따라행(ddarahang)] 이메일 인증";
         String content = "<html>"
                 + "<body>"
-                + "<h1>ddaragang(따라행) 인증 코드" + code + "</h1>"
-                + "<p>10분 안에 입력해주세요.</p>"
+                + "<h2>따라행(ddarahang) 인증 코드</h2>"
+                + "<h1>" + code + "</h1>"
+                + "<p>인증코드는 10분 동안 유효합니다.</p>"
                 + "</body>"
                 + "</html>";
         try {
-            mailSender.sendMail(email, title, content);
+            emailSender.sendMail(email, title, content);
         } catch (MessagingException e){
             throw new RuntimeException("Unable to send email", e);
         }

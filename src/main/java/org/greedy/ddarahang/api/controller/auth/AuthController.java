@@ -5,7 +5,7 @@ import org.greedy.ddarahang.api.dto.auth.LoginRequest;
 import org.greedy.ddarahang.api.dto.auth.SignUpRequest;
 import org.greedy.ddarahang.api.dto.auth.TokenResponse;
 import org.greedy.ddarahang.api.service.auth.AuthService;
-import org.greedy.ddarahang.api.service.auth.MailService;
+import org.greedy.ddarahang.api.service.auth.EmailService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
-    private final MailService mailService;
+    private final EmailService mailService;
 
     @PostMapping("/signup")
     public ResponseEntity<TokenResponse> signUp(@RequestBody SignUpRequest request) {
