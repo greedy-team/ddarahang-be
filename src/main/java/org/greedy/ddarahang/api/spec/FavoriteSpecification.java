@@ -17,7 +17,7 @@ public interface FavoriteSpecification {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "찜 목록 생성 성공")
     })
-    ResponseEntity<FavoriteListResponse> createFavoriteList(CreateFavoriteListRequest request);
+    ResponseEntity<Void> createFavoriteList(CreateFavoriteListRequest request);
 
     @Operation(summary = "찜 목록 전체 조회",
             description = "모든 찜 목록을 조회합니다.")

@@ -24,10 +24,11 @@ public class FavoriteController implements FavoriteSpecification {
 
     @Override
     @PostMapping("/list")
-    public ResponseEntity<FavoriteListResponse> createFavoriteList(@Valid @RequestBody CreateFavoriteListRequest request) {
-        FavoriteListResponse response = favoriteListService.createFavoriteList(request.listName(), request.description());
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<Void> createFavoriteList(@Valid @RequestBody CreateFavoriteListRequest request) {
+        favoriteListService.createFavoriteList(request.listName(), request.description());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
 
     @Override
     @GetMapping("/list")
