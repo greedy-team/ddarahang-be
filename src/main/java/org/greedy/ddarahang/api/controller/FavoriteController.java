@@ -53,6 +53,7 @@ public class FavoriteController implements FavoriteSpecification {
     @DeleteMapping("/list/{favoriteListId}/places/{placeId}")
     public ResponseEntity<DeleteFavoritePlaceResponse> deleteFavoritePlace(@PathVariable Long favoriteListId,
                                                                            @PathVariable Long placeId) {
+        favoritePlaceService.deleteFavoritePlace(favoriteListId, placeId);
         return ResponseEntity.noContent().build();
     }
 }
