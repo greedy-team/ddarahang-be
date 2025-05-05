@@ -16,41 +16,50 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/favorites")
+@RequestMapping("/api/v1")
 public class FavoriteController implements FavoriteSpecification {
 
     private final FavoriteListService favoriteListService;
     private final FavoritePlaceService favoritePlaceService;
 
     @Override
-    @PostMapping("/list")
+    @PostMapping("/favorite")
+    public ResponseEntity<List<FavoriteListNonLoginResponse>> createFavoriteListNonLogin(
+            @Valid @RequestBody CreateFavoriteListNonLoginRequest request) {
+
+        List<FavoriteListNonLoginResponse> response = favoriteListService.createFavoriteListNonLogin(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    @PostMapping("/favorites/list")
     public ResponseEntity<Void> createFavoriteList(@Valid @RequestBody CreateFavoriteListRequest request) {
         favoriteListService.createFavoriteList(request.listName(), request.description());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Override
-    @GetMapping("/list")
+    @GetMapping("/favorites/list")
     public ResponseEntity<List<FavoriteListResponse>> getFavoriteLists() {
         return ResponseEntity.ok(favoriteListService.getFavoriteLists());
     }
 
     @Override
-    @DeleteMapping("/list/{favoriteListId}")
+    @DeleteMapping("/favorites/list/{favoriteListId}")
     public ResponseEntity<DeleteFavoriteListResponse> deleteFavoriteList(@PathVariable Long favoriteListId) {
         favoriteListService.deleteFavoriteList(favoriteListId);
         return ResponseEntity.noContent().build();
     }
 
     @Override
-    @PostMapping("/places")
+    @PostMapping("/favorites/places")
     public ResponseEntity<FavoritePlaceResponse> addFavoritePlace(@Valid @RequestBody AddFavoritePlaceRequest request) {
         FavoritePlaceResponse response = favoritePlaceService.addFavoritePlace(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Override
-    @DeleteMapping("/list/{favoriteListId}/places/{placeId}")
+    @DeleteMapping("/favorites/list/{favoriteListId}/places/{placeId}")
     public ResponseEntity<DeleteFavoritePlaceResponse> deleteFavoritePlace(@PathVariable Long favoriteListId,
                                                                            @PathVariable Long placeId) {
         favoritePlaceService.deleteFavoritePlace(favoriteListId, placeId);

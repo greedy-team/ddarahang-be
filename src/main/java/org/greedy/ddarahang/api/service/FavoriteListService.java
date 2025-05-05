@@ -2,20 +2,21 @@ package org.greedy.ddarahang.api.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.greedy.ddarahang.api.dto.favoriteDTO.DeleteFavoriteListResponse;
-import org.greedy.ddarahang.api.dto.favoriteDTO.FavoriteListResponse;
-import org.greedy.ddarahang.api.dto.favoriteDTO.FavoritePlaceResponse;
+import org.greedy.ddarahang.api.dto.favoriteDTO.*;
 import org.greedy.ddarahang.common.exception.NotFoundFavoriteListException;
 import org.greedy.ddarahang.db.favoriteList.FavoriteList;
 import org.greedy.ddarahang.db.favoriteList.FavoritePlace;
 import org.greedy.ddarahang.db.favoriteList.FavoritePlaceRepository;
 import org.greedy.ddarahang.db.favoriteList.FavoriteListRepository;
+import org.greedy.ddarahang.db.place.Place;
+import org.greedy.ddarahang.db.place.PlaceRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -25,6 +26,29 @@ public class FavoriteListService {
 
     private final FavoriteListRepository favoriteListRepository;
     private final FavoritePlaceRepository favoritePlaceRepository;
+    private final PlaceRepository placeRepository;
+
+    public List<FavoriteListNonLoginResponse> createFavoriteListNonLogin(CreateFavoriteListNonLoginRequest request) {
+        List<Long> placeIds = request.placeIds();
+
+        Map<Long, Long> orderMap = new HashMap<>();
+        for (int i = 0; i < placeIds.size(); i++) {
+            orderMap.put(placeIds.get(i), (long) i + 1);
+        }
+
+        List<Place> places = placeRepository.findAllById(placeIds);
+
+        return places.stream()
+                .sorted(Comparator.comparingLong(p -> orderMap.getOrDefault(p.getId(), Long.MAX_VALUE)))
+                .map(place -> new FavoriteListNonLoginResponse(
+                        orderMap.get(place.getId()),
+                        place.getName(),
+                        place.getAddress(),
+                        place.getLatitude(),
+                        place.getLongitude()
+                ))
+                .toList();
+    }
 
     public FavoriteListResponse createFavoriteList(String listName, String description) {
         FavoriteList favoriteList = FavoriteList.builder()

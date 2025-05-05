@@ -12,6 +12,12 @@ import java.util.List;
 @Tag(name = "찜 목록 및 찜 장소 관리", description = "찜 목록 생성, 조회, 삭제 및 찜 장소 추가/삭제 API")
 public interface FavoriteSpecification {
 
+    @Operation(summary = "비로그인 찜 목록 생성", description = "비로그인 상태에서 장소 ID 리스트를 받아 찜 목록을 생성하고 응답합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "비로그인 찜 목록 생성 및 응답 성공")
+    })
+    ResponseEntity<List<FavoriteListNonLoginResponse>> createFavoriteListNonLogin(CreateFavoriteListNonLoginRequest request);
+
     @Operation(summary = "찜 목록 생성",
             description = "새로운 찜 목록을 생성합니다.")
     @ApiResponses({
