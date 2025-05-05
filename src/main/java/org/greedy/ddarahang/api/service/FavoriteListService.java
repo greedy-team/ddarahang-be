@@ -40,32 +40,13 @@ public class FavoriteListService {
                 .map(FavoritePlaceResponse::from)
                 .toList();
 
-        return FavoriteListResponse.from(savedFavoriteList, favoritePlaces);
+        return FavoriteListResponse.from(savedFavoriteList);
     }
 
     @Transactional(readOnly = true)
     public List<FavoriteListResponse> getFavoriteLists() {
-
-        List<FavoriteList> favoriteLists = favoriteListRepository.findAll();
-
-        List<Long> favoriteListIds = favoriteLists.stream()
-                .map(FavoriteList::getId)
-                .toList();
-
-        List<FavoritePlace> favoritePlaces = favoritePlaceRepository.findAllByFavoriteListIdIn(favoriteListIds);
-
-        Map<Long, List<FavoritePlace>> groupedPlaces = favoritePlaces.stream()
-                .collect(Collectors.groupingBy(flp -> flp.getFavoriteList().getId()));
-
-        return favoriteLists.stream()
-                .map(favoriteList -> {
-                    List<FavoritePlaceResponse> places = groupedPlaces
-                            .getOrDefault(favoriteList.getId(), List.of())
-                            .stream()
-                            .map(FavoritePlaceResponse::from)
-                            .toList();
-                    return FavoriteListResponse.from(favoriteList, places);
-                })
+        return favoriteListRepository.findAll().stream()
+                .map(FavoriteListResponse::from)
                 .toList();
     }
 

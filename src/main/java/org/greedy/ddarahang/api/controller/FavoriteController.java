@@ -29,7 +29,6 @@ public class FavoriteController implements FavoriteSpecification {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-
     @Override
     @GetMapping("/list")
     public ResponseEntity<List<FavoriteListResponse>> getFavoriteLists() {
