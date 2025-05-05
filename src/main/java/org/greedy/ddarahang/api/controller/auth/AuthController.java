@@ -5,7 +5,7 @@ import org.greedy.ddarahang.api.dto.auth.LoginRequest;
 import org.greedy.ddarahang.api.dto.auth.SignUpRequest;
 import org.greedy.ddarahang.api.dto.auth.TokenResponse;
 import org.greedy.ddarahang.api.service.auth.AuthService;
-import org.greedy.ddarahang.api.service.auth.MemberService;
+import org.greedy.ddarahang.api.service.auth.MailService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
-    private final MemberService memberService;
+    private final MailService mailService;
 
     @PostMapping("/signup")
     public ResponseEntity<TokenResponse> signUp(@RequestBody SignUpRequest request) {
@@ -35,20 +35,20 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(authService.login(request));
     }
 
-    @PostMapping("/emails/send") //
+    @PostMapping("/email/send") //메일 전송
     public ResponseEntity<Void> sendEmail(@RequestParam("email") String email) {
-        memberService.sendCodeToEmail(email);
+        mailService.sendCodeToEmail(email);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/emails/verify")
+    @PostMapping("/email/verify") //메일 인증
     public ResponseEntity<String> verifyEmail(
             @RequestParam("email") String email,
             @RequestParam("code") String code) {
 
-        boolean isVerified = memberService.verifyCode(email, code);
+        boolean isVerified = mailService.verifyCode(email, code);
         if (isVerified) {
-            return ResponseEntity.ok("이메일 인증 완료");
+            return ResponseEntity.ok("이메일 인증 성공!");
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못되었거나 만료된 인증 코드입니다.");
         }
