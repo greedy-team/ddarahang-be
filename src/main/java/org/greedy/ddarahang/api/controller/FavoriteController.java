@@ -26,7 +26,6 @@ public class FavoriteController implements FavoriteSpecification {
     @PostMapping("/favorite")
     public ResponseEntity<List<FavoriteListNonLoginResponse>> createFavoriteListNonLogin(
             @Valid @RequestBody CreateFavoriteListNonLoginRequest request) {
-
         List<FavoriteListNonLoginResponse> response = favoriteListService.createFavoriteListNonLogin(request);
         return ResponseEntity.ok(response);
     }
