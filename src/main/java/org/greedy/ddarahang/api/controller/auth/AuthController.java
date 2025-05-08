@@ -1,6 +1,8 @@
 package org.greedy.ddarahang.api.controller.auth;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.greedy.ddarahang.api.dto.auth.EmailSendRequest;
 import org.greedy.ddarahang.api.dto.auth.LoginRequest;
 import org.greedy.ddarahang.api.dto.auth.SignUpRequest;
 import org.greedy.ddarahang.api.dto.auth.TokenResponse;
@@ -36,8 +38,8 @@ public class AuthController {
     }
 
     @PostMapping("/email/send") //메일 전송
-    public ResponseEntity<Void> sendEmail(@RequestParam("email") String email) {
-        emailService.sendCodeToEmail(email);
+    public ResponseEntity<Void> sendEmail(@Valid @RequestBody EmailSendRequest request) {
+        emailService.sendCodeToEmail(request.email());
         return ResponseEntity.ok().build();
     }
 
