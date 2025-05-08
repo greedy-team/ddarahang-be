@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
-    private final EmailService mailService;
+    private final EmailService emailService;
 
     @PostMapping("/sign-up")
     public ResponseEntity<TokenResponse> signUp(@RequestBody SignUpRequest request) {
@@ -37,7 +37,7 @@ public class AuthController {
 
     @PostMapping("/email/send") //메일 전송
     public ResponseEntity<Void> sendEmail(@RequestParam("email") String email) {
-        mailService.sendCodeToEmail(email);
+        emailService.sendCodeToEmail(email);
         return ResponseEntity.ok().build();
     }
 
@@ -46,11 +46,6 @@ public class AuthController {
             @RequestParam("email") String email,
             @RequestParam("code") String code) {
 
-        boolean isVerified = mailService.verifyCode(email, code);
-        if (isVerified) {
-            return ResponseEntity.ok("이메일 인증 성공!");
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못되었거나 만료된 인증 코드입니다.");
-        }
+        return emailService.verifyEmail(email, code);
     }
 }
