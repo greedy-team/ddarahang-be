@@ -22,7 +22,7 @@ public class AuthController {
     private final AuthService authService;
     private final EmailService mailService;
 
-    @PostMapping("/signup")
+    @PostMapping("/sign-up")
     public ResponseEntity<TokenResponse> signUp(@RequestBody SignUpRequest request) {
         if (authService.findByEmail(request.email()).isPresent()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
