@@ -2,6 +2,7 @@ package org.greedy.ddarahang.api.controller.auth;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.greedy.ddarahang.api.dto.auth.EmailVerifyRequest;
 import org.greedy.ddarahang.api.dto.auth.EmailSendRequest;
 import org.greedy.ddarahang.api.dto.auth.LoginRequest;
 import org.greedy.ddarahang.api.dto.auth.SignUpRequest;
@@ -13,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -44,10 +44,7 @@ public class AuthController {
     }
 
     @PostMapping("/email/verify") //메일 인증
-    public ResponseEntity<String> verifyEmail(
-            @RequestParam("email") String email,
-            @RequestParam("code") String code) {
-
-        return emailService.verifyEmail(email, code);
+    public ResponseEntity<String> verifyEmail(@Valid @RequestBody EmailVerifyRequest request) {
+        return emailService.verifyEmail(request.email(), request.code());
     }
 }
