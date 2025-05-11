@@ -25,11 +25,13 @@ public class AuthController {
     private final EmailService emailService;
 
     @PostMapping("/sign-up")
-    public ResponseEntity<TokenResponse> signUp(@Valid @RequestBody SignUpRequest request) {
-        if (authService.findByEmail(request.email()).isPresent()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    public ResponseEntity<?> signUp(@Valid @RequestBody SignUpRequest request) {
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(authService.signUp(request));
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(authService.signUp(request));
+        catch (IllegalStateException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @PostMapping("/login")

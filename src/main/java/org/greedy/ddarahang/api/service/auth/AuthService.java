@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Slf4j
@@ -31,16 +32,21 @@ public class AuthService {
 
     @Transactional
     public TokenResponse signUp(SignUpRequest request) {
+
+        if (userRepository.existsByEmail(request.email())) {
+            throw new IllegalStateException("이미 존재하는 이메일입니다");
+        }
         User newUser = User.builder()
                 .nickname(request.nickname())
                 .password(passwordEncoder.encode(request.password()))
                 .email(request.email())
                 .build();
 
+        userRepository.save(newUser);
+
         String accessToken = jwtUtil.createAccessToken(newUser);
         String refreshToken = jwtUtil.createRefreshToken(newUser);
 
-        userRepository.save(newUser);
         refreshTokenRepository.save(
                 RefreshToken.builder()
                         .user(newUser)
@@ -61,7 +67,7 @@ public class AuthService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {
-            log.info("비밀번호가 일치하지 않습니다! request_password: " + request.password() + ", user_password: " + user.getPassword());
+            log.warn("[LOGIN FAILED] email={}, timestamp={}", user.getEmail(), LocalDateTime.now());
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
@@ -70,7 +76,8 @@ public class AuthService {
 
         String accessToken = "";
         String refreshToken = refreshTokenEntity.getToken();
-        if (jwtUtil.isValidRefreshToken(refreshToken)) {
+
+        if (jwtUtil.isValidRefreshToken(refreshToken)) { //refreshtoken 유효성 검증 갱신
             accessToken = jwtUtil.createAccessToken(user);
             return TokenResponse.builder()
                     .accessToken(accessToken)
@@ -86,7 +93,4 @@ public class AuthService {
                 .build();
     }
 
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
 }
