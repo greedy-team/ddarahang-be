@@ -25,7 +25,7 @@ public class AuthController {
     private final EmailService emailService;
 
     @PostMapping("/sign-up")
-    public ResponseEntity<TokenResponse> signUp(@RequestBody SignUpRequest request) {
+    public ResponseEntity<TokenResponse> signUp(@Valid @RequestBody SignUpRequest request) {
         if (authService.findByEmail(request.email()).isPresent()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -33,7 +33,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<TokenResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(authService.login(request));
     }
 
