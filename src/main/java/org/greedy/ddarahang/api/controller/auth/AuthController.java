@@ -30,7 +30,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.CREATED).body(authService.signUp(request));
         }
         catch (IllegalStateException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
 
