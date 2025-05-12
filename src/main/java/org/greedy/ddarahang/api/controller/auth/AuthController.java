@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
@@ -47,6 +49,26 @@ public class AuthController {
 
     @PostMapping("/email/verify") //메일 인증
     public ResponseEntity<String> verifyEmail(@Valid @RequestBody EmailVerifyRequest request) {
-        return emailService.verifyEmail(request.email(), request.code());
+        EmailService.VerificationResult result = emailService.verifyEmail(request.email(), request.code());
+
+        switch (result) {
+            case SUCCESS -> {
+                return ResponseEntity.ok("이메일 인증 성공!");
+            }
+            case BAD_REQUEST -> {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("인증 코드가 발송되지 않았습니다.");
+            }
+            case UNAUTHORIZED -> {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("인증 코드가 일치하지 않습니다.");
+            }
+            case GONE -> {
+                return ResponseEntity.status(HttpStatus.GONE)
+                        .body("인증 코드가 만료되었습니다.");
+            }
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).
+                body("알 수 없는 오류가 발생하였습니다: " + result.toString());
     }
 }

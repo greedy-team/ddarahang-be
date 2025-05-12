@@ -4,8 +4,6 @@ import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.greedy.ddarahang.api.dto.auth.VerificationCode;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -58,27 +56,29 @@ public class EmailService {
         return randomCode.toString();
     }
 
-    public ResponseEntity<String> verifyEmail(String email, String code) {
+    public VerificationResult verifyEmail(String email, String code) {
         VerificationCode stored = codeMap.get(email);
 
         if (stored == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("인증 코드가 발송되지 않았습니다.");
+            return VerificationResult.BAD_REQUEST;
         }
 
         if (!stored.getCode().equals(code)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("인증 코드가 일치하지 않습니다.");
+            return VerificationResult.UNAUTHORIZED;
         }
 
         if (stored.getExpiresTime().isBefore(LocalDateTime.now())) {
-            return ResponseEntity.status(HttpStatus.GONE)
-                    .body("인증 코드가 만료되었습니다.");
+            return VerificationResult.GONE;
         }
 
-        // 인증 성공 시 맵에서 제거
-        codeMap.remove(email);
+        codeMap.remove(email); //인증 성공 시 제거
+        return VerificationResult.SUCCESS;
+    }
 
-        return ResponseEntity.ok("이메일 인증 성공!");
+    public enum VerificationResult {
+        SUCCESS,
+        BAD_REQUEST,
+        UNAUTHORIZED,
+        GONE
     }
 }
