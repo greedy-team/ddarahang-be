@@ -47,12 +47,7 @@ public class AuthService {
         String accessToken = jwtUtil.createAccessToken(newUser);
         String refreshToken = jwtUtil.createRefreshToken(newUser);
 
-        refreshTokenRepository.save(
-                RefreshToken.builder()
-                        .user(newUser)
-                        .token(refreshToken)
-                        .build()
-        );
+        saveRefreshToken(newUser, refreshToken);
 
         return TokenResponse.builder()
                 .accessToken(accessToken)
@@ -83,14 +78,23 @@ public class AuthService {
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
                     .build();
-        } else {
-            refreshToken = jwtUtil.createRefreshToken(user);
-            refreshTokenEntity.updateToken(refreshToken);
         }
+
+        refreshToken = jwtUtil.createRefreshToken(user);
+        refreshTokenEntity.updateToken(refreshToken);
+
         return TokenResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
+    }
+
+    private void saveRefreshToken(User newUser, String refreshToken) {
+        RefreshToken token = RefreshToken.builder()
+                        .user(newUser)
+                        .token(refreshToken)
+                        .build();
+        refreshTokenRepository.save(token);
     }
 
 }
