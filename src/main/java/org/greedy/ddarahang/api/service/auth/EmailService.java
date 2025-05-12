@@ -16,7 +16,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @RequiredArgsConstructor
 public class EmailService {
 
-    private final EmailSender emailSender;
+    private final EmailUtil emailUtil;
 
     private static final String RANDOM_CODE_CHARACTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ" +
             "abcdefghijkmnpqrstuvwxyz" +
@@ -39,7 +39,7 @@ public class EmailService {
                 + "</body>"
                 + "</html>";
         try {
-            emailSender.sendMail(email, title, content);
+            emailUtil.sendMail(email, title, content);
         } catch (MessagingException e){
             throw new RuntimeException("Unable to send email", e);
         }

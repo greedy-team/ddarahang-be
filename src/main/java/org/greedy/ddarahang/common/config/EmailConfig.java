@@ -1,6 +1,6 @@
 package org.greedy.ddarahang.common.config;
 
-import org.greedy.ddarahang.api.service.auth.EmailSender;
+import org.greedy.ddarahang.api.service.auth.EmailUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,8 +34,8 @@ public class EmailConfig {
     private boolean starttls;
 
     @Bean
-    public EmailSender mailService() {
-        return new EmailSender(javaMailSender());
+    public EmailUtil mailService() {
+        return new EmailUtil(javaMailSender());
     }
 
     @Bean
