@@ -46,6 +46,7 @@ rollback() {
             -DRDS_PASSWORD="$RDS_PASSWORD" \
             -DGOOGLE_SPREADSHEET_ID="$GOOGLE_SPREADSHEET_ID" \
             -DGOOGLE_SERVICE_ACCOUNT_PATH="$GOOGLE_SERVICE_ACCOUNT_PATH" \
+            -DJWT_SECRET="$JWT_SECRET" \
             -Dserver.port="$port" "$current_jar" > "/home/ubuntu/console-$port.log" 2>&1 &
     else
         echo "오류: $port 포트에 대한 백업 JAR 파일이 없습니다. 롤백 실패"
@@ -75,6 +76,7 @@ deploy() {
         -DRDS_PASSWORD="$RDS_PASSWORD" \
         -DGOOGLE_SPREADSHEET_ID="$GOOGLE_SPREADSHEET_ID" \
         -DGOOGLE_SERVICE_ACCOUNT_PATH="$GOOGLE_SERVICE_ACCOUNT_PATH" \
+        -DJWT_SECRET="$JWT_SECRET" \
         -Dserver.port="$port" "$current_jar" > "$app_dir/console-$port.log" 2>&1 &
 
     sleep 20
