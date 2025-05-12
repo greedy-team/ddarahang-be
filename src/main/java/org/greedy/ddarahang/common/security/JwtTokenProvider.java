@@ -22,6 +22,8 @@ public class JwtTokenProvider {
 
     private final SecretKey secretKey;
 
+    private static final String JWT_CLAIMS = "email";
+
     public JwtTokenProvider(@Value("${jwt.secret}") String secret) {
         this.secretKey = new SecretKeySpec(
                 secret.getBytes(StandardCharsets.UTF_8),
@@ -30,7 +32,7 @@ public class JwtTokenProvider {
 
     public String createAccessToken(User user) {
         return Jwts.builder()
-                .claim("nickname", user.getNickname())
+                .claim(JWT_CLAIMS, user.getEmail())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
                 .signWith(secretKey)
@@ -39,7 +41,7 @@ public class JwtTokenProvider {
 
     public String createRefreshToken(User user) {
         return Jwts.builder()
-                .claim("nickname", user.getNickname())
+                .claim(JWT_CLAIMS, user.getEmail())
                 .expiration(new Date(System.currentTimeMillis() + refreshTokenExpiration))
                 .signWith(secretKey)
                 .compact();
