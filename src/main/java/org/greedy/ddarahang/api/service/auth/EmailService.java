@@ -25,23 +25,25 @@ public class EmailService {
     private final Map<String, VerificationCode> codeMap = new ConcurrentHashMap<>();
 
     public void sendCodeToEmail(String email) { //이메일 전송
-        String code = generateRandomCode(6);
-        LocalDateTime expireTime = LocalDateTime.now().plusMinutes(10);
+        synchronized (email.intern()) {
+            String code = generateRandomCode(6);
+            LocalDateTime expireTime = LocalDateTime.now().plusMinutes(10);
 
-        codeMap.put(email, new VerificationCode(code, expireTime));
+            codeMap.put(email, new VerificationCode(code, expireTime));
 
-        String title = "[따라행(ddarahang)] 이메일 인증";
-        String content = "<html>"
-                + "<body>"
-                + "<h2>따라행(ddarahang) 인증 코드</h2>"
-                + "<h1>" + code + "</h1>"
-                + "<p>인증코드는 10분 동안 유효합니다.</p>"
-                + "</body>"
-                + "</html>";
-        try {
-            emailUtil.sendMail(email, title, content);
-        } catch (MessagingException e){
-            throw new RuntimeException("Unable to send email", e);
+            String title = "[따라행(ddarahang)] 이메일 인증";
+            String content = "<html>"
+                    + "<body>"
+                    + "<h2>따라행(ddarahang) 인증 코드</h2>"
+                    + "<h1>" + code + "</h1>"
+                    + "<p>인증코드는 10분 동안 유효합니다.</p>"
+                    + "</body>"
+                    + "</html>";
+            try {
+                emailUtil.sendMail(email, title, content);
+            } catch (MessagingException e){
+                throw new RuntimeException("Unable to send email", e);
+            }
         }
     }
 
