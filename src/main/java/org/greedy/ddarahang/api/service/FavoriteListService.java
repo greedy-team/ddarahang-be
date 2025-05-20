@@ -45,7 +45,8 @@ public class FavoriteListService {
                         place.getName(),
                         place.getAddress(),
                         place.getLatitude(),
-                        place.getLongitude()
+                        place.getLongitude(),
+                        place.getTag()
                 ))
                 .toList();
     }

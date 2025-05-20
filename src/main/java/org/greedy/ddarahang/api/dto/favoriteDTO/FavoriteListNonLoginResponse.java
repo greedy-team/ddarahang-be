@@ -5,6 +5,7 @@ public record FavoriteListNonLoginResponse(
         String placeName,
         String placeAddress,
         Double latitude,
-        Double longitude
+        Double longitude,
+        String tag
 ) {
 }
