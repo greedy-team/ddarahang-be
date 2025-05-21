@@ -1,79 +1,58 @@
 package org.greedy.ddarahang.common.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import org.greedy.ddarahang.api.dto.ErrorResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.View;
 
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(InvalidFilterException.class)
-    public ResponseEntity<String> invalidFilterException(InvalidFilterException e) {
-        log.error("InvalidFilterException 발생: {}", e.getMessage(), e);
-        return ResponseEntity.badRequest().body(e.getMessage());
+    private final View error;
+
+    public GlobalExceptionHandler(View error) {
+        this.error = error;
     }
 
-    @ExceptionHandler(NotFoundTravelCourseDetailException.class)
-    public ResponseEntity<String> notFoundTravelCourseDetailException(NotFoundTravelCourseDetailException e) {
-        log.error("NotFoundTravelCourseDetailException 발생: {}", e.getMessage(), e);
-        return ResponseEntity.badRequest().body(e.getMessage());
+    @ExceptionHandler(InvalidDataException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidDataException(InvalidDataException e) {
+        return createErrorResponse(e.getErrorMessage(), e);
     }
 
-    @ExceptionHandler(InvalidCountryNameException.class)
-    public ResponseEntity<String> invalidCountryNameException(InvalidCountryNameException e) {
-        log.error("InvalidCountryNameException 발생: {}", e.getMessage(), e);
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
-    @ExceptionHandler(MissingIdException.class)
-    public ResponseEntity<String> missingIdException(MissingIdException e) {
-        log.error("MissingIdException 발생: {}", e.getMessage(), e);
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
-    @ExceptionHandler(NotFoundCountryException.class)
-    public ResponseEntity<String> notFoundCountryException(NotFoundCountryException e) {
-        log.error("NotFoundCountryException 발생: {}", e.getMessage(), e);
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
-    @ExceptionHandler(NotFoundRegionException.class)
-    public ResponseEntity<String> notFoundRegionException(NotFoundRegionException e) {
-        log.error("NotFoundRegionException 발생: {}", e.getMessage(), e);
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
-    @ExceptionHandler(InvalidDateFormat.class)
-    public ResponseEntity<String> invalidDateFormat(InvalidDateFormat e) {
-        log.error("InvalidDateFormat 발생: {}", e.getMessage(), e);
-        return ResponseEntity.badRequest().body(e.getMessage());
+    @ExceptionHandler(NotFoundDataException.class)
+    public ResponseEntity<ErrorResponse> handleNotFoundDataException(NotFoundDataException e) {
+        return createErrorResponse(e.getErrorMessage(), e);
     }
 
     @ExceptionHandler(DataSyncException.class)
-    public ResponseEntity<String> dataSyncException(DataSyncException e) {
-        log.error("DataSyncException 발생: {}", e.getMessage(), e);
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<ErrorResponse> handleDataSyncException(DataSyncException e) {
+        return createErrorResponse(e.getErrorMessage(), e);
     }
 
     @ExceptionHandler(BindException.class)
-    public ResponseEntity<String> handleBindException(BindException e) {
-        log.error("BindException 발생: {}", e.getMessage(), e);
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<ErrorResponse> handleBindException(BindException e) {
+        return createErrorResponse(ErrorMessage.VALIDATION_BIND_ERROR, e);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        log.error("MethodArgumentNotValidException 발생: {}", e.getMessage(), e);
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        return createErrorResponse(ErrorMessage.VALIDATION_ARGUMENT_NOT_VALID, e);
     }
 
     @ExceptionHandler(DdarahangException.class)
-    public ResponseEntity<String> handleExceptions(DdarahangException e) {
-        log.error("DdarahangException 발생: {}", e.getMessage(), e);
-        return ResponseEntity.internalServerError().body("프로그램 내 에러가 발생했습니다.");
+    public ResponseEntity<ErrorResponse> handleDdarahangException(DdarahangException e) {
+        return createErrorResponse(e.getErrorMessage(), e);
+    }
+
+    private ResponseEntity<ErrorResponse> createErrorResponse(ErrorMessage error, Exception exception) {
+        log.error("{} 발생: {}", error.name(), exception.getMessage(), exception);
+
+        ErrorResponse response = new ErrorResponse(error.getHttpStatus(), error.getMessage());
+        return ResponseEntity.status(error.getHttpStatus()).body(response);
     }
 }
