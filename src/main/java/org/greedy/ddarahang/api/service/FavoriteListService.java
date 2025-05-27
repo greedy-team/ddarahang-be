@@ -3,7 +3,8 @@ package org.greedy.ddarahang.api.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.greedy.ddarahang.api.dto.favoriteDTO.*;
-import org.greedy.ddarahang.common.exception.NotFoundFavoriteListException;
+import org.greedy.ddarahang.common.exception.ErrorMessage;
+import org.greedy.ddarahang.common.exception.NotFoundDataException;
 import org.greedy.ddarahang.db.favoriteList.FavoriteList;
 import org.greedy.ddarahang.db.favoriteList.FavoritePlace;
 import org.greedy.ddarahang.db.favoriteList.FavoritePlaceRepository;
@@ -77,7 +78,7 @@ public class FavoriteListService {
 
     public DeleteFavoriteListResponse deleteFavoriteList(Long favoriteListId) {
         FavoriteList favoriteList = favoriteListRepository.findById(favoriteListId)
-                .orElseThrow(() -> new NotFoundFavoriteListException("해당 찜 목록을 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundDataException(ErrorMessage.NOT_FOUND_FAVORITE_LIST));
 
         List<FavoritePlace> places = favoritePlaceRepository.findAllByFavoriteListId(favoriteListId);
 

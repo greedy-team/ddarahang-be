@@ -5,10 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.greedy.ddarahang.api.dto.favoriteDTO.AddFavoritePlaceRequest;
 import org.greedy.ddarahang.api.dto.favoriteDTO.DeleteFavoritePlaceResponse;
 import org.greedy.ddarahang.api.dto.favoriteDTO.FavoritePlaceResponse;
-import org.greedy.ddarahang.common.exception.DuplicateFavoritePlaceException;
-import org.greedy.ddarahang.common.exception.NotFoundFavoriteListException;
-import org.greedy.ddarahang.common.exception.NotFoundFavoritePlaceException;
-import org.greedy.ddarahang.common.exception.NotFoundPlaceException;
+import org.greedy.ddarahang.common.exception.ConflictDataException;
+import org.greedy.ddarahang.common.exception.ErrorMessage;
+import org.greedy.ddarahang.common.exception.NotFoundDataException;
 import org.greedy.ddarahang.db.favoriteList.FavoriteList;
 import org.greedy.ddarahang.db.favoriteList.FavoritePlace;
 import org.greedy.ddarahang.db.favoriteList.FavoritePlaceRepository;
@@ -31,16 +30,16 @@ public class FavoritePlaceService {
     public FavoritePlaceResponse addFavoritePlace(AddFavoritePlaceRequest request) {
 
         FavoriteList favoriteList = favoriteListRepository.findById(request.favoriteListId())
-                .orElseThrow(() -> new NotFoundFavoriteListException("해당 Id를 갖는 찜 목록을 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundDataException(ErrorMessage.NOT_FOUND_FAVORITE_LIST));
 
         Place place = placeRepository.findById(request.placeId())
-                .orElseThrow(() -> new NotFoundPlaceException("해당 Id를 갖는 장소를 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundDataException(ErrorMessage.NOT_FOUND_PLACE));
 
         boolean isAlreadyAdded = favoritePlaceRepository.existsByFavoriteListIdAndPlaceId(
                 request.favoriteListId(), request.placeId());
 
         if (isAlreadyAdded) {
-            throw new DuplicateFavoritePlaceException("해당 장소는 이미 찜 목록에 추가되어 있습니다.");
+            throw new ConflictDataException(ErrorMessage.DUPLICATE_FAVORITE_PLACE);
         }
 
         int orderInList = favoritePlaceRepository.countByFavoriteListId(request.favoriteListId()) + 1;
@@ -60,7 +59,7 @@ public class FavoritePlaceService {
 
         FavoritePlace favoritePlace = favoritePlaceRepository
                 .findByFavoriteListIdAndPlaceId(favoriteListId, placeId)
-                .orElseThrow(() -> new NotFoundFavoritePlaceException("해당 찜 장소를 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundDataException(ErrorMessage.NOT_FOUND_FAVORITE_PLACE));
 
         String listName = favoritePlace.getFavoriteList().getListName();
         String placeName = favoritePlace.getPlace().getName();

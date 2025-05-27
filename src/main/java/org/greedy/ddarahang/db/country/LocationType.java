@@ -2,7 +2,6 @@ package org.greedy.ddarahang.db.country;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.greedy.ddarahang.common.exception.NotFoundDataException;
 
 @Getter
 @AllArgsConstructor

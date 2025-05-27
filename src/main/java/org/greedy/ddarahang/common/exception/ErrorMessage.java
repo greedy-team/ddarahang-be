@@ -15,6 +15,9 @@ public enum ErrorMessage {
     NOT_FOUND_COUNTRY(HttpStatus.NOT_FOUND, "국가 정보를 찾을 수 없습니다."),
     NOT_FOUND_REGION(HttpStatus.NOT_FOUND, "지역 정보를 찾을 수 없습니다."),
     NOT_FOUND_TRAVEL_COURSE_DETAIL(HttpStatus.NOT_FOUND, "여행 코스 상세정보를 찾을 수 없습니다."),
+    NOT_FOUND_FAVORITE_LIST(HttpStatus.NOT_FOUND, "해당 찜 목록을 찾을 수 없습니다."),
+    NOT_FOUND_FAVORITE_PLACE(HttpStatus.NOT_FOUND, "해당 찜 장소를 찾을 수 없습니다."),
+    NOT_FOUND_PLACE(HttpStatus.NOT_FOUND, "해당 Id를 갖는 장소를 찾을 수 없습니다."),
 
     // DataSyncException
     FAILED_TO_INSERT_COUNTRIES(HttpStatus.INTERNAL_SERVER_ERROR, "국가(country) 데이터를 삽입하는 데 실패했습니다."),
@@ -30,6 +33,9 @@ public enum ErrorMessage {
 
     FAILED_TO_UPDATE_LAST_PROCESSED_ROW(HttpStatus.INTERNAL_SERVER_ERROR, "테이블의 마지막 처리된 행 정보를 업데이트하는 데 실패했습니다."),
     BATCH_INSERT_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "배치 삽입에 실패했습니다."),
+
+    // ConflictException
+    DUPLICATE_FAVORITE_PLACE(HttpStatus.CONFLICT, "해당 장소는 이미 찜 목록에 추가되어 있습니다."),
 
     // BindException, MethodArgumentNotValidException
     VALIDATION_BIND_ERROR(HttpStatus.BAD_REQUEST, "요청 데이터 바인딩에 실패했습니다."),
