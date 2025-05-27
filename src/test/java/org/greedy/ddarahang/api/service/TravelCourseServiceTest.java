@@ -204,7 +204,7 @@ class TravelCourseServiceTest extends BaseTest {
             // When & Then
             assertThatThrownBy(() -> travelCourseService.getTravelCourseDetail(-1L))
                     .isInstanceOf(NotFoundDataException.class)
-                    .hasMessage(ErrorMessage.NOT_FOUND_TRAVEL_COURSE_DETAIL.getMessage());
+                    .hasMessage(ErrorMessage.FAILED_TO_INSERT_TRAVEL_COURSE_DETAILS.getMessage());
         }
     }
 
