@@ -5,6 +5,8 @@ import org.greedy.ddarahang.api.dto.TravelCourseListRequest;
 import org.greedy.ddarahang.api.dto.TravelCourseListResponse;
 import org.greedy.ddarahang.api.dto.TravelCourseResponse;
 import org.greedy.ddarahang.common.BaseTest;
+import org.greedy.ddarahang.common.exception.ErrorMessage;
+import org.greedy.ddarahang.common.exception.NotFoundDataException;
 import org.greedy.ddarahang.common.fixture.CountryFixture;
 import org.greedy.ddarahang.common.fixture.PlaceFixture;
 import org.greedy.ddarahang.common.fixture.RegionFixture;
@@ -201,8 +203,8 @@ class TravelCourseServiceTest extends BaseTest {
         void 해당_id를_가진_데이터가_없으면_NotFoundTravelCourseDetailException_발생() {
             // When & Then
             assertThatThrownBy(() -> travelCourseService.getTravelCourseDetail(-1L))
-                    .isInstanceOf(NotFoundTravelCourseDetailException.class)
-                    .hasMessage("travel course not found");
+                    .isInstanceOf(NotFoundDataException.class)
+                    .hasMessage(ErrorMessage.NOT_FOUND_TRAVEL_COURSE_DETAIL.getMessage());
         }
     }
 
