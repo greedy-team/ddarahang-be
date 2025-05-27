@@ -1,7 +1,15 @@
 package org.greedy.ddarahang.common.exception;
 
 public class DdarahangException extends RuntimeException {
-    public DdarahangException(String message) {
-        super(message);
+
+    private final ErrorMessage errorMessage;
+
+    public DdarahangException(ErrorMessage errorMessage) {
+        super(errorMessage.getMessage());
+        this.errorMessage = errorMessage;
+    }
+
+    public ErrorMessage getErrorMessage() {
+        return errorMessage;
     }
 }

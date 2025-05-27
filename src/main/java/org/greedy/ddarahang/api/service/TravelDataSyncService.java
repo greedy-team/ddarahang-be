@@ -4,6 +4,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.greedy.ddarahang.common.exception.DataSyncException;
+import org.greedy.ddarahang.common.exception.ErrorMessage;
+import org.greedy.ddarahang.common.exception.InvalidDataException;
 import org.greedy.ddarahang.db.country.LocationType;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -47,6 +49,10 @@ public class TravelDataSyncService {
                 (ps, row) -> {
                     try {
                         String countryName = row.get(1).toString().trim();
+
+                        if (countryName == null || countryName.isEmpty()) {
+                            throw new InvalidDataException(ErrorMessage.COUNTRY_NAME_REQUIRED);
+                        }
                         String locationType = LocationType.getLocationType(countryName).toString();
 
                         ps.setString(1, countryName);
@@ -55,7 +61,7 @@ public class TravelDataSyncService {
                         log.info("Country 데이터 준비 - Name: {}, LocationType: {}", countryName, locationType);
                     } catch (SQLException e) {
                         log.error("Country 데이터 삽입 실패: {}", e.getMessage());
-                        throw new DataSyncException("Failed to insert data into countries");
+                        throw new DataSyncException(ErrorMessage.FAILED_TO_INSERT_COUNTRIES);
                     }
                 });
 
@@ -71,7 +77,7 @@ public class TravelDataSyncService {
                         log.info("Region 삽입 - Name: {}, CountryID: {}", regionName, countryId);
                     } catch (SQLException e) {
                         log.error("Region 데이터 삽입 실패: {}", e.getMessage());
-                        throw new DataSyncException("Failed to insert data into regions");
+                        throw new DataSyncException(ErrorMessage.FAILED_TO_INSERT_REGIONS);
                     }
                 });
 
@@ -96,7 +102,7 @@ public class TravelDataSyncService {
 
                     } catch (SQLException e) {
                         log.error("Place 데이터 삽입 실패: {}", e.getMessage());
-                        throw new DataSyncException("Failed to insert data into places");
+                        throw new DataSyncException(ErrorMessage.FAILED_TO_INSERT_PLACES);
                     }
                 });
 
@@ -122,7 +128,7 @@ public class TravelDataSyncService {
                                 videoUrl, title, viewCount, creator, uploadDate);
                     } catch (SQLException | DateTimeParseException e) {
                         log.error("Video 데이터 삽입 실패 - 오류: {}", e.getMessage());
-                        throw new DataSyncException("Failed to insert data into videos");
+                        throw new DataSyncException(ErrorMessage.FAILED_TO_INSERT_VIDEOS);
                     }
                 });
 
@@ -144,7 +150,7 @@ public class TravelDataSyncService {
 
                     } catch (SQLException e) {
                         log.error("TravelCourse 데이터 삽입 실패 - 오류: {}", e.getMessage());
-                        throw new DataSyncException("Failed to insert data into travel_courses");
+                        throw new DataSyncException(ErrorMessage.FAILED_TO_INSERT_TRAVEL_COURSES);
                     }
                 });
 
@@ -165,7 +171,7 @@ public class TravelDataSyncService {
                                 travelCourseId, day, orderInDay, placeId);
                     } catch (SQLException e) {
                         log.error("TravelCourseDetail 데이터 삽입 실패 - 오류: {}", e.getMessage());
-                        throw new DataSyncException("Failed to insert data into travel_course_details");
+                        throw new DataSyncException(ErrorMessage.FAILED_TO_INSERT_TRAVEL_COURSE_DETAILS);
                     }
                 });
 
@@ -195,13 +201,13 @@ public class TravelDataSyncService {
 
         } catch (IOException e) {
             log.error("{} 시트 동기화 중 Google Sheets API 호출 실패 : {}", sheetName, e.getMessage());
-            throw new DataSyncException(sheetName + " 시트 동기화 중 Google API 오류" + e.getMessage());
+            throw new DataSyncException(ErrorMessage.GOOGLE_API_SYNC_FAILED);
         } catch (DataIntegrityViolationException e) {
             log.error("{} 시트 동기화 중 DB 무결성 오류 : {}", sheetName, e.getMessage());
-            throw new DataSyncException(sheetName + " 시트 데이터 저장 중 DB 오류 발생" + e.getMessage());
+            throw new DataSyncException(ErrorMessage.SHEET_DATA_SAVE_FAILED);
         } catch (Exception e) {
             log.error("{} 시트 동기화 중 알 수 없는 오류 발생 : {}", sheetName, e.getMessage());
-            throw new DataSyncException(sheetName + " 시트 데이터 동기화 실패" + e.getMessage());
+            throw new DataSyncException(ErrorMessage.DATA_SYNC_FAILED);
         }
     }
 
@@ -220,7 +226,7 @@ public class TravelDataSyncService {
             jdbcTemplate.update("UPDATE sync_status SET last_row = ? WHERE sheet_name = ?", lastRow, tableName);
         } catch (Exception e) {
             log.error("마지막 처리된 행 업데이트 실패 : {}", e.getMessage());
-            throw new DataSyncException("Failed to update last processed row for table: " + tableName);
+            throw new DataSyncException(ErrorMessage.FAILED_TO_UPDATE_LAST_PROCESSED_ROW);
         }
     }
 
@@ -232,7 +238,7 @@ public class TravelDataSyncService {
             }
         } catch (Exception e) {
             log.error("Batch Insert 실패 : {}", e.getMessage());
-            throw new DataSyncException("Batch insert failed");
+            throw new DataSyncException(ErrorMessage.BATCH_INSERT_FAILED);
         }
     }
 }
