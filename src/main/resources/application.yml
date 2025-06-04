@@ -10,6 +10,18 @@ server:
 spring:
   profiles:
     active: prod
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ddarahang@gmail.com
+    password: ${PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
 
 management:
   endpoints:
@@ -20,3 +32,8 @@ management:
     metrics:
       export:
         enabled: true
+
+jwt:
+  secret: ${JWT_SECRET}
+  access-token-expiration: 3600000       # 1시간 (밀리초 단위)
+  refresh-token-expiration: 1209600000   # 14일 (밀리초 단위)

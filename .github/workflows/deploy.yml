@@ -57,6 +57,7 @@ jobs:
             export RDS_USERNAME='${{ secrets.RDS_USERNAME }}'
             export RDS_PASSWORD='${{ secrets.RDS_PASSWORD }}'
             export GOOGLE_SPREADSHEET_ID='${{ secrets.GOOGLE_SPREADSHEET_ID }}'
+            export JWT_SECRET='${{ secrets.JWT_SECRET }}'
             export GOOGLE_SERVICE_ACCOUNT_PATH='/home/ubuntu/ddarahang/ddarahang-account.json'
 
             chmod +x /home/ubuntu/ddarahang/scripts/deploy.sh
