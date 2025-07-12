@@ -52,6 +52,9 @@ dependencies {
 
     //swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
+
+    // faker
+    implementation 'net.datafaker:datafaker:2.0.2'
 }
 
 tasks.named('test') {
