@@ -7,7 +7,6 @@ import org.greedy.ddarahang.api.dto.TravelCourseListRequest;
 import org.greedy.ddarahang.api.dto.TravelCourseResponse;
 import org.greedy.ddarahang.api.dto.TravelCourseListResponse;
 import org.greedy.ddarahang.api.service.TravelCourseService;
-import org.greedy.ddarahang.api.spec.TravelCourseSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/travelcourses")
-public class TravelCourseController implements TravelCourseSpecification {
+public class TravelCourseController {
 
     private final TravelCourseService travelCourseService;
 
