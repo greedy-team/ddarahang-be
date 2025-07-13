@@ -43,7 +43,7 @@ public class TestDataService {
 
     @Async
     @Transactional
-    public void generateTestData() {
+    public void generateTest1Data() {
         try {
             log.info("Starting test data generation...");
 
@@ -205,7 +205,7 @@ public class TestDataService {
     // --- 새로운 인기 여행지 테스트 데이터 생성 메서드 (view_count 정렬 테스트용) ---
     @Async
     @Transactional
-    public void generatePopularCoursesTestData() {
+    public void generateTest2SortData() {
         try {
             log.info("Starting popular courses test data generation...");
 
@@ -350,4 +350,200 @@ public class TestDataService {
             log.info("Travel Course data generation progress: 100%");
         }
     }
+    /// ///----- test3
+
+    private static final int BATCH_SIZE = 10_000;
+
+    /**
+     * N+1 문제 테스트를 위한 데이터 생성
+     */
+    @Async
+    @Transactional
+    public void generateMinimalCoreTestDataForNplus1(int totalCourses) {
+        try {
+            log.info("N+1 테스트를 위한 최소 데이터 생성을 시작합니다.");
+            log.info("  -> TravelCourse 및 Video: {}개", totalCourses);
+            log.info("  -> Country: 10개, Region: 50개, Place: 100개 (TravelCourseDetail 생성 제외)");
+
+            // 1. Country (소량 생성)
+            List<Country> countries = createCountries(10);
+            log.info("Country {}개 생성 완료.", countries.size());
+
+            // 2. Region (소량 생성)
+            List<Region> regions = createRegions(50, countries);
+            log.info("Region {}개 생성 완료.", regions.size());
+
+            // 3. Place (소량 생성)
+            // TravelCourse는 Place와 직접적인 관계가 없지만, Region -> Place 관계 유지를 위해 생성
+            List<Place> places = createPlaces(100, regions);
+            log.info("Place {}개 생성 완료.", places.size());
+
+            // 4. Video (totalCourses 개수만큼 생성 - N+1 테스트의 핵심)
+            List<Video> videos = createVideos(totalCourses);
+            log.info("Video {}개 생성 완료.", videos.size());
+
+            // 5. TravelCourse (totalCourses 개수만큼 생성 - N+1 테스트의 핵심)
+            // TravelCourseDetail 생성 로직 호출하지 않음
+            createTravelCoursesWithoutDetails(totalCourses, videos, countries, regions);
+            log.info("TravelCourse {}개 생성 완료.", totalCourses);
+
+            log.info("N+1 테스트를 위한 최소 데이터 생성이 성공적으로 완료되었습니다!");
+        } catch (Exception e) {
+            log.error("N+1 테스트 데이터 생성 중 오류 발생: {}", e.getMessage(), e);
+            throw new RuntimeException("N+1 테스트 데이터 생성 실패", e);
+        }
+    }
+
+    /**
+     * 모든 테이블의 테스트 데이터를 삭제합니다. (매우 주의 요망)
+     */
+    @Async
+    @Transactional
+    public void clearAllTestData() {
+        log.warn("!!!! 데이터베이스에서 모든 테스트 데이터를 삭제합니다. 이 작업은 되돌릴 수 없습니다. !!!!");
+        try {
+            // 삭제 순서: TravelCourseDetail -> TravelCourse -> Video, Place -> Region -> Country
+            travelCourseDetailRepository.deleteAllInBatch(); // TravelCourseDetail 삭제 (TravelCourse 및 Place 참조)
+            travelCourseRepository.deleteAllInBatch(); // TravelCourse 삭제 (Video, Country, Region 참조)
+            videoRepository.deleteAllInBatch(); // Video 삭제
+            placeRepository.deleteAllInBatch(); // Place 삭제 (Region 참조)
+            regionRepository.deleteAllInBatch(); // Region 삭제 (Country 참조)
+            countryRepository.deleteAllInBatch(); // Country 삭제
+            log.info("모든 테스트 데이터가 성공적으로 삭제되었습니다!");
+        } catch (Exception e) {
+            log.error("모든 테스트 데이터 삭제 중 오류 발생: {}", e.getMessage(), e);
+            throw new RuntimeException("테스트 데이터 삭제 실패", e);
+        }
+    }
+
+    // --- 헬퍼 메서드: 각 엔티티 생성 로직 (배치 삽입 및 진행률 로깅 포함) ---
+    // (기존 메서드들과 동일하며, Place 생성 메서드는 유지됩니다)
+
+    private List<Country> createCountries(int count) {
+        log.info("  - Creating {} sample countries...", count);
+        List<Country> countries = new ArrayList<>();
+        LocationType[] locationTypes = LocationType.values();
+
+        for (int i = 0; i < count; i++) {
+            Country country = Country.builder()
+                    .name(faker.address().country() + " " + System.nanoTime() + "_" + i)
+                    .locationType(locationTypes[faker.random().nextInt(locationTypes.length)])
+                    .build();
+            countries.add(country);
+        }
+        return countryRepository.saveAll(countries);
+    }
+
+    private List<Region> createRegions(int count, List<Country> countries) {
+        log.info("  - Creating {} sample regions...", count);
+        List<Region> regions = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            Country randomCountry = countries.get(faker.random().nextInt(countries.size()));
+            Region region = Region.builder()
+                    .name(faker.address().state() + " " + System.nanoTime() + "_" + i)
+                    .country(randomCountry)
+                    .build();
+            regions.add(region);
+        }
+        return regionRepository.saveAll(regions);
+    }
+
+    // Place는 Country-Region-Place 계층 구조 유지를 위해 여전히 소량 생성
+    private List<Place> createPlaces(int count, List<Region> regions) {
+        log.info("  - Creating {} sample places...", count);
+        List<Place> places = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            Region randomRegion = regions.get(faker.random().nextInt(regions.size()));
+
+            // --- 이 부분이 수정되었습니다 ---
+            String tagWord = faker.lorem().word();
+            // tagWord가 null이거나 비어있으면 "default_tag" 사용, 그렇지 않으면 20자 이내로 자름
+            String safeTag = (tagWord != null && !tagWord.isEmpty()) ?
+                    tagWord.substring(0, Math.min(tagWord.length(), 20)) :
+                    "random_tag"; // NOT NULL 제약조건을 위해 기본값 제공
+            // --- 수정 끝 ---
+
+            Place place = Place.builder()
+                    .name(faker.address().cityName() + " " + faker.address().streetName())
+                    .address(faker.address().fullAddress())
+                    .tag(safeTag) // 수정된 safeTag 변수 사용
+                    .latitude(Double.parseDouble(faker.address().latitude()))
+                    .longitude(Double.parseDouble(faker.address().longitude()))
+                    .region(randomRegion)
+                    .build();
+            places.add(place);
+        }
+        return placeRepository.saveAll(places);
+    }
+
+    private List<Video> createVideos(int count) {
+        log.info("  - Creating {} videos...", count);
+        List<Video> videos = new ArrayList<>();
+        long lastLoggedPercentage = -1;
+
+        for (int i = 0; i < count; i += BATCH_SIZE) {
+            List<Video> batch = new ArrayList<>(Math.min(BATCH_SIZE, count - i));
+            for (int j = 0; j < Math.min(BATCH_SIZE, count - i); j++) {
+                Date pastDate = faker.date().past(365 * 5, TimeUnit.DAYS);
+                LocalDate uploadDate = pastDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+                Video video = Video.builder()
+                        .title(faker.lorem().sentence(3) + " - Video " + (i + j))
+                        .videoUrl(faker.internet().url() + "/video_" + (i + j) + ".mp4")
+                        .thumbnailUrl(faker.internet().url() + "/thumbnail_" + (i + j) + ".jpg")
+                        .viewCount(faker.number().numberBetween(100L, 1_000_000_000L))
+                        .creator(faker.name().fullName())
+                        .uploadDate(uploadDate)
+                        .build();
+                batch.add(video);
+            }
+            videos.addAll(videoRepository.saveAll(batch));
+
+            long currentPercentage = ((long)(i + batch.size()) * 100) / count;
+            if (currentPercentage % 10 == 0 && currentPercentage != lastLoggedPercentage) {
+                log.info("  - Video data generation progress: {}%", currentPercentage);
+                lastLoggedPercentage = currentPercentage;
+            }
+        }
+        if (lastLoggedPercentage != 100) {
+            log.info("  - Video data generation progress: 100%");
+        }
+        return videos;
+    }
+
+    // TravelCourseDetail을 생성하지 않는 TravelCourse 생성 메서드
+    private void createTravelCoursesWithoutDetails(int count, List<Video> videos, List<Country> countries, List<Region> regions) {
+        log.info("  - Creating {} travel courses (without details)...", count);
+        if (videos.size() < count) {
+            throw new IllegalStateException("생성할 TravelCourse 개수에 비해 Video 개수가 부족합니다. (" + videos.size() + "개 중 " + count + "개 요청)");
+        }
+        long lastLoggedPercentage = -1;
+
+        for (int i = 0; i < count; i += BATCH_SIZE) {
+            List<TravelCourse> batch = new ArrayList<>(Math.min(BATCH_SIZE, count - i));
+            List<Video> currentVideosBatch = videos.subList(i, Math.min(i + BATCH_SIZE, videos.size()));
+
+            for (int j = 0; j < currentVideosBatch.size(); j++) {
+                TravelCourse course = TravelCourse.builder()
+                        .travelDays(faker.number().numberBetween(1, 10))
+                        .video(currentVideosBatch.get(j))
+                        .country(countries.get(faker.random().nextInt(countries.size())))
+                        .region(regions.get(faker.random().nextInt(regions.size())))
+                        .build();
+                batch.add(course);
+            }
+
+            travelCourseRepository.saveAll(batch); // TravelCourseDetail 생성 로직 호출 없음
+
+            long currentPercentage = ((long)(i + batch.size()) * 100) / count;
+            if (currentPercentage % 10 == 0 && currentPercentage != lastLoggedPercentage) {
+                log.info("  - Travel Course data generation progress: {}%", currentPercentage);
+                lastLoggedPercentage = currentPercentage;
+            }
+        }
+        if (lastLoggedPercentage != 100) {
+            log.info("  - Travel Course data generation progress: 100%");
+        }
+    }
+
 }

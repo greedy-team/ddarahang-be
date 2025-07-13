@@ -18,6 +18,10 @@ public record TravelCourseListRequest(
         @Max(value = Integer.MAX_VALUE, message = "페이지 번호의 최대값을 초과했습니다.")
         Integer pageNumber,
 
+        @NotNull // 새로 추가된 pageSize 필드
+        @Min(value = 1, message = "페이지 크기는 1 이상이어야 합니다.")
+        Integer pageSize,
+
         @NotNull
         @Pattern(regexp = "^(viewCount|uploadDate)")
         String sortField
