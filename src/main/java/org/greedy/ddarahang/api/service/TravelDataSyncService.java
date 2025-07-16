@@ -29,6 +29,8 @@ import java.util.function.BiConsumer;
 public class TravelDataSyncService {
 
     private final GoogleSheetService googleSheetService;
+    private final VideoService videoService;
+
     private final JdbcTemplate jdbcTemplate;
     private static final int DEFAULT_BATCH_SIZE = 1000;
 
@@ -132,21 +134,24 @@ public class TravelDataSyncService {
                     }
                 });
 
-        syncData("TravelCourse", "travel_courses", "INSERT INTO travel_courses (video_id, travel_days, country_id, region_id) VALUES (?, ?, ?, ?)",
+        syncData("TravelCourse", "travel_courses",
+                "INSERT INTO travel_courses (video_id, travel_days, country_id, region_id, video_view_count) VALUES (?, ?, ?, ?, ?)",
                 (ps, row) -> {
                     try {
                         long videoId = Long.parseLong(row.get(1).toString().trim());
                         int travelDays = Integer.parseInt(row.get(2).toString().trim());
                         long countryId = Long.parseLong(row.get(3).toString().trim());
                         long regionId = Long.parseLong(row.get(4).toString().trim());
+                        long videoViewCount = Long.parseLong(row.get(5).toString().trim());
 
                         ps.setLong(1, videoId);
                         ps.setInt(2, travelDays);
                         ps.setLong(3, countryId);
                         ps.setLong(4, regionId);
+                        ps.setLong(5, videoViewCount);
 
-                        log.info("TravelCourse 삽입 - VideoID: {}, TravelDays: {}, CountryID: {}, RegionID: {}",
-                                videoId, travelDays, countryId, regionId);
+                        log.info("TravelCourse 삽입 - VideoID: {}, TravelDays: {}, CountryID: {}, RegionID: {}, ViewCount: {}",
+                                videoId, travelDays, countryId, regionId, videoViewCount);
 
                     } catch (SQLException e) {
                         log.error("TravelCourse 데이터 삽입 실패 - 오류: {}", e.getMessage());
