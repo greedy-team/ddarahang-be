@@ -12,7 +12,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -29,7 +28,6 @@ import java.util.function.BiConsumer;
 public class TravelDataSyncService {
 
     private final GoogleSheetService googleSheetService;
-    private final VideoService videoService;
 
     private final JdbcTemplate jdbcTemplate;
     private static final int DEFAULT_BATCH_SIZE = 1000;
