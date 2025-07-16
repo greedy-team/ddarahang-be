@@ -41,7 +41,7 @@ public class TravelCourseService {
             travelCourses = travelCourseRepository.findTravelCoursesByCountryName(request.countryName(), pageable);
         }
         else {
-            travelCourses = travelCourseRepository.findTravelCoursesByRegionName(request.regionName(), pageable);
+            travelCourses = travelCourseRepository.findByRegionNameAndCountryName(request.regionName(), request.countryName(), pageable);
         }
 
         log.info("여행 목록 정렬 성공: {}", request.sortField());
