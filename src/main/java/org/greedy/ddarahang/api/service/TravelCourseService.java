@@ -32,7 +32,8 @@ public class TravelCourseService {
     private final TravelCourseDetailRepository travelCourseDetailRepository;
 
     public Page<TravelCourseListResponse> getTravelCourses(TravelCourseListRequest request) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "video." + request.sortField());
+        String sortKey = request.sortField().equals("viewCount") ? "videoViewCount" : request.sortField();
+        Sort sort = Sort.by(Sort.Direction.DESC, sortKey);
 
         Pageable pageable = PageRequest.of(request.pageNumber(), PAGE_SIZE, sort);
 
@@ -60,4 +61,5 @@ public class TravelCourseService {
 
         return TravelCourseResponse.from(travelCourse, travelCourse.getVideo(), travelCourseDetails);
     }
+
 }

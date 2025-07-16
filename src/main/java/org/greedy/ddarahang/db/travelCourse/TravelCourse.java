@@ -27,7 +27,8 @@ import org.greedy.ddarahang.db.video.Video;
 public class TravelCourse {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(unique = true, nullable = false)
     private Long id;
 
@@ -46,4 +47,6 @@ public class TravelCourse {
     @JoinColumn(name = "region_id", nullable = false)
     private Region region;
 
+    @Column(nullable = false)
+    private String videoViewCount;
 }

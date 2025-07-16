@@ -4,7 +4,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -41,5 +43,9 @@ public interface TravelCourseRepository extends JpaRepository<TravelCourse, Long
             )  // viewCount 정렬
     //@EntityGraph(attributePaths = {"video", "country", "region", })
     Page<TravelCourse> findByRegionNameAndCountryName(String regionName, String countryName, Pageable pageable);
-    //
+
+    @Modifying
+    @Query("UPDATE TravelCourse tc SET tc.videoViewCount = :viewCount WHERE tc.video.id = :videoId")
+    void updateVideoViewCountByVideoId(Long videoId, String viewCount);
+
 }
