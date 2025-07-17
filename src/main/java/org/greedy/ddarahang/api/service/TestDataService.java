@@ -41,17 +41,41 @@ public class TestDataService {
     private final RegionRepository regionRepository;
     private final Faker faker = new Faker(Locale.KOREA);
 
+    /*
+     * 데이터 제거 메서드
+     */
+    @Async
+    @Transactional
+    public void clearAllTestData() {
+        log.warn("!!!! 데이터베이스에서 모든 테스트 데이터를 삭제합니다. 이 작업은 되돌릴 수 없습니다. !!!!");
+        try {
+            // 삭제 순서: TravelCourseDetail -> TravelCourse -> Video, Place -> Region -> Country
+            travelCourseDetailRepository.deleteAllInBatch();
+            travelCourseRepository.deleteAllInBatch();
+            videoRepository.deleteAllInBatch();
+            placeRepository.deleteAllInBatch();
+            regionRepository.deleteAllInBatch();
+            countryRepository.deleteAllInBatch();
+            log.info("모든 테스트 데이터가 성공적으로 삭제되었습니다!");
+        } catch (Exception e) {
+            log.error("모든 테스트 데이터 삭제 중 오류 발생: {}", e.getMessage(), e);
+            throw new RuntimeException("테스트 데이터 삭제 실패", e);
+        }
+    }
+
+    /*
+     * 1번 Test를 위한 데이터 생성 메서드
+     */
     @Async
     @Transactional
     public void generateTest1Data() {
         try {
             log.info("Starting test data generation...");
 
-            // 순서 중요: Country -> Region -> Place, Video (독립적) -> TravelCourse -> TravelCourseDetail
-            List<Country> countries = createSampleCountries(10); // 예시: 10개 국가 생성
-            List<Region> regions = createSampleRegions(50, countries); // 예시: 50개 지역 생성
-            List<Place> places = createSamplePlaces(100, regions); // Place에 Region 할당 추가
-            List<Video> videos = createSampleVideos(50); // 예시: 50개 비디오 생성
+            List<Country> countries = createSampleCountries(10);
+            List<Region> regions = createSampleRegions(50, countries);
+            List<Place> places = createSamplePlaces(100, regions);
+            List<Video> videos = createSampleVideos(50);
 
             createTravelCourses(1_000_000, places, videos, countries, regions);
 
@@ -65,12 +89,11 @@ public class TestDataService {
     private List<Country> createSampleCountries(int count) {
         log.info("Creating {} sample countries...", count);
         List<Country> countries = new ArrayList<>();
-        // LocationType은 Enum이므로, 미리 정의된 값 중 하나를 선택해야 함
         LocationType[] locationTypes = LocationType.values();
 
         for (int i = 0; i < count; i++) {
             Country country = Country.builder()
-                    .name(faker.address().country() + " " + i) // 이름 중복 방지를 위해 i 추가
+                    .name(faker.address().country() + " " + i)
                     .locationType(locationTypes[faker.random().nextInt(locationTypes.length)])
                     .build();
             countries.add(country);
@@ -84,7 +107,7 @@ public class TestDataService {
         for (int i = 0; i < count; i++) {
             Country randomCountry = countries.get(faker.random().nextInt(countries.size()));
             Region region = Region.builder()
-                    .name(faker.address().state() + " " + i) // 이름 중복 방지를 위해 i 추가
+                    .name(faker.address().state() + " " + i)
                     .country(randomCountry)
                     .build();
             regions.add(region);
@@ -92,11 +115,11 @@ public class TestDataService {
         return regionRepository.saveAll(regions);
     }
 
-    private List<Place> createSamplePlaces(int count, List<Region> regions) { // Region 인자 추가
+    private List<Place> createSamplePlaces(int count, List<Region> regions) {
         log.info("Creating {} sample places...", count);
         List<Place> places = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            Region randomRegion = regions.get(faker.random().nextInt(regions.size())); // 랜덤 Region 선택
+            Region randomRegion = regions.get(faker.random().nextInt(regions.size()));
             Place place = Place.builder()
                     .name(faker.address().cityName() + " " + faker.address().streetName())
                     .address(faker.address().fullAddress())
@@ -104,7 +127,7 @@ public class TestDataService {
                     .latitude(Double.parseDouble(faker.address().latitude()))
                     .longitude(Double.parseDouble(faker.address().longitude()))
 
-                    .region(randomRegion) // Region 할당
+                    .region(randomRegion)
                     .build();
             places.add(place);
         }
@@ -116,16 +139,16 @@ public class TestDataService {
         List<Video> videos = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             // Faker로 날짜 생성
-            Date pastDate = faker.date().past(365 * 5, TimeUnit.DAYS); // 5년 전부터 현재까지
+            Date pastDate = faker.date().past(365 * 5, TimeUnit.DAYS);
             LocalDate uploadDate = pastDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
             Video video = Video.builder()
                     .title(faker.lorem().sentence(3))
-                    .videoUrl(faker.internet().url() + "/video_" + i + ".mp4") // videoUrl
-                    .thumbnailUrl(faker.internet().url() + "/thumbnail_" + i + ".jpg") // thumbnailUrl
-                    .viewCount(faker.number().numberBetween(100L, 1_000_000L)) // viewCount
-                    .creator(faker.name().fullName()) // creator
-                    .uploadDate(uploadDate) // uploadDate
+                    .videoUrl(faker.internet().url() + "/video_" + i + ".mp4")
+                    .thumbnailUrl(faker.internet().url() + "/thumbnail_" + i + ".jpg")
+                    .viewCount(faker.number().numberBetween(100L, 1_000_000L))
+                    .creator(faker.name().fullName())
+                    .uploadDate(uploadDate)
                     .build();
             videos.add(video);
         }
@@ -141,7 +164,7 @@ public class TestDataService {
             List<TravelCourse> batch = new ArrayList<>(currentBatchSize);
 
             for (int j = 0; j < currentBatchSize; j++) {
-                long currentCourseId = (long) i + j + 1; // 1부터 시작하는 ID 할당
+                long currentCourseId = (long) i + j + 1;
 
                 Video randomVideo = videos.get(faker.random().nextInt(videos.size()));
                 Country randomCountry = countries.get(faker.random().nextInt(countries.size()));
@@ -162,7 +185,7 @@ public class TestDataService {
 
             log.info("Created {} travel courses ({}% complete)",
                     i + currentBatchSize,
-                    ((long)(i + currentBatchSize) * 100) / count);
+                    ((long) (i + currentBatchSize) * 100) / count);
         }
     }
 
@@ -200,46 +223,39 @@ public class TestDataService {
                 .build();
     }
 
-    // TestDataService.java (기존 코드에 다음 메서드들을 추가하세요)
 
-    // --- 새로운 인기 여행지 테스트 데이터 생성 메서드 (view_count 정렬 테스트용) ---
+    /*
+     * 2번 Test를 위한 데이터 생성 메서드
+     */
     @Async
     @Transactional
     public void generateTest2SortData() {
         try {
             log.info("Starting popular courses test data generation...");
 
-            // **1. 특정 Country ("TestCountry") 생성 또는 조회**
             String testCountryName = "TestCountry";
             Country targetCountry = countryRepository.findByName(testCountryName)
                     .orElseGet(() -> { // 없으면 새로 생성
                         log.warn("Test Country '{}' not found. Creating it.", testCountryName);
                         return countryRepository.save(Country.builder()
                                 .name(testCountryName)
-                                .locationType(LocationType.DOMESTIC) // 아무 LocationType 지정
+                                .locationType(LocationType.DOMESTIC)
                                 .build());
                     });
 
-            // **2. 특정 Region ("TestRegion") 생성 또는 조회 (위에서 생성한 Country에 연결)**
             String testRegionName = "TestRegion";
             Region targetRegion = regionRepository.findByName(testRegionName)
-                    .orElseGet(() -> { // 없으면 새로 생성
+                    .orElseGet(() -> {
                         log.warn("Test Region '{}' not found. Creating it.", testRegionName);
                         return regionRepository.save(Region.builder()
                                 .name(testRegionName)
-                                .country(targetCountry) // 특정 Country에 연결
+                                .country(targetCountry)
                                 .build());
                     });
 
-            // **3. 특정 Region에 속하는 Places 생성 (선택 사항이지만 일관성을 위해)**
-            // 기존 createSamplePlaces는 랜덤 Region에 할당하므로, 특정 Region에 할당하는 새 메서드 사용
             List<Place> targetPlaces = createSamplePlacesForSpecificRegion(100, targetRegion);
-
-
-            // 4. 1,000,000개의 Video 레코드 생성
             List<Video> newVideos = createOneMillionVideosForPopularityTest(1_000_000);
 
-            // **5. 1,000,000개의 TravelCourse 레코드 생성 (특정 Country/Region/Video에 연결)**
             createOneMillionTravelCoursesForSpecificLocation(1_000_000, newVideos, targetCountry, targetRegion);
 
             log.info("Popular courses test data generation completed successfully!");
@@ -249,10 +265,6 @@ public class TestDataService {
         }
     }
 
-
-    // --- 새로운 헬퍼 메서드 (특정 Country/Region에 데이터 삽입용) ---
-
-    // 특정 Region에 속하는 Place를 생성하는 헬퍼 메서드
     private List<Place> createSamplePlacesForSpecificRegion(int count, Region region) {
         log.info("Creating {} sample places for specific region '{}'...", count, region.getName());
         List<Place> places = new ArrayList<>();
@@ -263,15 +275,13 @@ public class TestDataService {
                     .tag(faker.lorem().word())
                     .latitude(Double.parseDouble(faker.address().latitude()))
                     .longitude(Double.parseDouble(faker.address().longitude()))
-                    .region(region) // 특정 Region 할당
+                    .region(region)
                     .build();
             places.add(place);
         }
         return placeRepository.saveAll(places);
     }
 
-
-    // 100만개 비디오 생성 (뷰카운트 범위 넓게) - 이 메서드는 이전과 동일
     private List<Video> createOneMillionVideosForPopularityTest(int count) {
         log.info("Creating {} videos for popular courses test...", count);
         List<Video> videos = new ArrayList<>();
@@ -296,7 +306,7 @@ public class TestDataService {
             }
             videos.addAll(videoRepository.saveAll(batch));
 
-            long currentPercentage = ((long)(i + batch.size()) * 100) / count;
+            long currentPercentage = ((long) (i + batch.size()) * 100) / count;
             if (currentPercentage % 10 == 0 && currentPercentage != lastLoggedPercentage) {
                 log.info("Video data generation progress: {}%", currentPercentage);
                 lastLoggedPercentage = currentPercentage;
@@ -308,14 +318,13 @@ public class TestDataService {
         return videos;
     }
 
-    // 100만개 TravelCourse 생성 (특정 Country/Region/Video에 연결)
     private void createOneMillionTravelCoursesForSpecificLocation(int count, List<Video> videos, Country country, Region region) {
         log.info("Creating {} travel courses for specific location '{}' / '{}'...", count, country.getName(), region.getName());
         if (videos.size() < count) {
             throw new IllegalStateException("Not enough videos generated to link with " + count + " travel courses.");
         }
         int batchSize = 10_000;
-        long startCourseId = 1_000_000 + 1; // 기존 TravelCourse ID와 겹치지 않도록
+        long startCourseId = 1_000_000 + 1;
 
         long lastLoggedPercentage = -1;
 
@@ -325,22 +334,20 @@ public class TestDataService {
                 long currentCourseId = startCourseId + i + j;
 
                 Video linkedVideo = videos.get(i + j);
-                // Country와 Region을 랜덤으로 선택하는 대신, 특정 Country/Region 객체 사용
-                // Country randomCountry = countries.get(faker.random().nextInt(countries.size()));
-                // Region randomRegion = regions.get(faker.random().nextInt(regions.size()));
 
                 TravelCourse course = TravelCourse.builder()
                         .id(currentCourseId)
                         .travelDays(faker.number().numberBetween(1, 10))
                         .video(linkedVideo)
-                        .country(country) // 특정 Country 객체 할당
-                        .region(region)   // 특정 Region 객체 할당
+                        .country(country)
+                        .region(region)
+                        .videoViewCount("0")
                         .build();
                 batch.add(course);
             }
             travelCourseRepository.saveAll(batch);
 
-            long currentPercentage = ((long)(i + batch.size()) * 100) / count;
+            long currentPercentage = ((long) (i + batch.size()) * 100) / count;
             if (currentPercentage % 10 == 0 && currentPercentage != lastLoggedPercentage) {
                 log.info("Travel Course data generation progress: {}%", currentPercentage);
                 lastLoggedPercentage = currentPercentage;
@@ -350,13 +357,12 @@ public class TestDataService {
             log.info("Travel Course data generation progress: 100%");
         }
     }
-    /// ///----- test3
 
-    private static final int BATCH_SIZE = 10_000;
-
-    /**
+    /*
      * N+1 문제 테스트를 위한 데이터 생성
      */
+    private static final int BATCH_SIZE = 10_000;
+
     @Async
     @Transactional
     public void generateMinimalCoreTestDataForNplus1(int totalCourses) {
@@ -365,25 +371,18 @@ public class TestDataService {
             log.info("  -> TravelCourse 및 Video: {}개", totalCourses);
             log.info("  -> Country: 10개, Region: 50개, Place: 100개 (TravelCourseDetail 생성 제외)");
 
-            // 1. Country (소량 생성)
             List<Country> countries = createCountries(10);
             log.info("Country {}개 생성 완료.", countries.size());
 
-            // 2. Region (소량 생성)
             List<Region> regions = createRegions(50, countries);
             log.info("Region {}개 생성 완료.", regions.size());
 
-            // 3. Place (소량 생성)
-            // TravelCourse는 Place와 직접적인 관계가 없지만, Region -> Place 관계 유지를 위해 생성
             List<Place> places = createPlaces(100, regions);
             log.info("Place {}개 생성 완료.", places.size());
 
-            // 4. Video (totalCourses 개수만큼 생성 - N+1 테스트의 핵심)
             List<Video> videos = createVideos(totalCourses);
             log.info("Video {}개 생성 완료.", videos.size());
 
-            // 5. TravelCourse (totalCourses 개수만큼 생성 - N+1 테스트의 핵심)
-            // TravelCourseDetail 생성 로직 호출하지 않음
             createTravelCoursesWithoutDetails(totalCourses, videos, countries, regions);
             log.info("TravelCourse {}개 생성 완료.", totalCourses);
 
@@ -393,31 +392,6 @@ public class TestDataService {
             throw new RuntimeException("N+1 테스트 데이터 생성 실패", e);
         }
     }
-
-    /**
-     * 모든 테이블의 테스트 데이터를 삭제합니다. (매우 주의 요망)
-     */
-    @Async
-    @Transactional
-    public void clearAllTestData() {
-        log.warn("!!!! 데이터베이스에서 모든 테스트 데이터를 삭제합니다. 이 작업은 되돌릴 수 없습니다. !!!!");
-        try {
-            // 삭제 순서: TravelCourseDetail -> TravelCourse -> Video, Place -> Region -> Country
-            travelCourseDetailRepository.deleteAllInBatch(); // TravelCourseDetail 삭제 (TravelCourse 및 Place 참조)
-            travelCourseRepository.deleteAllInBatch(); // TravelCourse 삭제 (Video, Country, Region 참조)
-            videoRepository.deleteAllInBatch(); // Video 삭제
-            placeRepository.deleteAllInBatch(); // Place 삭제 (Region 참조)
-            regionRepository.deleteAllInBatch(); // Region 삭제 (Country 참조)
-            countryRepository.deleteAllInBatch(); // Country 삭제
-            log.info("모든 테스트 데이터가 성공적으로 삭제되었습니다!");
-        } catch (Exception e) {
-            log.error("모든 테스트 데이터 삭제 중 오류 발생: {}", e.getMessage(), e);
-            throw new RuntimeException("테스트 데이터 삭제 실패", e);
-        }
-    }
-
-    // --- 헬퍼 메서드: 각 엔티티 생성 로직 (배치 삽입 및 진행률 로깅 포함) ---
-    // (기존 메서드들과 동일하며, Place 생성 메서드는 유지됩니다)
 
     private List<Country> createCountries(int count) {
         log.info("  - Creating {} sample countries...", count);
@@ -448,25 +422,21 @@ public class TestDataService {
         return regionRepository.saveAll(regions);
     }
 
-    // Place는 Country-Region-Place 계층 구조 유지를 위해 여전히 소량 생성
     private List<Place> createPlaces(int count, List<Region> regions) {
         log.info("  - Creating {} sample places...", count);
         List<Place> places = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             Region randomRegion = regions.get(faker.random().nextInt(regions.size()));
 
-            // --- 이 부분이 수정되었습니다 ---
             String tagWord = faker.lorem().word();
-            // tagWord가 null이거나 비어있으면 "default_tag" 사용, 그렇지 않으면 20자 이내로 자름
             String safeTag = (tagWord != null && !tagWord.isEmpty()) ?
                     tagWord.substring(0, Math.min(tagWord.length(), 20)) :
-                    "random_tag"; // NOT NULL 제약조건을 위해 기본값 제공
-            // --- 수정 끝 ---
+                    "random_tag";
 
             Place place = Place.builder()
                     .name(faker.address().cityName() + " " + faker.address().streetName())
                     .address(faker.address().fullAddress())
-                    .tag(safeTag) // 수정된 safeTag 변수 사용
+                    .tag(safeTag)
                     .latitude(Double.parseDouble(faker.address().latitude()))
                     .longitude(Double.parseDouble(faker.address().longitude()))
                     .region(randomRegion)
@@ -499,7 +469,7 @@ public class TestDataService {
             }
             videos.addAll(videoRepository.saveAll(batch));
 
-            long currentPercentage = ((long)(i + batch.size()) * 100) / count;
+            long currentPercentage = ((long) (i + batch.size()) * 100) / count;
             if (currentPercentage % 10 == 0 && currentPercentage != lastLoggedPercentage) {
                 log.info("  - Video data generation progress: {}%", currentPercentage);
                 lastLoggedPercentage = currentPercentage;
@@ -511,7 +481,6 @@ public class TestDataService {
         return videos;
     }
 
-    // TravelCourseDetail을 생성하지 않는 TravelCourse 생성 메서드
     private void createTravelCoursesWithoutDetails(int count, List<Video> videos, List<Country> countries, List<Region> regions) {
         log.info("  - Creating {} travel courses (without details)...", count);
         if (videos.size() < count) {
@@ -533,9 +502,9 @@ public class TestDataService {
                 batch.add(course);
             }
 
-            travelCourseRepository.saveAll(batch); // TravelCourseDetail 생성 로직 호출 없음
+            travelCourseRepository.saveAll(batch);
 
-            long currentPercentage = ((long)(i + batch.size()) * 100) / count;
+            long currentPercentage = ((long) (i + batch.size()) * 100) / count;
             if (currentPercentage % 10 == 0 && currentPercentage != lastLoggedPercentage) {
                 log.info("  - Travel Course data generation progress: {}%", currentPercentage);
                 lastLoggedPercentage = currentPercentage;
@@ -544,6 +513,95 @@ public class TestDataService {
         if (lastLoggedPercentage != 100) {
             log.info("  - Travel Course data generation progress: 100%");
         }
+    }
+
+    /*
+     * 3번 Test를 위한 데이터 생성 메서드
+     */
+    @Async
+    @Transactional
+    public void generateRegionCountryFilterTestData() {
+        try {
+            log.info("🔍 [필터링 성능 테스트] 유럽 > 크로아티아 TravelCourse 생성 시작");
+
+            // 1. Country 20개 생성 (크로아티아 포함)
+            List<Country> countries = createCountries(20);
+            Country croatia = countries.stream()
+                    .filter(c -> c.getName().toLowerCase().contains("크로아티아"))
+                    .findFirst()
+                    .orElseGet(() -> {
+                        log.info("🇭🇷 '크로아티아' Country 새로 생성");
+                        Country c = Country.builder()
+                                .name("크로아티아")
+                                .locationType(LocationType.INTERNATIONAL)
+                                .build();
+                        return countryRepository.save(c);
+                    });
+
+            List<Region> regions = createRegions(200, countries);
+            Region europeRegion = Region.builder()
+                    .name("유럽")
+                    .country(croatia)
+                    .build();
+            regionRepository.save(europeRegion);
+            List<Country> allCountriesExceptTarget = countryRepository.findAll().stream()
+                    .filter(c -> !c.getId().equals(croatia.getId()))
+                    .toList();
+            List<Region> allRegionsExceptTarget = regionRepository.findAll().stream()
+                    .filter(r -> !r.getId().equals(europeRegion.getId()))
+                    .toList();
+            List<Video> videos = createVideos(1_000_000);
+
+            createFilteredTravelCourses(videos, croatia, europeRegion, allCountriesExceptTarget, allRegionsExceptTarget);
+
+            log.info("✅ 필터링 테스트용 TravelCourse 데이터 생성 완료");
+        } catch (Exception e) {
+            log.error("❌ 필터링 테스트 데이터 생성 실패", e);
+            throw new RuntimeException("Filter Test Data Generation Failed", e);
+        }
+    }
+
+    private void createFilteredTravelCourses(
+            List<Video> videos,
+            Country targetCountry,
+            Region targetRegion,
+            List<Country> allCountriesExceptTarget,
+            List<Region> allRegionsExceptTarget
+    ) {
+        int count = videos.size();
+        int batchSize = 10_000;
+
+        for (int i = 0; i < count; i += batchSize) {
+            List<TravelCourse> batch = new ArrayList<>();
+            for (int j = 0; j < Math.min(batchSize, count - i); j++) {
+                Video video = videos.get(i + j);
+
+                boolean isTargetCombo = faker.random().nextInt(100) < 5;
+                Country country = isTargetCombo ? targetCountry : getRandomCountry(allCountriesExceptTarget);
+                Region region = isTargetCombo ? targetRegion : getRandomRegion(allRegionsExceptTarget);
+
+                TravelCourse course = TravelCourse.builder()
+                        .travelDays(faker.number().numberBetween(1, 10))
+                        .video(video)
+                        .country(country)
+                        .region(region)
+                        .build();
+
+                batch.add(course);
+            }
+            travelCourseRepository.saveAll(batch);
+
+            long progress = ((long) (i + batchSize) * 100) / count;
+            if (progress % 10 == 0) log.info("⏳ TravelCourse 생성 진행률: {}%", progress);
+        }
+    }
+
+    private Country getRandomCountry(List<Country> candidates) {
+        return candidates.get(faker.random().nextInt(candidates.size()));
+    }
+
+    private Region getRandomRegion(List<Region> candidates) {
+        return candidates.get(faker.random().nextInt(candidates.size()));
     }
 
 }

@@ -22,10 +22,10 @@ public class TestDataController {
         return ResponseEntity.ok("Test data generation started. Check logs for progress.");
     }
 
-    @PostMapping("/api/v1/test-data/generate-popular-courses")
+    @PostMapping("/api/v1/test-data/generate-test2")
     public ResponseEntity<String> generatePopularCoursesTestData() {
         log.info("Generating popular courses test data (for view_count sorting test)...");
-        testDataService.generateTest2SortData(); // TestDataService의 generatePopularCoursesTestData 호출
+        testDataService.generateTest2SortData();
         return ResponseEntity.ok("Popular courses test data generation started. Check logs for progress.");
     }
 
@@ -35,8 +35,6 @@ public class TestDataController {
         if (totalCourses <= 0 || totalCourses > 5_000_000) {
             return ResponseEntity.badRequest().body("생성할 TravelCourse 및 Video 개수는 1개 이상 5백만 개 이하여야 합니다.");
         }
-
-        // TravelCourseDetail, Place 생성을 제외한 새로운 핵심 메서드 호출
         testDataService.generateMinimalCoreTestDataForNplus1(totalCourses);
         return ResponseEntity.ok("N+1 테스트 데이터 생성이 시작되었습니다. 서버 로그를 확인해주세요.");
     }
@@ -46,6 +44,13 @@ public class TestDataController {
         log.warn("!!!! 모든 테스트 데이터를 삭제하는 요청이 접수되었습니다. 복구 불가능한 작업입니다. !!!!");
         testDataService.clearAllTestData();
         return ResponseEntity.ok("모든 테스트 데이터 삭제가 시작되었습니다. 서버 로그를 확인해주세요.");
+    }
+
+    @PostMapping("/api/v1/test-data/generate-test3")
+    public ResponseEntity<String> generateRegionCountryFilterData() {
+        log.info("Generating data for region+country filter performance test...");
+        testDataService.generateRegionCountryFilterTestData();
+        return ResponseEntity.ok("Region+Country filter test data generation started. Check logs for progress.");
     }
 
 }
