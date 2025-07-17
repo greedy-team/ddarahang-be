@@ -38,11 +38,10 @@ public class TravelCourseService {
         Pageable pageable = PageRequest.of(request.pageNumber(), PAGE_SIZE, sort);
 
         Page<TravelCourse> travelCourses;
-        if (request.regionName().isBlank()) {
-            travelCourses = travelCourseRepository.findTravelCoursesByCountryName(request.countryName(), pageable);
-        }
-        else {
-            travelCourses = travelCourseRepository.findByRegionNameAndCountryName(request.regionName(), request.countryName(), pageable);
+        if (request.regionId() == null) {
+            travelCourses = travelCourseRepository.findTravelCoursesByCountryId(request.countryId(), pageable);
+        } else {
+            travelCourses = travelCourseRepository.findByRegionIdAndCountryId(request.regionId(), request.countryId(), pageable);
         }
 
         log.info("여행 목록 정렬 성공: {}", request.sortField());
