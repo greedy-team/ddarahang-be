@@ -28,7 +28,7 @@ public class TravelCourse {
 
     @Id
     //@GeneratedValue(strategy = GenerationType.IDENTITY)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO) // 테스트2 실행시 삭제
     @Column(unique = true, nullable = false)
     private Long id;
 
@@ -49,4 +49,8 @@ public class TravelCourse {
 
     @Column(nullable = false)
     private String videoViewCount;
+
+    @Column(nullable = false)
+    private String videoUploadDate;
+
 }

@@ -32,7 +32,10 @@ public class TravelCourseService {
     private final TravelCourseDetailRepository travelCourseDetailRepository;
 
     public Page<TravelCourseListResponse> getTravelCourses(TravelCourseListRequest request) {
-        String sortKey = request.sortField().equals("viewCount") ? "videoViewCount" : request.sortField();
+        String sortKey = switch (request.sortField()) {
+            case "uploadDate" -> "videoUploadDate";
+            default -> "videoViewCount"; // 기본 정렬
+        };
         Sort sort = Sort.by(Sort.Direction.DESC, sortKey);
 
         Pageable pageable = PageRequest.of(request.pageNumber(), PAGE_SIZE, sort);
