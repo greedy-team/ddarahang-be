@@ -6,11 +6,12 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
     hikari:
-      maximum-pool-size: 500       # 기본은 10, 테스트 시 30~100 권장
+      maximum-pool-size: 500
       minimum-idle: 10
       idle-timeout: 30000
       max-lifetime: 60000
       connection-timeout: 30000
+      
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
@@ -19,11 +20,6 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
-
-logging:
-  level:
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
 management:
   endpoints:
