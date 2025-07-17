@@ -12,6 +12,8 @@ public class TravelCourseFixture {
                 .video(video)
                 .country(country)
                 .region(region)
+                .videoUploadDate(video.getUploadDate().toString())
+                .videoViewCount(String.valueOf(video.getViewCount()))
                 .build();
     }
 }

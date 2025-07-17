@@ -125,7 +125,7 @@ class TravelCourseServiceTest extends BaseTest {
             void countryName과_regionName이_모두_있으면_같은_지역의_코스가_날짜순으로_정렬된다() {
                 // Given
                 TravelCourseListRequest request = new TravelCourseListRequest(
-                        country.getName(), region.getName(), 0, "uploadDate"
+                        country.getId(), region.getId(), 0, "uploadDate"
                 );
 
                 // When
@@ -140,7 +140,7 @@ class TravelCourseServiceTest extends BaseTest {
             void countryName은_있고_regionName이_없어도_같은_나라의_코스가_날짜순으로_정렬된다() {
                 // Given
                 TravelCourseListRequest request = new TravelCourseListRequest(
-                        country.getName(), "", 0, "uploadDate"
+                        country.getId(), null, 0, "uploadDate"
                 );
 
                 // When
@@ -159,7 +159,7 @@ class TravelCourseServiceTest extends BaseTest {
             void countryName과_regionName이_모두_있으면_같은_지역의_코스가_조회순으로_정렬된다() {
                 // Given
                 TravelCourseListRequest request = new TravelCourseListRequest(
-                        country.getName(), region.getName(), 0, "viewCount"
+                        country.getId(), region.getId(), 0, "viewCount"
                 );
 
                 // When
@@ -174,7 +174,7 @@ class TravelCourseServiceTest extends BaseTest {
             void countryName은_있고_regionName이_없어도_같은_나라의_코스가_조회순으로_정렬된다() {
                 // Given
                 TravelCourseListRequest request = new TravelCourseListRequest(
-                        country.getName(), "", 0, "viewCount"
+                        country.getId(), null, 0, "viewCount"
                 );
 
                 // When
@@ -217,7 +217,7 @@ class TravelCourseServiceTest extends BaseTest {
             Statistics stats = getStatistics();
 
             TravelCourseListRequest request = new TravelCourseListRequest(
-                    country.getName(), region.getName(), 0, "uploadDate"
+                    country.getId(), region.getId(), 0, "uploadDate"
             );
 
             // When
