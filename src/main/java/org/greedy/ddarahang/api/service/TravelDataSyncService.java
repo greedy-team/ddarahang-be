@@ -133,23 +133,31 @@ public class TravelDataSyncService {
                 });
 
         syncData("TravelCourse", "travel_courses",
-                "INSERT INTO travel_courses (video_id, travel_days, country_id, region_id, video_view_count) VALUES (?, ?, ?, ?, ?)",
+                "INSERT INTO travel_courses (video_id, travel_days, country_id, region_id, video_view_count, video_upload_date) VALUES (?, ?, ?, ?, ?, ?)",
                 (ps, row) -> {
                     try {
                         long videoId = Long.parseLong(row.get(1).toString().trim());
                         int travelDays = Integer.parseInt(row.get(2).toString().trim());
                         long countryId = Long.parseLong(row.get(3).toString().trim());
                         long regionId = Long.parseLong(row.get(4).toString().trim());
-                        long videoViewCount = Long.parseLong(row.get(5).toString().trim());
+
+                        // video_id로부터 viewCount, uploadDate 가져오기
+                        Map<String, Object> videoData = jdbcTemplate.queryForMap(
+                                "SELECT view_count, upload_date FROM videos WHERE id = ?",
+                                videoId
+                        );
+                        long videoViewCount = ((Number) videoData.get("view_count")).longValue();
+                        java.sql.Date videoUploadDate = (java.sql.Date) videoData.get("upload_date");
 
                         ps.setLong(1, videoId);
                         ps.setInt(2, travelDays);
                         ps.setLong(3, countryId);
                         ps.setLong(4, regionId);
                         ps.setLong(5, videoViewCount);
+                        ps.setObject(6, videoUploadDate);
 
-                        log.info("TravelCourse 삽입 - VideoID: {}, TravelDays: {}, CountryID: {}, RegionID: {}, ViewCount: {}",
-                                videoId, travelDays, countryId, regionId, videoViewCount);
+                        log.info("TravelCourse 삽입 - VideoID: {}, TravelDays: {}, CountryID: {}, RegionID: {}, ViewCount: {}, UploadDate: {}",
+                                videoId, travelDays, countryId, regionId, videoViewCount, videoUploadDate);
 
                     } catch (SQLException e) {
                         log.error("TravelCourse 데이터 삽입 실패 - 오류: {}", e.getMessage());
