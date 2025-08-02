@@ -45,9 +45,9 @@ class FavoriteControllerTest {
 
         // given
         List<FavoriteListNonLoginResponse> stubResponse = List.of(
-                new FavoriteListNonLoginResponse(1L, "식당C", "주소C", 33.3, 333.3, "음식"),
-                new FavoriteListNonLoginResponse(2L, "식당A", "주소A", 11.1, 111.1, "음식"),
-                new FavoriteListNonLoginResponse(3L, "식당B", "주소B", 22.2, 222.2, "음식")
+                new FavoriteListNonLoginResponse(1L, 1L, "식당C", "주소C", 33.3, 333.3, "음식"),
+                new FavoriteListNonLoginResponse(2L, 2L, "식당A", "주소A", 11.1, 111.1, "음식"),
+                new FavoriteListNonLoginResponse(3L, 3L, "식당B", "주소B", 22.2, 222.2, "음식")
         );
         when(favoriteListService.createFavoriteListNonLogin(any(CreateFavoriteListNonLoginRequest.class)))
                 .thenReturn(stubResponse);

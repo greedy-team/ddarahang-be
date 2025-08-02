@@ -42,6 +42,7 @@ public class FavoriteListService {
         return places.stream()
                 .sorted(Comparator.comparingLong(p -> orderMap.getOrDefault(p.getId(), Long.MAX_VALUE)))
                 .map(place -> new FavoriteListNonLoginResponse(
+                        place.getId(),
                         orderMap.get(place.getId()),
                         place.getName(),
                         place.getAddress(),
