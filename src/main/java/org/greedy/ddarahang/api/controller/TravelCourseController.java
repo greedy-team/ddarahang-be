@@ -8,6 +8,7 @@ import org.greedy.ddarahang.api.dto.TravelCourseListRequest;
 import org.greedy.ddarahang.api.dto.TravelCourseListResponse;
 import org.greedy.ddarahang.api.dto.TravelCourseResponse;
 import org.greedy.ddarahang.api.service.TravelCourseService;
+import org.greedy.ddarahang.api.spec.TravelCourseSpecification;
 import org.greedy.ddarahang.db.country.CountryRepository;
 import org.greedy.ddarahang.db.region.RegionRepository;
 import org.springframework.data.domain.Page;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class TravelCourseController {
+public class TravelCourseController implements TravelCourseSpecification {
 
     private final TravelCourseService travelCourseService;
     private final CountryRepository countryRepository;
