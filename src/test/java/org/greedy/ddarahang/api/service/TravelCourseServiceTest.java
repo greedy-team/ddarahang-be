@@ -1,6 +1,7 @@
 package org.greedy.ddarahang.api.service;
 
 import jakarta.persistence.EntityManagerFactory;
+import org.greedy.ddarahang.api.dto.TravelCourseListIdRequest;
 import org.greedy.ddarahang.api.dto.TravelCourseListRequest;
 import org.greedy.ddarahang.api.dto.TravelCourseListResponse;
 import org.greedy.ddarahang.api.dto.TravelCourseResponse;
@@ -124,7 +125,7 @@ class TravelCourseServiceTest extends BaseTest {
             @Test
             void countryName과_regionName이_모두_있으면_같은_지역의_코스가_날짜순으로_정렬된다() {
                 // Given
-                TravelCourseListRequest request = new TravelCourseListRequest(
+                TravelCourseListIdRequest request = new TravelCourseListIdRequest(
                         country.getId(), region.getId(), 0, "uploadDate"
                 );
 
@@ -139,8 +140,8 @@ class TravelCourseServiceTest extends BaseTest {
             @Test
             void countryName은_있고_regionName이_없어도_같은_나라의_코스가_날짜순으로_정렬된다() {
                 // Given
-                TravelCourseListRequest request = new TravelCourseListRequest(
-                        country.getId(), null, 0, "uploadDate"
+                TravelCourseListIdRequest request = new TravelCourseListIdRequest(
+                        country.getId(), region.getId(), 0, "uploadDate"
                 );
 
                 // When
@@ -158,8 +159,8 @@ class TravelCourseServiceTest extends BaseTest {
             @Test
             void countryName과_regionName이_모두_있으면_같은_지역의_코스가_조회순으로_정렬된다() {
                 // Given
-                TravelCourseListRequest request = new TravelCourseListRequest(
-                        country.getId(), region.getId(), 0, "viewCount"
+                TravelCourseListIdRequest request = new TravelCourseListIdRequest(
+                        country.getId(), region.getId(), 0, "uploadDate"
                 );
 
                 // When
@@ -173,8 +174,8 @@ class TravelCourseServiceTest extends BaseTest {
             @Test
             void countryName은_있고_regionName이_없어도_같은_나라의_코스가_조회순으로_정렬된다() {
                 // Given
-                TravelCourseListRequest request = new TravelCourseListRequest(
-                        country.getId(), null, 0, "viewCount"
+                TravelCourseListIdRequest request = new TravelCourseListIdRequest(
+                        country.getId(), region.getId(), 0, "uploadDate"
                 );
 
                 // When
@@ -216,7 +217,7 @@ class TravelCourseServiceTest extends BaseTest {
             // Given
             Statistics stats = getStatistics();
 
-            TravelCourseListRequest request = new TravelCourseListRequest(
+            TravelCourseListIdRequest request = new TravelCourseListIdRequest(
                     country.getId(), region.getId(), 0, "uploadDate"
             );
 
