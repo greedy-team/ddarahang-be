@@ -3,6 +3,7 @@ package org.greedy.ddarahang.api.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.greedy.ddarahang.api.dto.TravelCourseDetailResponse;
+import org.greedy.ddarahang.api.dto.TravelCourseListIdRequest;
 import org.greedy.ddarahang.api.dto.TravelCourseListRequest;
 import org.greedy.ddarahang.api.dto.TravelCourseListResponse;
 import org.greedy.ddarahang.api.dto.TravelCourseResponse;
@@ -31,7 +32,7 @@ public class TravelCourseService {
     private final TravelCourseRepository travelCourseRepository;
     private final TravelCourseDetailRepository travelCourseDetailRepository;
 
-    public Page<TravelCourseListResponse> getTravelCourses(TravelCourseListRequest request) {
+    public Page<TravelCourseListResponse> getTravelCourses(TravelCourseListIdRequest request) {
         String sortKey = switch (request.sortField()) {
             case "uploadDate" -> "videoUploadDate";
             default -> "videoViewCount"; // 기본 정렬
