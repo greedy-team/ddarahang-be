@@ -56,12 +56,7 @@ public class TravelCourseService {
                 request.sortField()
         );
 
-        String sortKey = switch (idRequest.sortField()) {
-            case "uploadDate" -> "videoUploadDate";
-            default -> "videoViewCount"; // 기본 정렬
-        };
-        Sort sort = Sort.by(Sort.Direction.DESC, sortKey);
-
+        Sort sort = Sort.by(Sort.Direction.DESC, request.sortField());
         Pageable pageable = PageRequest.of(idRequest.pageNumber(), PAGE_SIZE, sort);
 
         Page<TravelCourse> travelCourses;

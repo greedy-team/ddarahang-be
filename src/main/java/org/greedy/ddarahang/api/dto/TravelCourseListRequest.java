@@ -19,7 +19,7 @@ public record TravelCourseListRequest(
         Integer pageNumber,
 
         @NotNull
-        @Pattern(regexp = "^(viewCount|uploadDate)")
+        @Pattern(regexp = "^(videoViewCount|videoUploadDate)")
         String sortField
 ) {
 }
