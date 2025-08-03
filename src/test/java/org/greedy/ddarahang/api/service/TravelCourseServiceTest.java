@@ -2,6 +2,7 @@ package org.greedy.ddarahang.api.service;
 
 import jakarta.persistence.EntityManagerFactory;
 import org.greedy.ddarahang.api.dto.TravelCourseListIdRequest;
+import org.greedy.ddarahang.api.dto.TravelCourseListRequest;
 import org.greedy.ddarahang.api.dto.TravelCourseListResponse;
 import org.greedy.ddarahang.api.dto.TravelCourseResponse;
 import org.greedy.ddarahang.common.BaseTest;
@@ -124,8 +125,8 @@ class TravelCourseServiceTest extends BaseTest {
             @Test
             void countryName과_regionName이_모두_있으면_같은_지역의_코스가_날짜순으로_정렬된다() {
                 // Given
-                TravelCourseListIdRequest request = new TravelCourseListIdRequest(
-                        country.getId(), region.getId(), 0, "uploadDate"
+                TravelCourseListRequest request = new TravelCourseListRequest(
+                        country.getName(), region.getName(),0, "uploadDate"
                 );
 
                 // When
@@ -139,8 +140,8 @@ class TravelCourseServiceTest extends BaseTest {
             @Test
             void countryName은_있고_regionName이_없어도_같은_나라의_코스가_날짜순으로_정렬된다() {
                 // Given
-                TravelCourseListIdRequest request = new TravelCourseListIdRequest(
-                        country.getId(), region.getId(), 0, "uploadDate"
+                TravelCourseListRequest request = new TravelCourseListRequest(
+                        country.getName(), region.getName(),0, "uploadDate"
                 );
 
                 // When
@@ -158,8 +159,8 @@ class TravelCourseServiceTest extends BaseTest {
             @Test
             void countryName과_regionName이_모두_있으면_같은_지역의_코스가_조회순으로_정렬된다() {
                 // Given
-                TravelCourseListIdRequest request = new TravelCourseListIdRequest(
-                        country.getId(), region.getId(), 0, "uploadDate"
+                TravelCourseListRequest request = new TravelCourseListRequest(
+                        country.getName(), region.getName(),0, "uploadDate"
                 );
 
                 // When
@@ -173,8 +174,8 @@ class TravelCourseServiceTest extends BaseTest {
             @Test
             void countryName은_있고_regionName이_없어도_같은_나라의_코스가_조회순으로_정렬된다() {
                 // Given
-                TravelCourseListIdRequest request = new TravelCourseListIdRequest(
-                        country.getId(), region.getId(), 0, "uploadDate"
+                TravelCourseListRequest request = new TravelCourseListRequest(
+                        country.getName(), region.getName(),0, "uploadDate"
                 );
 
                 // When
@@ -216,8 +217,8 @@ class TravelCourseServiceTest extends BaseTest {
             // Given
             Statistics stats = getStatistics();
 
-            TravelCourseListIdRequest request = new TravelCourseListIdRequest(
-                    country.getId(), region.getId(), 0, "uploadDate"
+            TravelCourseListRequest request = new TravelCourseListRequest(
+                    country.getName(), region.getName(),0, "uploadDate"
             );
 
             // When
@@ -225,7 +226,7 @@ class TravelCourseServiceTest extends BaseTest {
 
             // Then
             long queryCount = stats.getQueryExecutionCount();
-            assertEquals(1, queryCount);
+            assertEquals(2, queryCount);
         }
 
         @Test
