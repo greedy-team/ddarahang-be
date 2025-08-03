@@ -585,6 +585,8 @@ public class TestDataService {
                         .video(video)
                         .country(country)
                         .region(region)
+                        .videoUploadDate(String.valueOf(video.getUploadDate()))
+                        .videoViewCount(String.valueOf(video.getViewCount()))
                         .build();
 
                 batch.add(course);
