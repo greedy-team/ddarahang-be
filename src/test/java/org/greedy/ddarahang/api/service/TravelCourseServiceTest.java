@@ -2,7 +2,6 @@ package org.greedy.ddarahang.api.service;
 
 import jakarta.persistence.EntityManagerFactory;
 import org.greedy.ddarahang.api.dto.TravelCourseListIdRequest;
-import org.greedy.ddarahang.api.dto.TravelCourseListRequest;
 import org.greedy.ddarahang.api.dto.TravelCourseListResponse;
 import org.greedy.ddarahang.api.dto.TravelCourseResponse;
 import org.greedy.ddarahang.common.BaseTest;

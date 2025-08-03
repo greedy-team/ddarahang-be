@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.greedy.ddarahang.api.dto.TravelCourseListIdRequest;
 import org.greedy.ddarahang.api.dto.TravelCourseListRequest;
-import org.greedy.ddarahang.api.dto.TravelCourseResponse;
 import org.greedy.ddarahang.api.dto.TravelCourseListResponse;
+import org.greedy.ddarahang.api.dto.TravelCourseResponse;
 import org.greedy.ddarahang.api.service.TravelCourseService;
 import org.greedy.ddarahang.db.country.CountryRepository;
 import org.greedy.ddarahang.db.region.RegionRepository;
@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -28,7 +27,7 @@ public class TravelCourseController {
     private final RegionRepository regionRepository;
 
     @GetMapping("/api/v1/travelcourses")
-    public ResponseEntity<Page<TravelCourseListResponse>> getTravelCourses( @Valid @ModelAttribute TravelCourseListRequest request) {
+    public ResponseEntity<Page<TravelCourseListResponse>> getTravelCourses(@Valid @ModelAttribute TravelCourseListRequest request) {
         log.info("GET /travelcourses - sortField: {}, countryName: {}, regionName: {}, pageNumber: {}",
                 request.sortField(),
                 request.countryName(),
@@ -41,8 +40,7 @@ public class TravelCourseController {
         if (request.regionName() != null && !request.regionName().isBlank()) {
             regionId = regionRepository.findIdByName(request.regionName())
                     .orElseThrow(() -> new IllegalArgumentException("Invalid region name"));
-        }
-        else {
+        } else {
             countryId = countryRepository.findIdByName(request.countryName())
                     .orElseThrow(() -> new IllegalArgumentException("Invalid country name"));
         }
