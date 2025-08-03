@@ -7,11 +7,11 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 public record TravelCourseListRequest(
+        @NotBlank
         @NotNull(message = "국가명을 입력해 주세요.")
-        Long countryId,
+        String countryName,
 
-        @NotNull(message = "지역을 선택해 주세요.")
-        Long regionId,
+        String regionName,
 
         @NotNull
         @Min(value = 0, message = "페이지 번호에 음수는 입력될 수 없습니다.")
