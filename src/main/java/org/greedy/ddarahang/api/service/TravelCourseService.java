@@ -4,10 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.greedy.ddarahang.api.dto.TravelCourseDetailResponse;
 import org.greedy.ddarahang.api.dto.TravelCourseListIdRequest;
+import org.greedy.ddarahang.api.dto.TravelCourseListRequest;
 import org.greedy.ddarahang.api.dto.TravelCourseListResponse;
 import org.greedy.ddarahang.api.dto.TravelCourseResponse;
 import org.greedy.ddarahang.common.exception.ErrorMessage;
 import org.greedy.ddarahang.common.exception.NotFoundDataException;
+import org.greedy.ddarahang.db.country.CountryRepository;
+import org.greedy.ddarahang.db.region.RegionRepository;
 import org.greedy.ddarahang.db.travelCourse.TravelCourse;
 import org.greedy.ddarahang.db.travelCourse.TravelCourseRepository;
 import org.greedy.ddarahang.db.travelCourseDetail.TravelCourseDetailRepository;
@@ -30,24 +33,45 @@ public class TravelCourseService {
 
     private final TravelCourseRepository travelCourseRepository;
     private final TravelCourseDetailRepository travelCourseDetailRepository;
+    private final CountryRepository countryRepository;
+    private final RegionRepository regionRepository;
 
-    public Page<TravelCourseListResponse> getTravelCourses(TravelCourseListIdRequest request) {
-        String sortKey = switch (request.sortField()) {
+    public Page<TravelCourseListResponse> getTravelCourses(TravelCourseListRequest request) {
+
+        Long countryId = null;
+        Long regionId = null;
+
+        if (request.regionName() != null && !request.regionName().isBlank()) {
+            regionId = regionRepository.findIdByName(request.regionName())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid region name"));
+        } else {
+            countryId = countryRepository.findIdByName(request.countryName())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid country name"));
+        }
+
+        TravelCourseListIdRequest idRequest = new TravelCourseListIdRequest( // 새로운 dto에 초기화
+                countryId,
+                regionId,
+                request.pageNumber(),
+                request.sortField()
+        );
+
+        String sortKey = switch (idRequest.sortField()) {
             case "uploadDate" -> "videoUploadDate";
             default -> "videoViewCount"; // 기본 정렬
         };
         Sort sort = Sort.by(Sort.Direction.DESC, sortKey);
 
-        Pageable pageable = PageRequest.of(request.pageNumber(), PAGE_SIZE, sort);
+        Pageable pageable = PageRequest.of(idRequest.pageNumber(), PAGE_SIZE, sort);
 
         Page<TravelCourse> travelCourses;
-        if (request.regionId() == null) {
-            travelCourses = travelCourseRepository.findTravelCoursesByCountryId(request.countryId(), pageable);
+        if (idRequest.regionId() == null) {
+            travelCourses = travelCourseRepository.findTravelCoursesByCountryId(idRequest.countryId(), pageable);
         } else {
-            travelCourses = travelCourseRepository.findByRegionIdAndCountryId(request.regionId(), request.countryId(), pageable);
+            travelCourses = travelCourseRepository.findByRegionIdAndCountryId(idRequest.regionId(), idRequest.countryId(), pageable);
         }
 
-        log.info("여행 목록 정렬 성공: {}", request.sortField());
+        log.info("여행 목록 정렬 성공: {}", idRequest.sortField());
         return travelCourses.map(course -> TravelCourseListResponse.from(course, course.getVideo()));
     }
 

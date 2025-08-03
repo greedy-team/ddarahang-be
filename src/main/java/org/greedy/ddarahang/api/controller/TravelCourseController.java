@@ -24,8 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class TravelCourseController implements TravelCourseSpecification {
 
     private final TravelCourseService travelCourseService;
-    private final CountryRepository countryRepository;
-    private final RegionRepository regionRepository;
 
     @GetMapping("/api/v1/travelcourses")
     public ResponseEntity<Page<TravelCourseListResponse>> getTravelCourses(@Valid @ModelAttribute TravelCourseListRequest request) {
@@ -35,25 +33,7 @@ public class TravelCourseController implements TravelCourseSpecification {
                 request.regionName(),
                 request.pageNumber());
 
-        Long countryId = null;
-        Long regionId = null;
-
-        if (request.regionName() != null && !request.regionName().isBlank()) {
-            regionId = regionRepository.findIdByName(request.regionName())
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid region name"));
-        } else {
-            countryId = countryRepository.findIdByName(request.countryName())
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid country name"));
-        }
-
-        TravelCourseListIdRequest travelCourseListIdRequest = new TravelCourseListIdRequest(
-                countryId,
-                regionId,
-                request.pageNumber(),
-                request.sortField()
-        );
-
-        return ResponseEntity.ok(travelCourseService.getTravelCourses(travelCourseListIdRequest));
+        return ResponseEntity.ok(travelCourseService.getTravelCourses(request));
     }
 
     @GetMapping("/api/v1/travelcourses/{id}")
