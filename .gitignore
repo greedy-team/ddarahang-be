@@ -37,10 +37,13 @@ out/
 /.nb-gradle/
 
 ### VS Code ###
-.vscode/
 
 ### Spring Boot 환경 설정 파일 제외 ###
 application-prod.yml
 src/main/resources/ddarahang-684ec417dfa8.json
 docker-compose.yml
 prometheus-data/
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat
+.gitignore
