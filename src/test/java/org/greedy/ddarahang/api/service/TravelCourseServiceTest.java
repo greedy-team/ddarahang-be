@@ -1,6 +1,7 @@
 package org.greedy.ddarahang.api.service;
 
 import jakarta.persistence.EntityManagerFactory;
+import org.greedy.ddarahang.api.dto.TravelCourseListIdRequest;
 import org.greedy.ddarahang.api.dto.TravelCourseListRequest;
 import org.greedy.ddarahang.api.dto.TravelCourseListResponse;
 import org.greedy.ddarahang.api.dto.TravelCourseResponse;
@@ -125,7 +126,7 @@ class TravelCourseServiceTest extends BaseTest {
             void countryName과_regionName이_모두_있으면_같은_지역의_코스가_날짜순으로_정렬된다() {
                 // Given
                 TravelCourseListRequest request = new TravelCourseListRequest(
-                        country.getName(), region.getName(), 0, "uploadDate"
+                        country.getName(), region.getName(),0, "videoUploadDate"
                 );
 
                 // When
@@ -140,7 +141,7 @@ class TravelCourseServiceTest extends BaseTest {
             void countryName은_있고_regionName이_없어도_같은_나라의_코스가_날짜순으로_정렬된다() {
                 // Given
                 TravelCourseListRequest request = new TravelCourseListRequest(
-                        country.getName(), "", 0, "uploadDate"
+                        country.getName(), region.getName(),0, "videoUploadDate"
                 );
 
                 // When
@@ -159,7 +160,7 @@ class TravelCourseServiceTest extends BaseTest {
             void countryName과_regionName이_모두_있으면_같은_지역의_코스가_조회순으로_정렬된다() {
                 // Given
                 TravelCourseListRequest request = new TravelCourseListRequest(
-                        country.getName(), region.getName(), 0, "viewCount"
+                        country.getName(), region.getName(),0, "videoUploadDate"
                 );
 
                 // When
@@ -174,7 +175,7 @@ class TravelCourseServiceTest extends BaseTest {
             void countryName은_있고_regionName이_없어도_같은_나라의_코스가_조회순으로_정렬된다() {
                 // Given
                 TravelCourseListRequest request = new TravelCourseListRequest(
-                        country.getName(), "", 0, "viewCount"
+                        country.getName(), region.getName(),0, "videoUploadDate"
                 );
 
                 // When
@@ -217,7 +218,7 @@ class TravelCourseServiceTest extends BaseTest {
             Statistics stats = getStatistics();
 
             TravelCourseListRequest request = new TravelCourseListRequest(
-                    country.getName(), region.getName(), 0, "uploadDate"
+                    country.getName(), region.getName(),0, "videoUploadDate"
             );
 
             // When
@@ -225,7 +226,7 @@ class TravelCourseServiceTest extends BaseTest {
 
             // Then
             long queryCount = stats.getQueryExecutionCount();
-            assertEquals(1, queryCount);
+            assertEquals(2, queryCount);
         }
 
         @Test

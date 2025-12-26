@@ -7,10 +7,10 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 public record TravelCourseListRequest(
-        @NotBlank(message = "국가명을 입력해 주세요.")
+        @NotBlank
+        @NotNull(message = "국가명을 입력해 주세요.")
         String countryName,
 
-        @NotNull
         String regionName,
 
         @NotNull
@@ -19,7 +19,7 @@ public record TravelCourseListRequest(
         Integer pageNumber,
 
         @NotNull
-        @Pattern(regexp = "^(viewCount|uploadDate)")
+        @Pattern(regexp = "^(videoViewCount|videoUploadDate)")
         String sortField
 ) {
 }

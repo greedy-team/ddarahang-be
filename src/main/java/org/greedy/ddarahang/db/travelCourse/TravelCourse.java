@@ -27,7 +27,8 @@ import org.greedy.ddarahang.db.video.Video;
 public class TravelCourse {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO) // 테스트2 실행시 삭제
     @Column(unique = true, nullable = false)
     private Long id;
 
@@ -45,5 +46,11 @@ public class TravelCourse {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "region_id", nullable = false)
     private Region region;
+
+    @Column(nullable = false)
+    private String videoViewCount;
+
+    @Column(nullable = false)
+    private String videoUploadDate;
 
 }

@@ -14,12 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/data")
 public class GoogleSheetController implements GoogleSheetSpecification {
 
     private final TravelDataSyncService travelDataSyncService;
 
-    @PostMapping
+    @PostMapping("/api/v1/data")
     public ResponseEntity<Void> syncGoogleSheetWithDB() throws GeneralSecurityException, IOException {
         travelDataSyncService.syncGoogleSheetWithDB();
         return ResponseEntity.ok().build();
